@@ -3,10 +3,10 @@
 # Metadata:                                                                    #
 #                                                                              #
 #     File: .prospector.yaml                                                   #
-#     Project: Django Foundry                                                   #
+#     Project: Django Foundry                                                  #
 #     Created Date: 17 Aug 2022                                                #
 #     Author: Jess Mann                                                        #
-#     Email: jess.a.mann@gmail.com                                                  #
+#     Email: jess.a.mann@gmail.com                                             #
 #                                                                              #
 #     -----                                                                    #
 #                                                                              #
@@ -15,7 +15,7 @@
 #                                                                              #
 #     -----                                                                    #
 #                                                                              #
-#     Copyright (c) 2022 Jess Mann                                                #
+#     Copyright (c) 2022 Jess Mann                                             #
 ################################################################################
 output-format: text
 
