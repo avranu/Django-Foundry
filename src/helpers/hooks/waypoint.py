@@ -20,12 +20,11 @@
 """
 # Generic imports
 from __future__ import annotations
-from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Iterable, Optional
-from helpers.hooks.meta.constants import DEFAULT_NAMESPACE
+from .meta.constants import DEFAULT_NAMESPACE
 
 if TYPE_CHECKING:
-	from helpers.hooks.hook import Hook
+	from .hook import Hook
 
 class Waypoint:
 	"""
@@ -56,9 +55,9 @@ class Waypoint:
 			name : str,
 			namespace : str = DEFAULT_NAMESPACE,
 			positional_arguments : int = 0,
-     		named_arguments : list[str] = [],
-         	return_type : Any = Any,
-          	hooks : list[Hook] = []):
+	 		named_arguments : list[str] = [],
+		 	return_type : Any = Any,
+		  	hooks : list[Hook] = []):
 		self.name = name
 		self.namespace = namespace
 		self.positional_arguments = positional_arguments

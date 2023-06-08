@@ -24,19 +24,19 @@ from __future__ import annotations
 from typing import Any
 
 class Hookable:
-    @classmethod
-    def hook(cls, name: str, **kwargs) -> None:
-        '''
-        Implemented by subclasses to hook into methods of this class without overriding them.
-        TODO: Signals
-        '''
-        # By default, do nothing
-        return
+	@classmethod
+	def hook(cls, name: str, **kwargs) -> None:
+		'''
+		Implemented by subclasses to hook into methods of this class without overriding them.
+		TODO: Signals
+		'''
+		# By default, do nothing
+		return
 
-    @classmethod
-    def hook_filter(cls, name: str, value: Any, **kwargs) -> Any:
-        '''
-        Implemented by subclasses to filter a variable (much like a hook) without overriding this class' methods
-        '''
-        # By default, return the unfiltered value
-        return value
+	@classmethod
+	def hook_filter(cls, name: str, value: Any, **kwargs) -> Any:
+		'''
+		Implemented by subclasses to filter a variable (much like a hook) without overriding this class' methods
+		'''
+		# By default, return the unfiltered value
+		return value

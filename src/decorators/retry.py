@@ -23,10 +23,11 @@
 from __future__ import annotations
 import time
 import math
+from decimal import Decimal
 
 
 # Retry decorator with exponential backoff
-def retry(tries, delay=3, backoff=2):
+def retry(tries, delay : Decimal | int | float = 3, backoff : int = 2):
 	'''
 	Based on https://wiki.python.org/moin/PythonDecoratorLibrary#Cached_Properties
 
@@ -35,7 +36,8 @@ def retry(tries, delay=3, backoff=2):
 	delay sets the initial delay in seconds, and backoff sets the factor by which
 	the delay should lengthen after each failure. backoff must be greater than 1,
 	or else it isn't really a backoff. tries must be at least 0, and delay
-	greater than 0.'''
+	greater than 0.
+	'''
 
 	if backoff <= 1:
 		raise ValueError("backoff must be greater than 1")
@@ -47,20 +49,20 @@ def retry(tries, delay=3, backoff=2):
 	if delay <= 0:
 		raise ValueError("delay must be greater than 0")
 
-	def deco_retry(f):
+	def deco_retry(callback):
 		def f_retry(*args, **kwargs):
-			mtries, mdelay = tries, delay  # make mutable
+			mtries, mdelay = tries, float(delay)  # make mutable
 
-			rv = f(*args, **kwargs)  # first attempt
+			result = callback(*args, **kwargs)  # first attempt
 			while mtries > 0:
-				if rv is True:  # Done on success
+				if result is True:  # Done on success
 					return True
 
-				mtries -= 1      # consume an attempt
+				mtries -= 1	  # consume an attempt
 				time.sleep(mdelay)  # wait...
 				mdelay *= backoff  # make future wait longer
 
-				rv = f(*args, **kwargs)  # Try again
+				result = callback(*args, **kwargs)  # Try again
 
 			return False  # Ran out of tries :-(
 

@@ -17,13 +17,14 @@
 
 		Copyright (c) 2023 Jess Mann
 """
+from __future__ import annotations
 import os
-import openai
-import yaml
 import argparse
 import re
-from tqdm import tqdm
+import yaml
 import glob
+import openai
+from tqdm import tqdm
 
 class ChatGPTBugFixer:
 	def __init__(self, api_key, project_path):
@@ -85,7 +86,7 @@ class ChatGPTBugFixer:
 				model="gpt-4",
 				messages = [
 					{"role": "system", "content": "Your job is to identify bugs in python code and suggest improvements, adhering to modern best "+
-      											  "practices, such as DRY. Review the code supplied and list specific changes to the code. If "+
+	  											  "practices, such as DRY. Review the code supplied and list specific changes to the code. If "+
 												  "functionality can be added to the code, suggest them. Use the following format for your "+
 												  "suggestions: 'Change Y to Z'. If there are no changes needed, respond with 'no changes proposed'. "+
 												  "Example response format: In the `calculate` method, change 'area = length * length' to 'area = "+
@@ -100,6 +101,9 @@ class ChatGPTBugFixer:
 			# print the full response
 			print(response)
 
+			# Convert it to a format that we can subscript
+			response = response.__dict__
+
 			return f'''
 			Tokens: {response['usage']}
 			Model: {response['model']}
@@ -108,7 +112,7 @@ class ChatGPTBugFixer:
 			'''
 		except Exception as e:
 			print(f"Error when submitting code to ChatGPT: {e}")
-			return None
+			return 'Error Retrieving Response. Please try again.'
 
 	def process_python_files(self):
 		python_files = glob.glob(f"{self.project_path}/**/*.py", recursive=True)
@@ -117,7 +121,7 @@ class ChatGPTBugFixer:
 		exclude = ["__init__.py", "settings.py", "urls.py", "wsgi.py", "asgi.py", "manage.py"]
 		python_files = [file for file in python_files if os.path.basename(file) not in exclude]
 		excluded_dirs = ['migrations', 'logs', 'tests', 'conf', 'settings', 'static', 'templates',
-                   		 'node_modules', 'venv', 'build', 'dist', 'public', 'docs']
+				   		 'node_modules', 'venv', 'build', 'dist', 'public', 'docs']
 		for excluded_dir in excluded_dirs:
 			python_files = [file for file in python_files if excluded_dir not in file]
 		count = 0

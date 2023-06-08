@@ -107,8 +107,8 @@ class ColumnInfo(DbInfo):
 		data_length: int,
 		nullable: str,
 		data_default: Any,
-		precision: int = None,
-		scale: int = None,
+		precision: Optional[int] = None,
+		scale: Optional[int] = None,
 	):
 		self.name = name
 		self.data_type = data_type
@@ -229,9 +229,9 @@ class IndexInfo(DbInfo):
 		columns (list[IndexColumnInfo]): The columns in the index
 	"""
 
-	def __init__(self, name: str, columns: list[IndexColumnInfo] = None, uniqueness: str = ''):
+	def __init__(self, name: str, columns: Optional[list[IndexColumnInfo]] = None, uniqueness: str = ''):
 		if not name or name == '':
-			name = f'index.{"-".join([column.name for column in columns])}'
+			name = f'index.{"-".join([column.name for column in columns or []])}'
 		self.name = name
 		self.uniqueness = uniqueness
 		self.columns = columns if columns is not None else []
@@ -271,7 +271,7 @@ class ForeignKeyInfo:
 		referenced_column (str): The name of the column that the foreign key references
 		related_name (str): The name of the related name
 	"""
-	def __init__(self, column: str, constraint_type: ConstraintType, referenced_table: str, referenced_column: str, related_name: str = None):
+	def __init__(self, column: str, constraint_type: ConstraintType, referenced_table: str, referenced_column: str, related_name: Optional[str] = None):
 		self.column = column
 		self.constraint_type = constraint_type
 		self.referenced_table = referenced_table

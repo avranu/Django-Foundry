@@ -29,4 +29,4 @@ from django.views import generic
 
 
 class ListController(generic.ListView):
-    pass
+	pass

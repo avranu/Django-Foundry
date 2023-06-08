@@ -24,9 +24,9 @@
 # Generic imports
 from __future__ import annotations
 from typing import Any, Callable, Iterable, Optional
-from helpers.hooks.meta import WaypointMap, NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from helpers.hooks.hook import Hook
-from helpers.hooks.waypoint import Waypoint
+from .meta import WaypointMap, NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from .hook import Hook
+from .waypoint import Waypoint
 
 class Hooks:
 	"""
@@ -154,7 +154,7 @@ class Hooks:
 		Returns:
 			bool: True if a waypoint exists here, False if no waypoint can be found with this name/namespace.
   		"""
-    	# No waypoint registered because this name/namespace hasn't been defined.
+		# No waypoint registered because this name/namespace hasn't been defined.
 		if namespace not in cls._hooks or name not in cls._hooks[namespace]:
 			return False
 
@@ -249,9 +249,9 @@ class Hooks:
 			name : str,
 			namespace : str = DEFAULT_NAMESPACE,
 			positional_arguments : int = 0,
-     		named_arguments : list[str] = [],
-         	return_type : Any = Any,
-          	hooks : list[Hook] = []) -> Waypoint:
+	 		named_arguments : list[str] = [],
+		 	return_type : Any = Any,
+		  	hooks : list[Hook] = []) -> Waypoint:
 		"""
 		Creates and registers a new waypoint.
   		"""
@@ -261,11 +261,11 @@ class Hooks:
 
 		# Create a new waypoint
 		waypoint = Waypoint(name=name,
-                      namespace=namespace,
-                      positional_arguments=positional_arguments,
-                      named_arguments=named_arguments,
-                      return_type = return_type,
-                      hooks = hooks)
+					  namespace=namespace,
+					  positional_arguments=positional_arguments,
+					  named_arguments=named_arguments,
+					  return_type = return_type,
+					  hooks = hooks)
 
 		# Register it
 		cls._initialize_waypoint(name, namespace, waypoint)

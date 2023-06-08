@@ -147,7 +147,7 @@ class Db:
 			return -1
 
 		# Okay, not running. Try starting it with subprocess.run
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'start']).returncode
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'start'], check=True).returncode
 
 	def restart(self) -> int:
 		"""
@@ -156,7 +156,7 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart']).returncode
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart'], check=True).returncode
 
 	def stop(self) -> int:
 		"""
@@ -165,7 +165,7 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop']).returncode
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop'], check=True).returncode
 
 	def status(self) -> int:
 		"""
@@ -174,7 +174,7 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status']).returncode
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status'], check=True).returncode
 
 	def check_errors(self) -> int:
 		"""

@@ -23,20 +23,20 @@ from decorators.timeout import timeout
 
 '''
 class TimeoutTestCase(TestCase):
-    def test_timeout_decorator(self):
-        @timeout(1)
-        def sample_function():
-            sleep(2)
-            return "Function completed"
+	def test_timeout_decorator(self):
+		@timeout(1)
+		def sample_function():
+			sleep(2)
+			return "Function completed"
 
-        @timeout(3)
-        def another_function():
-            sleep(1)
-            return "Another function completed"
+		@timeout(3)
+		def another_function():
+			sleep(1)
+			return "Another function completed"
 
-        with self.assertRaises(TimeoutError):
-            sample_function()
+		with self.assertRaises(TimeoutError):
+			sample_function()
 
-        result = another_function()
-        self.assertEqual(result, "Another function completed")
+		result = another_function()
+		self.assertEqual(result, "Another function completed")
 '''

@@ -25,13 +25,13 @@ from typing import Iterable
 class MatchingEngine(ABC):
 
 	@abstractmethod
-	def choose( self, input : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str, int]:
+	def choose( self, input_str : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str, int]:
 		"""
 		Use the matching engine to pick the best option from a group of options
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 			choices (Iterable[str]):
 				A group of choices to pick between
 			required_confidence (int, optional):
@@ -47,7 +47,7 @@ class MatchingEngine(ABC):
 		"""
 
 	@abstractmethod
-	def match( self, input : str, compare : str ) -> int:
+	def match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
@@ -57,8 +57,8 @@ class MatchingEngine(ABC):
 			"Smith, John" != "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -70,7 +70,7 @@ class MatchingEngine(ABC):
 		"""
 
 	@abstractmethod
-	def partial_match( self, input : str, compare : str ) -> int:
+	def partial_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings have a partial match.
 
@@ -78,8 +78,8 @@ class MatchingEngine(ABC):
 			"John Edward Smith" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -91,7 +91,7 @@ class MatchingEngine(ABC):
 		"""
 
 	@abstractmethod
-	def token_match( self, input : str, compare : str ) -> int:
+	def token_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that each token (i.e. string part) of these two strings match.
 
@@ -99,8 +99,8 @@ class MatchingEngine(ABC):
 			"Smith, John" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -112,7 +112,7 @@ class MatchingEngine(ABC):
 		"""
 
 	@abstractmethod
-	def token_partial_match( self, input : str, compare : str ) -> int:
+	def token_partial_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
@@ -120,8 +120,8 @@ class MatchingEngine(ABC):
 			"Smith, John Edward" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:

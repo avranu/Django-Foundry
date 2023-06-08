@@ -22,16 +22,16 @@ from __future__ import annotations
 from signals import Signal
 
 class QueueSignal(Signal):
-    """
+	"""
 	A signal issued by a Queue
-    """
+	"""
 
 class QueueSaved(QueueSignal):
-    """
+	"""
 	Emitted when a Queue is saved
-    """
+	"""
 
 class QueueCleared(QueueSignal):
-    """
+	"""
 	Emitted when a Queue is cleared
-    """
+	"""

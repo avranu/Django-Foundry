@@ -27,6 +27,6 @@ register = template.Library()
 
 @register.filter
 def python_code(value):
-    style = get_style_by_name('monokai')
-    formatter = HtmlFormatter(style=style)
-    return highlight(value, PythonLexer(), formatter)
+	style = get_style_by_name('monokai')
+	formatter = HtmlFormatter(style=style)
+	return highlight(value, PythonLexer(), formatter)

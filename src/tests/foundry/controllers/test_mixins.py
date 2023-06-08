@@ -41,7 +41,7 @@ class HasParamsTest(TestCase):
 			'basic': 	 			True,
 			'with spaces': 			'withspaces',
 			'   with  spa ces  ': 	'withspaces',
-			'123': 		            True,
+			'123': 					True,
 			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_': True,
 			'!@#$%^&*()[{]};:\'",<.>/\\|?`~- 	': ',-',
 		}
@@ -50,7 +50,7 @@ class HasParamsTest(TestCase):
 			'basic': 	 			False,
 			'with spaces': 			False,
 			'   with  spa ces  ': 	False,
-			'123': 		            123,
+			'123': 					123,
 			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_': 123456789,
 			'!@#$%^&*()[{]};:\'",<.>/\\|?`~- 	': False,
 		}

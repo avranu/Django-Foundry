@@ -26,8 +26,8 @@ from jinja2 import TemplateNotFound
 from django.db import connections
 from django.db.backends.utils import CursorWrapper
 # LIB imports
-from helpers.render.meta.model import IndexInfo, ColumnInfo, ConstraintInfo
-from helpers.render.jinja.code.python.template import PythonHelper
+from helpers.render.meta.model import IndexInfo, IndexColumnInfo, ColumnInfo, ConstraintInfo
+from .template import PythonHelper
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
@@ -171,7 +171,7 @@ class ModelHelper(PythonHelper):
 			table_name = self.table_name
 
 		# Query the DB for the columns directly using connection.cursor().execute()
-		with self.cursor() as cursor:
+		with self.cursor as cursor:
 			# Get the column details from the ALL_TAB_COLUMNS view
 			cursor.execute(f"""
 					SELECT column_name, data_type, data_length, nullable, data_default
@@ -194,7 +194,7 @@ class ModelHelper(PythonHelper):
 					data_type=result[1],
 					data_length=result[2],
 					nullable=result[3],
-					default=result[4]
+					data_default=result[4]
 				))
 			return columns
 
@@ -212,7 +212,7 @@ class ModelHelper(PythonHelper):
 			table_name = self.table_name
 
 		# Query the DB for the constraints directly using connection.cursor().execute()
-		with self.cursor() as cursor:
+		with self.cursor as cursor:
 			# Get the constraint details from the ALL_CONSTRAINTS view
 			cursor.execute(f"""
 					SELECT SELECT cc.constraint_name, cc.column_name, c.constraint_type, c.search_condition, c.r_owner, c.r_constraint_name
@@ -249,7 +249,7 @@ class ModelHelper(PythonHelper):
 			table_name = self.table_name
 
 		# Query the DB for the indexes directly using connection.cursor().execute()
-		with self.cursor() as cursor:
+		with self.cursor as cursor:
 			# Get the index details from the ALL_INDEXES view
 			cursor.execute(f"""
 					SELECT i.index_name, i.column_name, i.column_position, ind.uniqueness
@@ -263,9 +263,8 @@ class ModelHelper(PythonHelper):
 			indexes = []
 			for result in results:
 				indexes.append(IndexInfo(
-					name=result[0],
-					column_name=result[1],
-					column_position=result[2],
+					name = result[0],
+					columns = [ IndexColumnInfo( name=result[1], position=result[2] )],
 					uniqueness=result[3]
 				))
 			return self.remove_duplicate_indexes(indexes)
@@ -284,9 +283,13 @@ class ModelHelper(PythonHelper):
 			table_name = self.table_name
 
 		# Query the DB for the row count directly using connection.cursor().execute()
-		with self.cursor() as cursor:
+		with self.cursor as cursor:
 			cursor.execute(f'SELECT COUNT(*) FROM "{self.schema}"."{self.table_name}"')
 			result = cursor.fetchone()
+
+			if not result:
+				return 0
+			
 			return result[0]
 
 	def render(self, variables: dict, template_name: str = 'model') -> str | None:

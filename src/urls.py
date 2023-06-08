@@ -21,14 +21,12 @@
 from __future__ import annotations
 # Django imports
 from django.urls import path
-from django.contrib.auth.views import LogoutView
-# 3rd Party imports
 # App Imports
 from .controllers.memory import MemoryMonitorView, memory_usage
 
 app_name = 'django-foundry'
 
 urlpatterns = [
-        path('memory-monitor/', MemoryMonitorView.as_view(), name='memory_monitor'),
-        path('memory-monitor/memory-usage/', memory_usage, name='memory_usage'),
+		path('memory-monitor/', MemoryMonitorView.as_view(), name='memory_monitor'),
+		path('memory-monitor/memory-usage/', memory_usage, name='memory_usage'),
 ]

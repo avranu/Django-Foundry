@@ -20,7 +20,7 @@
 
 """
 # Generic imports
-from helpers.logging import log_object
-from helpers.progress import ProgressBar, ProgressStates
-from helpers.queue import Queue, Callbacks as QueueCallbacks, QueueSaved, QueueCleared, QueueSignal
-from helpers.encoders import JSONEncoder
+from .logging import log_object
+from .progress import ProgressBar, ProgressStates
+from .queue import Queue, Callbacks as QueueCallbacks, QueueSaved, QueueCleared, QueueSignal
+from .encoders import JSONEncoder

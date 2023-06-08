@@ -22,6 +22,6 @@
 from __future__ import annotations
 from src.exceptions import AppException
 class MaxExecutionsError(AppException):
-    """
+	"""
 	Indicates an action has already been executed the maximum number of times.
-    """
+	"""

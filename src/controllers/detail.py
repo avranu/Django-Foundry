@@ -32,18 +32,18 @@ from controllers.mixins import JSONResponseMixin
 # App Imports
 
 if TYPE_CHECKING:
-    pass
+	pass
 
 class DetailController(generic.DetailView):
-    '''
-    Generic controller for providing detail views for django models. All detail views in our application inherit from this.
-    '''
+	'''
+	Generic controller for providing detail views for django models. All detail views in our application inherit from this.
+	'''
 
 class JsonDetailController(JSONResponseMixin, DetailController):
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
-        data = super().get(request, *args, **kwargs)
-        return self.render_to_response(data)
+	def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+		data = super().get(request, *args, **kwargs)
+		return self.render_to_response(data)
 
-    def render_to_response(self, context, **kwargs):
-        return self.render_to_json_response(context, **kwargs)
+	def render_to_response(self, context, **kwargs):
+		return self.render_to_json_response(context, **kwargs)

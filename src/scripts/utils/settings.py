@@ -20,7 +20,7 @@
 # Generic imports
 from __future__ import annotations
 import os
-from typing import Any, Optional, TypedDict, Literal
+from typing import Any
 import yaml
 from yaml.loader import SafeLoader
 import logging
@@ -77,7 +77,7 @@ class Settings:
 		# Read our default sensitivity settings (if available)
 		filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), SETTINGS_PATH)
 
-		if (os.path.exists(filepath)):
+		if os.path.exists(filepath):
 			# If it exists, then open it
 			with open(filepath) as file:
 				# Load the contents into a variable

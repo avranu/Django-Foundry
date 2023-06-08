@@ -25,13 +25,13 @@ from matching.engine import MatchingEngine
 
 class TheFuzz(MatchingEngine):
 
-	def choose( self, input : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str, int]:
+	def choose( self, input_str : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str | None, int]:
 		"""
 		Use the matching engine to pick the best option from a group of options
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 			choices (Iterable[str]):
 				A group of choices to pick between
 			required_confidence (int, optional):
@@ -45,16 +45,21 @@ class TheFuzz(MatchingEngine):
 			Match: The matching choice, or None
 			Confidence: The confidence of the match, from 1-100
 		"""
-		(matching_key, confidence) = process.extractOne(str(input), choices)
+		results = process.extractOne(str(input_str), choices, score_cutoff=required_confidence)
 
-		# Not a sufficient match.
-		if confidence < required_confidence:
-			return (None, 100 - confidence)
+		if results is None:
+			return (None, 0)
+		
+		# Check if there are 2 or 3 values in the tuple, and unpack
+		if len(results) == 2:
+			(matching_key, confidence) = results
+		else:
+			(matching_key, confidence, _index) = results
 
 		# Sufficient match!
 		return (matching_key, confidence)
 
-	def match( self, input : str, compare : str ) -> int:
+	def match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
@@ -64,8 +69,8 @@ class TheFuzz(MatchingEngine):
 			"Smith, John" != "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -75,9 +80,9 @@ class TheFuzz(MatchingEngine):
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
-		return fuzz.ratio(input, compare)
+		return fuzz.ratio(input_str, compare)
 
-	def partial_match( self, input : str, compare : str ) -> int:
+	def partial_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings have a partial match.
 
@@ -85,8 +90,8 @@ class TheFuzz(MatchingEngine):
 			"John Edward Smith" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -96,9 +101,9 @@ class TheFuzz(MatchingEngine):
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
-		return fuzz.partial_ratio(input, compare)
+		return fuzz.partial_ratio(input_str, compare)
 
-	def token_match( self, input : str, compare : str ) -> int:
+	def token_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that each token (i.e. string part) of these two strings match.
 
@@ -106,8 +111,8 @@ class TheFuzz(MatchingEngine):
 			"Smith, John" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -117,9 +122,9 @@ class TheFuzz(MatchingEngine):
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
-		return fuzz.token_sort_ratio(input, compare)
+		return fuzz.token_sort_ratio(input_str, compare)
 
-	def token_partial_match( self, input : str, compare : str ) -> int:
+	def token_partial_match( self, input_str : str, compare : str ) -> int:
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
@@ -127,8 +132,8 @@ class TheFuzz(MatchingEngine):
 			"Smith, John Edward" == "John Smith"
 
 		Args:
-			input (str):
-				The input to attempt to match
+			input_str (str):
+				The input_str to attempt to match
 
 		Returns:
 			int:
@@ -138,4 +143,4 @@ class TheFuzz(MatchingEngine):
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
-		return fuzz.token_set_ratio(input, compare)
+		return fuzz.token_set_ratio(input_str, compare)

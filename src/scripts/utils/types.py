@@ -23,6 +23,9 @@ from enum import Enum
 from typing import Any, TypedDict
 
 class LoggerLevels(Enum):
+	"""
+	Enum for the different logging levels.
+	"""
 	DEBUG = 'debug'
 	INFO = 'info'
 	ERROR = 'error'
@@ -30,6 +33,9 @@ class LoggerLevels(Enum):
 	WARN = WARNING
 
 class YesNo(Enum):
+	"""
+	Enum for YES/NO fields
+	"""
 	YES = 'yes'
 	Y = YES
 	NO = 'no'
@@ -44,17 +50,23 @@ class Logger(TypedDict):
 	propogate: YesNo
 
 class LogFormatter(TypedDict):
+	"""
+	Expected format for a "formatter" in the settings file.
+	"""
 	format: str
 
 class LogHandler(TypedDict):
+	"""
+	Expected format for a "handler" in the settings file.
+	"""
 	level: LoggerLevels
 	formatter: str
 	stream: str
 	#class: str
 
 class LogRoot(TypedDict):
-    level: LoggerLevels
-    handlers: list[LogHandler]
+	level: LoggerLevels
+	handlers: list[LogHandler]
 
 class SettingsLog(TypedDict):
 	"""
@@ -69,6 +81,9 @@ class SettingsLog(TypedDict):
 	root: LogRoot
 
 class BrowserSync(TypedDict):
+	"""
+	Expected format for the browsersync portion of the settings file.
+	"""
 	startPath: str
 	watch: list[str]
 	proxy: str

@@ -29,7 +29,6 @@ class Manager(auto_prefetch.Manager):
 	A custom query manager. This creates QuerySets and is used in all models interacting with the db.
 	'''
 
-
 class PostgresManager(PGManager):
 	'''
 	A custom query manager. This creates querysets and is used in all models interacting with the db (when that db is postgres)

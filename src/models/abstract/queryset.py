@@ -137,7 +137,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			result = self.latest(property_name)
 			return getattr(result, property_name, None)
 
-		except Exception as e:
+		except Exception as _e:
 			logger.debug(f"No result found for latest {property_name}")
 			return None
 
@@ -175,7 +175,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		try:
 			return self.aggregate(Max(property_name))[f'{property_name}__max']
 
-		except Exception as e:
+		except Exception as _e:
 			logger.debug(f"No result found for max {property_name}")
 			return None
 
@@ -519,11 +519,11 @@ class QuerySet(auto_prefetch.QuerySet):
 			{ 0: 1, 1: 2, 2: 1, 3: 1, 4: 1 }
 		'''
 		# Get the min and max of the field
-		min = self.aggregate(Min(field_name))[f"{field_name}__min"]
-		max = self.aggregate(Max(field_name))[f"{field_name}__max"]
+		min_value = self.aggregate(Min(field_name))[f"{field_name}__min"]
+		max_value = self.aggregate(Max(field_name))[f"{field_name}__max"]
 
 		# Get the distribution
-		distribution = (self.values(field_name).annotate(bin=ExpressionWrapper(F(field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins)).values("bin").annotate(count=Count("bin")).order_by("bin"))
+		distribution = (self.values(field_name).annotate(bin=ExpressionWrapper(F(field_name) - min_value, output_field=fields.IntegerField()) // ((max_value - min_value) // bins)).values("bin").annotate(count=Count("bin")).order_by("bin"))
 
 		return {result["bin"]: result["count"] for result in distribution}
 
@@ -548,12 +548,12 @@ class QuerySet(auto_prefetch.QuerySet):
 			{ 'open': { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1 }, 'closed': { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1 } }
 		'''
 		# Get the min and max of the field
-		min = self.aggregate(Min(y_field_name))[f"{y_field_name}__min"]
-		max = self.aggregate(Max(y_field_name))[f"{y_field_name}__max"]
+		min_value = self.aggregate(Min(y_field_name))[f"{y_field_name}__min"]
+		max_value = self.aggregate(Max(y_field_name))[f"{y_field_name}__max"]
 
 		# Get the distribution
-		distribution = (self.values(x_field_name, y_field_name).annotate(bin=ExpressionWrapper(F(y_field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins)).values(x_field_name,
-																																														   "bin").annotate(count=Count("bin")).order_by(x_field_name, "bin"))
+		distribution = (self.values(x_field_name, y_field_name).annotate(bin=ExpressionWrapper(F(y_field_name) - min_value, output_field=fields.IntegerField()) // ((max_value - min_value) // bins)).values(x_field_name,
+																																														   			         "bin").annotate(count=Count("bin")).order_by(x_field_name, "bin"))
 
 		# Convert the distribution to a dictionary
 		distribution_dict = {}

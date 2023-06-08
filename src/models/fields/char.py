@@ -50,18 +50,18 @@ class RowIdField(CharField):
 	def __init__(self, *,
 				 map_field  : Optional[str] = None,
 				 max_length : int = 18,
-				 unique     : bool = True,
-				 null       : bool = False,
-				 blank      : bool = False,
+				 unique	 : bool = True,
+				 null	   : bool = False,
+				 blank	  : bool = False,
 				 editable   : bool = False,
 				 **kwargs):
 		# Call the parent init function first
 		return super().__init__(max_length  = max_length,
 								map_field   = map_field,
-								unique      = unique,
-								null        = null,
-								blank       = blank,
-								editable    = editable,
+								unique	  = unique,
+								null		= null,
+								blank	   = blank,
+								editable	= editable,
 								**kwargs)
 
 class GuidField(CharField):
@@ -71,9 +71,9 @@ class GuidField(CharField):
 	def __init__(self, *,
 				 map_field  : Optional[str] = None,
 				 max_length : int = 38,
-				 unique     : bool = True,
-				 null       : bool = False,
-				 blank      : bool = False,
+				 unique	 : bool = True,
+				 null	   : bool = False,
+				 blank	  : bool = False,
 				 editable   : bool = False,
 				 **kwargs):
 		'''
@@ -82,8 +82,8 @@ class GuidField(CharField):
 		# Call the parent init function first
 		return super().__init__(max_length  = max_length,
 								map_field   = map_field,
-								unique      = unique,
-								null        = null,
-								blank       = blank,
-								editable    = editable,
+								unique	  = unique,
+								null		= null,
+								blank	   = blank,
+								editable	= editable,
 								**kwargs)

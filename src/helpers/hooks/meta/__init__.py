@@ -18,7 +18,5 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-# Generic imports
-from __future__ import annotations
-from helpers.hooks.meta.constants import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from helpers.hooks.meta.types import WaypointMap, NamespaceMap
+from .constants import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from .types import WaypointMap, NamespaceMap
