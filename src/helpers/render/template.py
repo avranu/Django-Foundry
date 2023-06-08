@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: template.py
 		Project: Django Foundry
 		Created Date: 09 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Sun Apr 09 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from __future__ import annotations
@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 class TemplateHelper(ABC):
 	"""
-	A helper class for rendering templates 
-	
+	A helper class for rendering templates
+
 	Attributes:
 		template_path (str): The path to the templates.
 		template_suffix (str): The suffix for the templates.
@@ -60,7 +60,7 @@ class TemplateHelper(ABC):
 	def app_name(self) -> str:
 		"""
 		The name of the app to load the templates from.
-		
+
 		Returns:
 			str: The name of the app to load the templates from.
 		"""
@@ -86,11 +86,11 @@ class TemplateHelper(ABC):
 	def render(self, variables: dict, template_name: str) -> str | None:
 		"""
 		Render a template with the given variables.
-		
+
 		Args:
 			template_name (str): The name of the template to render.
 			variables (dict): The variables to pass to the template.
-			
+
 		Returns:
 			str: The rendered template.
 		"""

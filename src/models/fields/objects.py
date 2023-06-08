@@ -21,12 +21,9 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import Any
-# 3rd party packages
-import orjson
 # Django imports
-from django.db.models import JSONField, Func, FloatField
-from django.core import exceptions
+from django.db import models
+from django.db.models import Func
 # 3rd Party imports
 from psqlextra import fields
 import picklefield.fields
@@ -34,30 +31,30 @@ import picklefield.fields
 class HStoreField(fields.HStoreField):
 	pass
 
-class JSONField(JSONField):
+class JSONField(models.JSONField):
 	'''
-    def get_prep_value(self, value):
-        if value is None:
-            return value
-        return orjson.dumps(value)
+	def get_prep_value(self, value):
+		if value is None:
+			return value
+		return orjson.dumps(value)
 
-    def validate(self, value, model_instance):
-        super().validate(value, model_instance)
-        try:
-            orjson.dumps(value)
-        except TypeError:
-            raise exceptions.ValidationError(
-                self.error_messages["invalid"],
-                code="invalid",
-                params={"value": value},
-            )
+	def validate(self, value, model_instance):
+		super().validate(value, model_instance)
+		try:
+			orjson.dumps(value)
+		except TypeError:
+			raise exceptions.ValidationError(
+				self.error_messages["invalid"],
+				code="invalid",
+				params={"value": value},
+			)
 	'''
 
 class JsonFloatValues(Func):
-    function = 'jsonb_each_text'
+	function = 'jsonb_each_text'
 
-    def __init__(self, expression, **extra):
-        super().__init__(expression, output_field=FloatField(), **extra)
+	def __init__(self, expression, **extra):
+		super().__init__(expression, output_field=models.FloatField(), **extra)
 
 class PickledObjectField(picklefield.fields.PickledObjectField):
 	pass

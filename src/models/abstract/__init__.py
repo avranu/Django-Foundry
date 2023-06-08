@@ -20,7 +20,6 @@
 
 """
 # Generic imports
-from __future__ import annotations
-from models.abstract.queryset import *
-from models.abstract.manager import Manager, PostgresManager
-from models.abstract.model import Model
+from .queryset import *
+from .manager import Manager, PostgresManager
+from .model import Model

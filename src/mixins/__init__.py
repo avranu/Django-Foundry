@@ -20,6 +20,7 @@
 
 """
 # Generic imports
-from __future__ import annotations
-from mixins.hookable import Hookable
-from mixins.dirtyfields import DirtyFields
+from .hookable import Hookable
+from .dirtyfields import DirtyFields
+from .hasParams import HasParams
+from .jsonResponse import JSONResponseMixin

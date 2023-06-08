@@ -59,7 +59,7 @@ class Serializer(serializers.ModelSerializer):
 			if field in fields:
 				fields.remove(field)
 		return fields
-	
+
 	class Meta:
 		fields = [
 			'id'

@@ -1,19 +1,19 @@
 """
 	Metadata:
-	
+
 		File: model.py
 		Project: Django Foundry
 		Created Date: 11 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Fri Apr 14 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from __future__ import annotations
@@ -34,7 +34,7 @@ class ConstraintType(Enum):
 class DbInfo:
 	"""
 	Store information about a structure of a database (such as a table, column, etc)
-	
+
 	Atributes:
 		name (str): The name of the database object
 	"""
@@ -46,7 +46,7 @@ class DbInfo:
 	def __str__(self) -> str:
 		"""
 		Returns the name of the database object
-		
+
 		Returns:
 			str: The name of the database object
 		"""
@@ -55,7 +55,7 @@ class DbInfo:
 	def __repr__(self) -> str:
 		"""
 		Returns the name of the database object
-		
+
 		Returns:
 			str: The name of the database object
 		"""
@@ -64,7 +64,7 @@ class DbInfo:
 class TableInfo(DbInfo):
 	"""
 	Store information about a table in Oracle.
-	
+
 	Atributes:
 		name (str): The name of the table
 		has_model (bool): Whether or not the table has a corresponding Django model
@@ -90,7 +90,7 @@ class TableInfo(DbInfo):
 class ColumnInfo(DbInfo):
 	"""
 	Store information about a column in a table in Oracle.
-	
+
 	Atributes:
 		name (str): The name of the column
 		data_type (str): The data type of the column
@@ -124,7 +124,7 @@ class ColumnInfo(DbInfo):
 				self.nullable = False
 			case _:
 				raise ValueError(f'Unknown value for nullable: "{nullable}"')
-			
+
 
 	def get_django_field_type(self) -> str:
 		"""
@@ -156,7 +156,7 @@ class ColumnInfo(DbInfo):
 class ConstraintInfo(DbInfo):
 	"""
 	Store information about a constraint in a table in Oracle.
-	
+
 	Atributes:
 		name (str): The name of the constraint
 		constraint_type (ConstraintType): The type of constraint
@@ -189,7 +189,7 @@ class ConstraintInfo(DbInfo):
 class IndexColumnInfo(DbInfo):
 	"""
 	Store information about a column in an index in Oracle.
-	
+
 	Atributes:
 		name (str): The name of the column
 		position (int): The position of the column in the index
@@ -197,32 +197,32 @@ class IndexColumnInfo(DbInfo):
 	def __init__(self, name: str, position: int):
 		self.name = name
 		self.position = position
-	
+
 	def __eq__(self, other: 'IndexColumnInfo') -> bool:
 		return self.name == other.name and self.position == other.position
-	
+
 	def __hash__(self) -> int:
 		return hash((self.name, self.position))
-	
+
 	def __lt__(self, other: 'IndexColumnInfo') -> bool:
 		return self.position < other.position
-	
+
 	def __le__(self, other: 'IndexColumnInfo') -> bool:
 		return self.position <= other.position
-	
+
 	def __gt__(self, other: 'IndexColumnInfo') -> bool:
 		return self.position > other.position
-	
+
 	def __ge__(self, other: 'IndexColumnInfo') -> bool:
 		return self.position >= other.position
-	
+
 	def __ne__(self, other: 'IndexColumnInfo') -> bool:
 		return not self.__eq__(other)
 
 class IndexInfo(DbInfo):
 	"""
 	Store information about an index in Oracle.
-	
+
 	Atributes:
 		name (str): The name of the index
 		uniqueness (str): Whether or not the index is unique
@@ -239,11 +239,11 @@ class IndexInfo(DbInfo):
 	def add_column(self, column_name: str, column_position: int):
 		"""
 		Add a column to the index.
-		
+
 		Args:
 			column_name (str): The name of the column
 			column_position (int): The position of the column in the index
-			
+
 		Returns:
 			None
 
@@ -256,14 +256,14 @@ class IndexInfo(DbInfo):
 
 	def __eq__(self, other: 'IndexInfo') -> bool:
 		return self.name == other.name and self.uniqueness == other.uniqueness and self.columns == other.columns
-	
+
 	def __hash__(self) -> int:
 		return hash((self.name, self.uniqueness, tuple(self.columns)))
 
 class ForeignKeyInfo:
 	"""
 	Store information about a foreign key in Oracle.
-	
+
 	Atributes:
 		column (str): The name of the column
 		constraint_type (ConstraintType): The type of constraint
@@ -281,7 +281,7 @@ class ForeignKeyInfo:
 	def __str__(self) -> str:
 		"""
 		Returns the name of the column.
-		
+
 		Returns:
 			str: The name of the column
 		"""
@@ -290,15 +290,15 @@ class ForeignKeyInfo:
 	def __repr__(self) -> str:
 		"""
 		Returns the name of the column.
-		
+
 		Returns:
 			str: The name of the column
 		"""
 		return self.column
-	
+
 	def __eq__(self, other: 'ForeignKeyInfo') -> bool:
 		return self.column == other.column and self.constraint_type == other.constraint_type and self.referenced_table == other.referenced_table and self.referenced_column == other.referenced_column and self.related_name == other.related_name
-	
+
 	def __hash__(self) -> int:
 		return hash((self.column, self.constraint_type, self.referenced_table, self.referenced_column, self.related_name))
 

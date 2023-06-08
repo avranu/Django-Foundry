@@ -20,6 +20,6 @@
 """
 # Generic imports
 from __future__ import annotations
-from helpers.hooks.meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from helpers.hooks.exceptions import MaxExecutionsError
-from helpers.hooks.hooks import Hook, Hooks
+from .meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from .exceptions import MaxExecutionsError
+from .hooks import Hook, Hooks

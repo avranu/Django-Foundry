@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: test_hooks.py
 		Project: Django Foundry
 		Created Date: 30 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Wed May 10 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from django.test import TestCase
@@ -34,7 +34,7 @@ class TestHook(TestCase):
         self.assertEqual(self.hook.action, self.action)
         self.assertEqual(self.hook.priority, DEFAULT_PRIORITY)
         self.assertEqual(self.hook.max_executions, -1)
-        
+
     '''
     def test_can_run(self):
         self.assertTrue(self.hook.can_run())
@@ -62,7 +62,7 @@ class TestHook(TestCase):
 
 '''
 class WaypointTestCase(TestCase):
-    
+
     def setUp(self):
         self.hook1 = Hook(priority=10, function=func1)
         self.hook2 = Hook(priority=20, function=func2)

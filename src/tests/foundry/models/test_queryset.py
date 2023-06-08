@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: test_queryset.py
 		Project: Django Foundry
 		Created Date: 09 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Wed May 10 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from math import sqrt
@@ -30,7 +30,7 @@ class Case:
 
 class QuerySetTestCase(TestCase):
 	model = Case
-	app = 'dashboard'
+	app = 'django-foundry'
 	model_name = 'Case'
 
 	@classmethod
@@ -86,7 +86,7 @@ class QuerySetTestCase(TestCase):
 			{
 				'case_type': 'test_case_6',
 				'status': '',
-				'location': '',	
+				'location': '',
 				'processing_ms': 3,
 			}
 		]
@@ -102,7 +102,7 @@ class QuerySetTestCase(TestCase):
 		for attribs in self.model_attributes:
 			cases.append(self.model(**attribs))
 		return cases
-	
+
 	def _create_sample_documents(self, cases : list):
 		# Create a list of documents to test with
 		document_attributes = [

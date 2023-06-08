@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: template.py
 		Project: Django Foundry
 		Created Date: 09 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Thu Apr 13 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class TemplateHelper(BaseTemplate):
 	"""
 	A helper class for rendering jinja templates
-	
+
 	Attributes:
 		env (Environment): The jinja environment.
 	"""
@@ -51,7 +51,7 @@ class TemplateHelper(BaseTemplate):
 		"""
 		if app_name is None:
 			raise ValueError('app_name cannot be None')
-		
+
 		super().__init__(app_name, template_path, template_suffix)
 
 		self.autoescape = autoescape
@@ -60,7 +60,7 @@ class TemplateHelper(BaseTemplate):
 	def env(self) -> Environment:
 		"""
 		The jinja environment.
-		
+
 		Returns:
 			Environment: The jinja environment.
 		"""
@@ -79,11 +79,11 @@ class TemplateHelper(BaseTemplate):
 	def render(self, template_name: str, variables: dict) -> str | None:
 		"""
 		Render a template with the given variables.
-		
+
 		Args:
 			template_name (str): The name of the template to render.
 			variables (dict): The variables to pass to the template.
-			
+
 		Returns:
 			str: The rendered template.
 		"""

@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: engine.py
 		Project: Django Foundry
 		Created Date: 27 Dec 2022
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Mon May 01 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2022 Jess Mann
 """
 from __future__ import annotations
@@ -51,7 +51,7 @@ class MatchingEngine(ABC):
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
-		For example: 
+		For example:
 			"John Smith" == "John Smith"
 			"John Edward Smith" != "John Smith"
 			"Smith, John" != "John Smith"
@@ -61,7 +61,7 @@ class MatchingEngine(ABC):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
 
@@ -74,7 +74,7 @@ class MatchingEngine(ABC):
 		"""
 		Use the matching engine to determine the confidence that these two strings have a partial match.
 
-		For example: 
+		For example:
 			"John Edward Smith" == "John Smith"
 
 		Args:
@@ -82,10 +82,10 @@ class MatchingEngine(ABC):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
@@ -95,7 +95,7 @@ class MatchingEngine(ABC):
 		"""
 		Use the matching engine to determine the confidence that each token (i.e. string part) of these two strings match.
 
-		For example: 
+		For example:
 			"Smith, John" == "John Smith"
 
 		Args:
@@ -103,10 +103,10 @@ class MatchingEngine(ABC):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
@@ -124,10 +124,10 @@ class MatchingEngine(ABC):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""

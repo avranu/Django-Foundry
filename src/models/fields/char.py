@@ -26,65 +26,64 @@ from django.db import models
 # App Imports
 
 class CharField(models.CharField):
-    '''
-    Override the default django field 
-    '''
-
+	'''
+	Override the default django field
+	'''
 
 class TextField(models.TextField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''
 
 class OneCharField(CharField):
-    """
-    A single character string field.
-    """
-    def __init__(self, *, max_length: int = 1, **kwargs):
-        if max_length > 1:
-            raise ValueError(f'Trying to initialize a single character field with a length of {max_length}')
+	"""
+	A single character string field.
+	"""
+	def __init__(self, *, max_length: int = 1, **kwargs):
+		if max_length > 1:
+			raise ValueError(f'Trying to initialize a single character field with a length of {max_length}')
 
-        return super().__init__(max_length=max_length, **kwargs)
+		return super().__init__(max_length=max_length, **kwargs)
 
 
 class RowIdField(CharField):
-    def __init__(self, *,
-                 map_field  : Optional[str] = None,
-                 max_length : int = 18,
-                 unique     : bool = True,
-                 null       : bool = False,
-                 blank      : bool = False,
-                 editable   : bool = False,
-                 **kwargs):
-        # Call the parent init function first
-        return super().__init__(max_length  = max_length,
-                                map_field   = map_field,
-                                unique      = unique,
-                                null        = null,
-                                blank       = blank,
-                                editable    = editable,
-                                **kwargs)
+	def __init__(self, *,
+				 map_field  : Optional[str] = None,
+				 max_length : int = 18,
+				 unique     : bool = True,
+				 null       : bool = False,
+				 blank      : bool = False,
+				 editable   : bool = False,
+				 **kwargs):
+		# Call the parent init function first
+		return super().__init__(max_length  = max_length,
+								map_field   = map_field,
+								unique      = unique,
+								null        = null,
+								blank       = blank,
+								editable    = editable,
+								**kwargs)
 
 class GuidField(CharField):
-    """
-    A charfield that is used for storing GUIDs (UUID v4)
-    """
-    def __init__(self, *,
-                 map_field  : Optional[str] = None,
-                 max_length : int = 38,
-                 unique     : bool = True,
-                 null       : bool = False,
-                 blank      : bool = False,
-                 editable   : bool = False,
-                 **kwargs):
-        '''
-        Redefine init to only accept named args
-        '''
-        # Call the parent init function first
-        return super().__init__(max_length  = max_length,
-                                map_field   = map_field,
-                                unique      = unique,
-                                null        = null,
-                                blank       = blank,
-                                editable    = editable,
-                                **kwargs)
+	"""
+	A charfield that is used for storing GUIDs (UUID v4)
+	"""
+	def __init__(self, *,
+				 map_field  : Optional[str] = None,
+				 max_length : int = 38,
+				 unique     : bool = True,
+				 null       : bool = False,
+				 blank      : bool = False,
+				 editable   : bool = False,
+				 **kwargs):
+		'''
+		Redefine init to only accept named args
+		'''
+		# Call the parent init function first
+		return super().__init__(max_length  = max_length,
+								map_field   = map_field,
+								unique      = unique,
+								null        = null,
+								blank       = blank,
+								editable    = editable,
+								**kwargs)

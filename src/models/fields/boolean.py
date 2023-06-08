@@ -29,6 +29,6 @@ from django.db import models
 
 class BooleanField(models.BooleanField):
     '''
-    Override the default django field 
+    Override the default django field
     '''
 

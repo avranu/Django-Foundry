@@ -22,9 +22,8 @@ from __future__ import annotations
 # Django Imports
 # Third party imports
 from rest_framework import viewsets, filters
-# Lib imports
-from controllers.mixins import HasParams
 # App imports
+from mixins import HasParams
 from .queryset import QuerySet
 from .serializer import Serializer
 
@@ -34,17 +33,17 @@ class ViewSet(HasParams, viewsets.ReadOnlyModelViewSet):
 	filterset_fields : list[str] = []
 	ordering_fields = ['__all__']
 	ordering = ['id']
-	
+
 	def apply_filters(self, queryset : QuerySet) -> QuerySet:
 		"""
 		Apply filters to the queryset. This is applied automatically in the get_queryset method using the filterset_fields attribute and request params.
-		
+
 		Args:
 			queryset (QuerySet): The queryset to apply filters to.
-			
+
 		Returns:
 			QuerySet: The filtered queryset.
-			
+
 		Example:
 			>>> queryset = self.apply_filters(queryset)
 			<QuerySet [<Case: Case object (1)>, <Case: Case object (2)>]>

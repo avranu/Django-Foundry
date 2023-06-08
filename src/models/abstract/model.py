@@ -23,18 +23,16 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import Callable, Any, Iterable, Optional, Tuple
+from typing import Iterable, Optional
 import logging
-from typing_extensions import Self
 # Django Imports
 from django.db import models
-from django.db.models.fields import Field
 # Django extensions
 import auto_prefetch
 # Lib Imports
 from mixins import Hookable
 # App Imports
-from models.abstract.manager import Manager, PostgresManager
+from models.abstract.manager import PostgresManager
 
 # Set up a logger for this module.
 #

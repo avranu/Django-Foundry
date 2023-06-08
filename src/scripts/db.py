@@ -21,14 +21,13 @@
 
 # Generic imports
 import argparse, textwrap, os, re
+import sys
 from enum import Enum
-from argparse import RawTextHelpFormatter
 import subprocess
-from typing import Optional
 from shutil import which
 import time
 # Our imports
-from utils.action import EnumAction
+from .utils.action import EnumAction
 
 # Default path to the data directory, which we pass directly to postgres
 DEFAULT_DATA_PATH = os.environ.get('django_foundry_db_data_path', './pgsql/data')
@@ -38,6 +37,19 @@ DEFAULT_LOG_PATH = os.environ.get('django_foundry_log_path', './pgsql/pgsql.log'
 EXE = os.environ.get('django_foundry_postgres_bin', "pg_ctl")
 
 class Db:
+	"""
+	Manages a database instance. This class is responsible for starting, stopping, and restarting the database.
+
+	Attributes:
+		data_path (str):
+			The path to the data directory for the database.
+		log_path (str):
+			The path to the logfile for the database.
+		user (str):
+			The user to run the database as.
+		database (str):
+			The name of the database to use.
+	"""
 	_data_path : str
 	_log_path : str
 	_user : str
@@ -50,11 +62,11 @@ class Db:
 	@property
 	def data_path(self) -> str:
 		return self._data_path
-	
+
 	@property
 	def user(self) -> str:
 		return self._user
-	
+
 	@property
 	def database(self) -> str:
 		return self._database
@@ -134,8 +146,8 @@ class Db:
 			print("Postgres server already running")
 			return -1
 
-		# Okay, not running. Try starting it.
-		return os.system(f'{EXE} -D {self.data_path} -l {self.log_path} start')
+		# Okay, not running. Try starting it with subprocess.run
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'start']).returncode
 
 	def restart(self) -> int:
 		"""
@@ -144,7 +156,7 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return os.system(f'{EXE} -D {self.data_path} -l {self.log_path} restart')
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart']).returncode
 
 	def stop(self) -> int:
 		"""
@@ -153,7 +165,7 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return os.system(f'{EXE} -D {self.data_path} -l {self.log_path} stop')
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop']).returncode
 
 	def status(self) -> int:
 		"""
@@ -162,34 +174,55 @@ class Db:
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
   		"""
-		return os.system(f'{EXE} -D {self.data_path} -l {self.log_path} status')
-	
+		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status']).returncode
+
 	def check_errors(self) -> int:
+		"""
+		Checks the postgres server for errors and prints all output to stdout.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT * FROM pg_stat_database_conflicts WHERE datname = current_database();"]
 		return subprocess.call(cmd)
 
 	def analyze(self) -> int:
+		"""
+		Runs an ANALYZE VERBOSE on the database.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "ANALYZE VERBOSE;"]
 		return subprocess.call(cmd)
 
 	def repair_errors(self) -> int:
+		"""
+		Runs a REINDEX DATABASE on the database.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "REINDEX DATABASE current_database;"]
 		return subprocess.call(cmd)
-	
+
 	def dead_rows(self) -> int:
+		"""
+		Checks for dead rows in the database.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT relname, n_dead_tup FROM pg_stat_user_tables WHERE n_dead_tup > 0;"]
 		return subprocess.call(cmd)
 
 	def long_queries(self) -> int:
+		"""
+		Checks for long running queries in the database.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT pid, now() - pg_stat_activity.query_start AS duration, query FROM pg_stat_activity WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';"]
 		return subprocess.call(cmd)
 
 	def locks(self) -> int:
+		"""
+		Checks for locks in the database.
+		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT pid, relation::regclass, mode, granted FROM pg_locks WHERE NOT granted;"]
 		return subprocess.call(cmd)
 
-	
+
 	def manage(self) -> None:
+		"""
+		Manages the postgres server, restarting it if it is not running.
+		"""
 		while True:
 			if not self.is_running():
 				print("Postgres is not running. Starting it up...")
@@ -209,7 +242,7 @@ class Db:
 			FileNotFoundError: If postgres is not able to find the data directory
   		"""
 		# Create a child process, supressing output
-		child = subprocess.run([EXE, '-D', self.data_path, 'status'], stdout = subprocess.PIPE)
+		child = subprocess.run([EXE, '-D', self.data_path, 'status'], stdout = subprocess.PIPE, check=True)
 
 		"""
   		Postgres returns exit code 3 if the server is NOT running, and 4 on error. It returns 0 otherwise.
@@ -222,7 +255,7 @@ class Db:
 		"""
 		if child.returncode == 4:
 			raise FileNotFoundError(f'Postgres is not able to find the data directory: {self.data_path}')
-		return child.returncode == 0
+		return not child.returncode
 
 	def sanitize_path(self, user_input_path : str) -> str:
 		"""
@@ -260,17 +293,17 @@ class Actions(Enum):
 		stop:
 			stop the DB (if it is running)
 	"""
-	start = 'start'
-	restart = 'restart'
-	status = 'status'
-	stop = 'stop'
-	check_errors = 'check_errors'
-	analyze = 'analyze'
-	repair_errors = 'repair_errors'
-	manage = 'manage'
-	dead_rows = 'dead_rows'
-	long_queries = 'long_queries'
-	locks = 'locks'
+	START = 'start'
+	RESTART = 'restart'
+	STATUS = 'status'
+	STOP = 'stop'
+	CHECK_ERRORS = 'check_errors'
+	ANALYZE = 'analyze'
+	REPAIR_ERRORS = 'repair_errors'
+	MANAGE = 'manage'
+	DEAD_ROWS = 'dead_rows'
+	LONG_QUERIES = 'long_queries'
+	LOCKS = 'locks'
 
 	def __str__(self):
 		"""
@@ -304,6 +337,13 @@ if __name__ == '__main__':
 						start: start the DB (if it is not already running)
 						restart: stop the DB (if it is running) and start it again.
 						stop: stop the DB (if it is running)
+						check_errors: check for errors in the DB
+						repair_errors: repair errors in the DB
+						analyze: analyze the DB
+						dead_rows: check for dead rows in the DB
+						long_queries: check for long running queries in the DB
+						locks: check for locks in the DB
+						manage: manage the DB, restarting it if it is not running
 					 """))
 	parser.add_argument('-l', '--log',
 					 	type=str,
@@ -326,40 +366,40 @@ if __name__ == '__main__':
 	except ValueError as ve:
 		# One of the options contains bad data. Print the message and exit.
 		print(f'Bad option provided: {ve}')
-		exit()
+		sys.exit()
 	except FileNotFoundError as fnf:
 		# The options were okay, but we can't find a necessary file (probably the executable)
 		print(f'Unable to find a necessary file: {fnf}')
-		exit()
+		sys.exit()
 
 	match options.action:
-		case Actions.start:
+		case Actions.START:
 			# Check the status and start the server if it isn't running, and print output to stdout.
 			result = db.start()
-		case Actions.stop:
+		case Actions.STOP:
 			# Stop the server and print output to stdout.
 			result = db.stop()
-		case Actions.restart:
+		case Actions.RESTART:
 			# Restart the server and print output to stdout.
 			result = db.restart()
-		case Actions.status:
+		case Actions.STATUS:
 			# Check the server status and print output to stdout.
 			result = db.status()
-		case Actions.check_errors:
+		case Actions.CHECK_ERRORS:
 			result = db.check_errors()
-		case Actions.analyze:
+		case Actions.ANALYZE:
 			result = db.analyze()
-		case Actions.repair_errors:
+		case Actions.REPAIR_ERRORS:
 			result = db.repair_errors()
-		case Actions.dead_rows:
+		case Actions.DEAD_ROWS:
 			result = db.dead_rows()
-		case Actions.long_queries:
+		case Actions.LONG_QUERIES:
 			result = db.long_queries()
-		case Actions.locks:
+		case Actions.LOCKS:
 			result = db.locks()
-		case Actions.manage:
+		case Actions.MANAGE:
 			db.manage()
 		case _:
 			print("Error: Unknown action. Try --help to see how to call this script.")
-		
-	exit()
+
+	sys.exit()

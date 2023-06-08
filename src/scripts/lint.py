@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: lint.py
 		Project: Django Foundry
 		Created Date: 18 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Fri Apr 28 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 import os
@@ -34,7 +34,7 @@ class ChatGPTBugFixer:
 	def strip_comments(self, code : str) -> str:
 		# Strip comments beginning with a hash
 		code = re.sub(r"(?m)^\s*#.*\n?", "", code)
-		
+
 		# Strip comments beginning with a triple quote
 		code = re.sub(r'(?s)""".*?"""', '', code)
 
@@ -45,23 +45,23 @@ class ChatGPTBugFixer:
 		code = re.sub(r"(?m)^__.*__\s*=\s*.*\n?", "", code)
 
 		return code
-	
+
 	def strip_standard_imports(self, code : str) -> str:
 		# Strip standard library imports
 		code = re.sub(r"(?m)^\s*import.*\n?", "", code)
 		code = re.sub(r"(?m)^\s*from.*\n?", "", code)
 
 		return code
-	
+
 	def strip_common_code(self, code : str) -> str:
 		# Remove logger = logging.getLogger(__name__)
 		code = re.sub(r"(?m)^\s*logger = logging.getLogger\(__name__\)\s*\n?", "", code)
 		return code
-	
+
 	def lint_code(self, code : str) -> str:
 		# Run the code through a linter with autofixes
 		return code
-	
+
 	def remove_blanks(self, code : str) -> str:
 		# Remove blank lines
 		code = re.sub(r"(?m)^\s*\n?", "", code)
@@ -70,7 +70,7 @@ class ChatGPTBugFixer:
 		code = re.sub(r"(?m)\s+$", "", code)
 
 		return code
-	
+
 	def trim_code(self, code : str) -> str:
 		code = self.strip_comments(code)
 		code = self.strip_standard_imports(code)

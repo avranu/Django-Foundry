@@ -149,14 +149,14 @@ class Queue(queue.Queue):
         """
         if callbacks is None:
             callbacks = {}
-            
+
         # Set the unique key (or convert to an array and set it). If not provided, we assume that a subclass has set it manually in the class def.
         if unique_key is not None:
             self.unique_key : Array = unique_key if unique_key is Array else [unique_key]
 
         # If no unique key is available from the class def or __init__, then we can't do bulk_inserts.
         if self.unique_key is None:
-            raise TypeError(f'No unique key provided to dashboard.models.Queue: {unique_key}')
+            raise TypeError(f'No unique key provided to django-foundry.models.Queue: {unique_key}')
 
         # Allow the default python queue to handle the generic init.
         # maxsize must be 0 to allow us to overflow the queue to trigger a save.
@@ -340,7 +340,7 @@ class Queue(queue.Queue):
             int: The number of rows saved (and removed) from the queue.
 
         Examples:
-            >>> from dashboard.models.people import Person
+            >>> frommodels.people import Person
             >>> queue = Queue(limit=2)
             >>> queue.append(Person())
             1

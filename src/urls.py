@@ -1,26 +1,26 @@
 """
-	
+
 	Metadata:
-	
+
 		File: urls.py
 		Project: Django Foundry
 		Created Date: 04 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Wed Apr 19 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 # Generic imports
 from __future__ import annotations
 # Django imports
-from django.urls import path, include, re_path
+from django.urls import path
 from django.contrib.auth.views import LogoutView
 # 3rd Party imports
 # App Imports

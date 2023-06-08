@@ -19,7 +19,8 @@
 """
 # Generic imports
 from __future__ import annotations
-import django.dispatch as dispatch
+from django import dispatch
+
 
 class Signal(dispatch.Signal):
 	"""

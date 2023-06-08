@@ -21,8 +21,6 @@
 """
 # Generic imports
 from .responses import *
-from controllers.mixins import HasParams
-from controllers.ajax import AjaxController
-from controllers.detail import DetailController, LoadingDetailController, DetailSectionController
-from controllers.list import ListController, LoadingListController
-from controllers.generic import GenericController
+from .detail import DetailController
+from .list import ListController
+from .generic import GenericController

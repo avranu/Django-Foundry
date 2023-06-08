@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: exceptions.py
 		Project: Django Foundry
 		Created Date: 17 Dec 2022
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Sun Apr 16 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2022 Jess Mann
 """
 class AppException(Exception):
@@ -28,7 +28,7 @@ class AppException(Exception):
 		if self._custom_message is not None:
 			return self._custom_message
 		return self.args[0] or 'No exception message provided.'
-	
+
 	@message.setter
 	def message(self, value : str):
 		self._custom_message = value

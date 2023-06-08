@@ -39,3 +39,4 @@ package-lock.json
 # Application
 *.log
 .dev/
+pylint.out

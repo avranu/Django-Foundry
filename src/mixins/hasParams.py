@@ -17,12 +17,11 @@
 
 		Copyright (c) 2022 Jess Mann
 """
+from __future__ import annotations
 # Generic imports
 from typing import Any, Iterable, TypeVar
 import re
 import logging
-# Django imports
-from django.http import JsonResponse
 
 # Get a logger for logging messages
 #
@@ -174,13 +173,3 @@ class HasParams:
 				return self.sanitize_int(value)
 
 		raise ValueError(f"Unsupported type {T}")
-
-class JSONResponseMixin:
-	"""
-	Mixin for a controller that render JSON responses.
-	"""
-	def render_to_json_response(self, context, **kwargs):
-		return JsonResponse(self.get_data(context), **kwargs)
-
-	def get_data(self, context):
-		return context

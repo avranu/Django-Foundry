@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: response.py
 		Project: Django Foundry
 		Created Date: 04 May 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Thu May 04 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from rest_framework import response

@@ -20,9 +20,9 @@
 
 """
 # Generic imports
-from models.exceptions import DoesNotExist, NotUnique
-from models.abstract.queryset import QuerySet
-from models.abstract.manager import Manager, PostgresManager
-from models.abstract.model import Model
-from models.choices import TextChoices
-from models.fields import *
+from .exceptions import DoesNotExist, NotUnique
+from .abstract.queryset import QuerySet
+from .abstract.manager import Manager, PostgresManager
+from .abstract.model import Model
+from .choices import TextChoices
+from .fields import *

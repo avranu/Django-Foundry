@@ -29,31 +29,31 @@ from django.db import models
 
 
 class IntegerField(models.IntegerField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''
 
 class PositiveIntegerField(models.PositiveIntegerField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''
 
 class BigIntegerField(models.BigIntegerField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''
 
 class DecimalField(models.DecimalField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''
 
 class CurrencyField(DecimalField):
-    """
-    Represents currency
-    """
+	"""
+	Represents currency
+	"""
 
 class FloatField(models.FloatField):
-    '''
-    Override the default django field 
-    '''
+	'''
+	Override the default django field
+	'''

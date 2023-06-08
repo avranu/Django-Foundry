@@ -18,5 +18,5 @@
 		Copyright (c) 2022 Jess Mann
 """
 # Generic imports
-from helpers.queue.signals import QueueSignal, QueueSaved, QueueCleared
-from helpers.queue.queue import Queue, Callbacks
+from .signals import QueueSignal, QueueSaved, QueueCleared
+from .queue import Queue, Callbacks

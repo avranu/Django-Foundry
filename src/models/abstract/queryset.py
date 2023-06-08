@@ -52,6 +52,7 @@ import auto_prefetch
 #
 logger = logging.getLogger(__name__)
 
+
 class QuerySet(auto_prefetch.QuerySet):
 	'''
 	A custom queryset. All models below will use this for interacting with results from the db.
@@ -78,7 +79,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		"""
 		#return self._result_cache is not None
 		raise NotImplementedError('_result_cache does not appear to exist on django querysets anymore.')
-	
+
 	def field_is_numeric(self, field_name: str) -> bool:
 		"""
 		Determines whether a field is numeric or not. This is used primarily for determining if we can perform math operations on its value.
@@ -100,14 +101,14 @@ class QuerySet(auto_prefetch.QuerySet):
 		"""
 		if not hasattr(self.model, field_name):
 			raise ValueError(f"No field '{field_name}' on queryset")
-		
+
 		# List of all fields that are numeric
 		numeric_fields = [
-			fields.IntegerField, 
-			fields.FloatField, 
-			fields.DecimalField, 
-			fields.BigIntegerField, 
-			fields.PositiveIntegerField, 
+			fields.IntegerField,
+			fields.FloatField,
+			fields.DecimalField,
+			fields.BigIntegerField,
+			fields.PositiveIntegerField,
 			fields.SmallIntegerField,
 			fields.PositiveSmallIntegerField,
 			fields.DurationField,
@@ -139,8 +140,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		except Exception as e:
 			logger.debug(f"No result found for latest {property_name}")
 			return None
-		
-	def min(self, property_name : str) -> Union[float, None]:
+
+	def min(self, property_name: str) -> Union[float, None]:
 		'''
 		Attempts to get the minimum value for the given property. If no record is found, returns None.
 		This bypasses an exception being thrown on no results.
@@ -157,10 +158,10 @@ class QuerySet(auto_prefetch.QuerySet):
 		except Exception as e:
 			logger.debug(f"No result found for min {property_name}")
 			return None
-		
+
 	from typing import Union
 
-	def max(self, property_name : str) -> Union[float, None]:
+	def max(self, property_name: str) -> Union[float, None]:
 		'''
 		Attempts to get the maximum value for the given property. If no record is found, returns None.
 		This bypasses an exception being thrown on no results.
@@ -177,8 +178,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		except Exception as e:
 			logger.debug(f"No result found for max {property_name}")
 			return None
-		
-	def filter_smallest(self, property_name: str, margin : float = 0) -> Self:
+
+	def filter_smallest(self, property_name: str, margin: float = 0) -> Self:
 		'''
 		Attempts to get the entry with the smallest value for the given property.
 
@@ -196,11 +197,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		min_value = self.min(property_name)
 		if min_value is None:
 			return self.none()
-		
+
 		# Reduce the queryset to only results with the smallest value for the given property, after accounting for the margin
 		return self.filter(**{property_name: min_value - margin})
-	
-	def filter_largest(self, property_name: str, margin : float = 0) -> Self:
+
+	def filter_largest(self, property_name: str, margin: float = 0) -> Self:
 		'''
 		Attempts to get the entry with the largest value for the given property.
 
@@ -218,11 +219,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		max_value = self.max(property_name)
 		if max_value is None:
 			return self.none()
-		
+
 		# Reduce the queryset to only results with the largest value for the given property, after accounting for the margin
 		return self.filter(**{property_name: max_value + margin})
-	
-	def has_blank(self, property_name: str, include_null : bool = True) -> Self:
+
+	def has_blank(self, property_name: str, include_null: bool = True) -> Self:
 		'''
 		Attempts to get any entries with a blank value (or optionally null) for the given property.
 
@@ -235,10 +236,10 @@ class QuerySet(auto_prefetch.QuerySet):
 		'''
 		if include_null:
 			return self.filter(**{f'{property_name}__isnull': True}) | self.filter(**{f'{property_name}__exact': ''})
-		
+
 		return self.filter(**{f'{property_name}__exact': ''})
-	
-	def have_blanks(self, include_null : bool = True, number_of_blank_fields : int = 1) -> Self:
+
+	def have_blanks(self, include_null: bool = True, number_of_blank_fields: int = 1) -> Self:
 		'''
 		Attempts to get any entries with a blank value (or optionally null) for any property.
 
@@ -259,7 +260,7 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		# Filter the queryset to only include records with the minimum number of blank fields
 		return annotated.filter(blank_fields__gte=number_of_blank_fields)
-	
+
 	def total(self, property_name: str) -> Union[float, int, Decimal]:
 		'''
 		Adds up the values of a given property and returns the result
@@ -279,10 +280,10 @@ class QuerySet(auto_prefetch.QuerySet):
 		'''
 		if not hasattr(self.model, property_name):
 			raise ValueError(f"No field '{property_name}' on queryset")
-		
+
 		if not self.field_is_numeric(property_name):
 			raise ValueError(f"Field '{property_name}' is not numeric")
-		
+
 		return self.aggregate(Sum(property_name))[f'{property_name}__sum'] or 0
 
 	def request(self, request_str: str) -> Union[Self, RawQuerySet]:
@@ -300,8 +301,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Iterate over all requests
 		for arg in arguments:
 			if arg is None or len(arg) < 1 or arg == ' ':
-				raise ValueError(
-					f'Request {request_str} returned an empty argument')
+				raise ValueError(f'Request {request_str} returned an empty argument')
 
 			# Build a new queryset with the single request
 			qs = qs.apply_filter(arg)
@@ -369,10 +369,10 @@ class QuerySet(auto_prefetch.QuerySet):
 	def foreignkey_exists(self, attribute_name: str) -> Self:
 		"""
 		Filters this queryset to only include objects that have a non-null foreign key.
-		
+
 		Args:
 			attribute_name (str): The name of the attribute to check
-			
+
 		Returns:
 			QuerySet: A filtered copy of this queryset
 
@@ -381,7 +381,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			<QuerySet [<Case: Case 1>, <Case: Case 2>, <Case: Case 3>]>
 		"""
 		return self.filter(**{f'{attribute_name}__isnull': False})
-	
+
 	def summarize_x_by_average_y(self, x_field_name: str, y_field_name: str) -> dict[str, float]:
 		'''
 		Summarizes the values of a given field. This is used to summarize the values of a field in a queryset.
@@ -401,13 +401,9 @@ class QuerySet(auto_prefetch.QuerySet):
 			>>> Case.objects.summarize_x_by_average_y('status', 'processing_time')
 			{ 'open': 1.5, 'closed': 2.0 }
 		'''
-		summary_data = (
-			self.values(x_field_name)
-			.annotate(count=Avg(y_field_name))
-			.order_by(x_field_name)
-		)
+		summary_data = (self.values(x_field_name).annotate(count=Avg(y_field_name)).order_by(x_field_name))
 		return {result[x_field_name]: result['count'] for result in summary_data}
-	
+
 	def summarize_x_by_sum_y(self, x_field_name: str, y_field_name: str) -> dict[str, float]:
 		'''
 		Summarizes the values of a given field. This is used to summarize the values of a field in a queryset.
@@ -427,13 +423,9 @@ class QuerySet(auto_prefetch.QuerySet):
 			>>> Case.objects.summarize_x_by_sum_y('status', 'processing_time')
 			{ 'open': 3.0, 'closed': 2.5 }
 		'''
-		summary_data = (
-			self.values(x_field_name)
-			.annotate(count=Sum(y_field_name))
-			.order_by(x_field_name)
-		)
+		summary_data = (self.values(x_field_name).annotate(count=Sum(y_field_name)).order_by(x_field_name))
 		return {result[x_field_name]: result['count'] for result in summary_data}
-	
+
 	def summarize_x_by_high_y(self, x_field_name: str, y_field_name: str) -> dict[str, int]:
 		'''
 		Summarizes the values of a given field. This is used to summarize the values of a field in a queryset.
@@ -454,13 +446,10 @@ class QuerySet(auto_prefetch.QuerySet):
 			>>> Case.objects.summarize_x_by_high_y('status', 'processing_time')
 			{ 'open': 2, 'closed': 5 }
 		'''
-		summary_data = (
-			self.values(x_field_name)
-			.annotate(count=Count(y_field_name, filter=Q(**{f"{y_field_name}__gt": Avg(y_field_name)})))
-			.order_by(x_field_name))
-		
+		summary_data = (self.values(x_field_name).annotate(count=Count(y_field_name, filter=Q(**{f"{y_field_name}__gt": Avg(y_field_name)}))).order_by(x_field_name))
+
 		return {result[x_field_name]: result['count'] for result in summary_data}
-	
+
 	def summarize_x_by_low_y(self, x_field_name: str, y_field_name: str) -> dict[str, int]:
 		'''
 		Summarizes the values of a given field. This is used to summarize the values of a field in a queryset.
@@ -480,14 +469,11 @@ class QuerySet(auto_prefetch.QuerySet):
 			>>> Case.objects.summarize_x_by_low_y('status', 'processing_time')
 			{ 'open': 1, 'closed': 3 }
 		'''
-		summary_data = (
-			self.values(x_field_name)
-			.annotate(count=Count(y_field_name, filter=Q(**{f"{y_field_name}__lt": Avg(y_field_name)})))
-			.order_by(x_field_name))
-		
+		summary_data = (self.values(x_field_name).annotate(count=Count(y_field_name, filter=Q(**{f"{y_field_name}__lt": Avg(y_field_name)}))).order_by(x_field_name))
+
 		return {result[x_field_name]: result['count'] for result in summary_data}
-	
-	def anomalies_in(self, field_name : str, deviations : int = 2) -> Self:
+
+	def anomalies_in(self, field_name: str, deviations: int = 2) -> Self:
 		'''
 		Finds anomalies in a field. This is used to find anomalies in a field in a queryset.
 		For example, if we have a queryset of cases, we get a list of anomalies in the processing time field.
@@ -513,7 +499,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the anomalies (2 standard deviations above the average)
 		return self.filter(**{f"{field_name}__gt": avg + deviations * std})
 
-	def summarize_distribution(self, field_name : str, bins : int = 10) -> dict[int, int]:
+	def summarize_distribution(self, field_name: str, bins: int = 10) -> dict[int, int]:
 		'''
 		Summarizes the distribution of a field. This is used to summarize the distribution of a field in a queryset.
 		For example, if we have a queryset of cases, we get a list of the distribution of the processing time field.
@@ -537,17 +523,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		max = self.aggregate(Max(field_name))[f"{field_name}__max"]
 
 		# Get the distribution
-		distribution = (
-			self.values(field_name)
-			.annotate(bin=ExpressionWrapper(F(field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins))
-			.values("bin")
-			.annotate(count=Count("bin"))
-			.order_by("bin")
-		)
+		distribution = (self.values(field_name).annotate(bin=ExpressionWrapper(F(field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins)).values("bin").annotate(count=Count("bin")).order_by("bin"))
 
 		return {result["bin"]: result["count"] for result in distribution}
-	
-	def summarize_x_by_y_distribution(self, x_field_name : str, y_field_name : str, bins : int = 10) -> dict[str, dict[int, int]]:
+
+	def summarize_x_by_y_distribution(self, x_field_name: str, y_field_name: str, bins: int = 10) -> dict[str, dict[int, int]]:
 		'''
 		Summarizes the distribution of a field by another field. This is used to summarize the distribution of a field in a queryset by another field.
 		For example, if we have a queryset of cases, we get a list of the distribution of the processing time field by status.
@@ -572,13 +552,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		max = self.aggregate(Max(y_field_name))[f"{y_field_name}__max"]
 
 		# Get the distribution
-		distribution = (
-			self.values(x_field_name, y_field_name)
-			.annotate(bin=ExpressionWrapper(F(y_field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins))
-			.values(x_field_name, "bin")
-			.annotate(count=Count("bin"))
-			.order_by(x_field_name, "bin")
-		)
+		distribution = (self.values(x_field_name, y_field_name).annotate(bin=ExpressionWrapper(F(y_field_name) - min, output_field=fields.IntegerField()) // ((max - min) // bins)).values(x_field_name,
+																																														   "bin").annotate(count=Count("bin")).order_by(x_field_name, "bin"))
 
 		# Convert the distribution to a dictionary
 		distribution_dict = {}
@@ -593,7 +568,7 @@ class QuerySet(auto_prefetch.QuerySet):
 	def count_unique(self, field_name: str) -> int:
 		"""
 		Counts the number of unique values in a field.
-		
+
 		Args:
 			field_name (str): The name of the field to count the unique values of
 
@@ -607,13 +582,12 @@ class QuerySet(auto_prefetch.QuerySet):
 		unique_count = self.aggregate(unique_count=Count(field_name, distinct=True))['unique_count']
 		return unique_count
 
-
-	def count_x_by_unique_y(self, field_name_x: str, field_name_y : str) -> dict[str, int]:
+	def count_x_by_unique_y(self, field_name_x: str, field_name_y: str) -> dict[str, int]:
 		"""
 		Counts entries in groups of X, only including those which have a unique Y.
 
 		For example: Count the number of cases that have a unique location, grouped by status.
-		
+
 		Args:
 			field_name_x (str): The name of the field to summarize (or group by)
 			field_name_y (str): The name of the field to find unique values for.
@@ -634,12 +608,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Convert the counts to a dictionary
 		return {result[field_name_x]: result['count'] for result in counts}
 
-
 	def median(self, field_name: str) -> float | None:
 		"""
 		Get the median value of a field.
 
-		The median represents the middle value of the field. 
+		The median represents the middle value of the field.
 		If there are an even number of entries, the median is the average of the two middle values.
 
 		Args:
@@ -658,21 +631,16 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		median_index = row_count // 2
 		if row_count % 2 == 1:
-			median_value = self.order_by(field_name).values_list(
-				field_name, flat=True)[median_index]
+			median_value = self.order_by(field_name).values_list(field_name, flat=True)[median_index]
 		else:
-			median_value = (
-				self.order_by(field_name)
-				.values_list(field_name, flat=True)[median_index - 1: median_index + 1]
-				.aggregate(median_value=Avg(ExpressionWrapper(F(field_name), output_field=FloatField())))["median_value"]
-			)
+			median_value = (self.order_by(field_name).values_list(field_name, flat=True)[median_index - 1:median_index + 1].aggregate(median_value=Avg(ExpressionWrapper(F(field_name), output_field=FloatField())))["median_value"])
 		return median_value
-	
-	def filter_median(self, field_name: str, deviation : int = 0) -> Self:
+
+	def filter_median(self, field_name: str, deviation: int = 0) -> Self:
 		"""
 		Filter the queryset to only include entries that are the median value of the field.
 
-		The median represents the middle value of the field. 
+		The median represents the middle value of the field.
 		If there are an even number of entries, the median is the average of the two middle values.
 
 		Args:
@@ -727,11 +695,10 @@ class QuerySet(auto_prefetch.QuerySet):
 			return None
 
 		percentile_index = int(row_count * percentile)
-		percentile_value = self.order_by(field_name).values_list(
-			field_name, flat=True)[percentile_index]
+		percentile_value = self.order_by(field_name).values_list(field_name, flat=True)[percentile_index]
 		return percentile_value
-	
-	def filter_percentile(self, field_name: str, percentile: float, deviation : int = 0) -> Self:
+
+	def filter_percentile(self, field_name: str, percentile: float, deviation: int = 0) -> Self:
 		"""
 		Filter the queryset to only include entries that are the percentile value of the field.
 
@@ -767,7 +734,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		return self.filter(**{f"{field_name}__gte": result - (standard_deviation * deviation), f"{field_name}__lte": result + (standard_deviation * deviation)})
-	
+
 	def mode(self, field_name: str) -> float:
 		"""
 		Get the mode value of a field.
@@ -790,8 +757,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the value with the highest count
 		mode_value = max(value_counts, key=lambda result: result['count'])[field_name]
 		return mode_value
-	
-	def filter_mode(self, field_name: str, deviation : int = 0) -> Self:
+
+	def filter_mode(self, field_name: str, deviation: int = 0) -> Self:
 		"""
 		Filter the queryset to only include entries that are the mode value of the field.
 
@@ -823,7 +790,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		return self.filter(**{f"{field_name}__gte": mode - (standard_deviation * deviation), f"{field_name}__lte": mode + (standard_deviation * deviation)})
-	
+
 	def mean(self, field_name: str) -> float:
 		"""
 		Get the mean (average) of a field.
@@ -840,8 +807,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		"""
 		mean = self.aggregate(mean=Avg(field_name))['mean']
 		return mean
-	
-	def filter_mean(self, field_name: str, deviation : int = 0) -> Self:
+
+	def filter_mean(self, field_name: str, deviation: int = 0) -> Self:
 		"""
 		Filter the queryset to only include entries that are the mean (average) value of the field.
 
@@ -871,7 +838,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		return self.filter(**{f"{field_name}__gte": mean - (standard_deviation * deviation), f"{field_name}__lte": mean + (standard_deviation * deviation)})
-	
+
 	def mean_nonzero(self, field_name: str) -> float:
 		"""
 		Get the mean (average) of a field, ignoring zero values.
@@ -888,8 +855,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		"""
 		mean = self.exclude(**{field_name: 0}).aggregate(mean=Avg(field_name))['mean']
 		return mean
-	
-	def filter_mean_nonzero(self, field_name: str, deviation : int = 0) -> Self:
+
+	def filter_mean_nonzero(self, field_name: str, deviation: int = 0) -> Self:
 		"""
 		Filter the queryset to only include entries that are the mean value of the field, ignoring zero values.
 
@@ -919,7 +886,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		return self.filter(**{f"{field_name}__gte": mean - (standard_deviation * deviation), f"{field_name}__lte": mean + (standard_deviation * deviation)})
-	
+
 	def variance(self, field_name: str) -> float:
 		"""
 		Get the variance of a field.
@@ -944,7 +911,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		mean = self.aggregate(mean=Avg(field_name))['mean']
 
 		# Get the variance
-		variance = self.aggregate(variance=Avg((F(field_name) - mean) ** 2))['variance']
+		variance = self.aggregate(variance=Avg((F(field_name) - mean)**2))['variance']
 		return variance
 
 	def standard_deviation(self, field_name: str) -> float:
@@ -967,7 +934,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the standard deviation
 		standard_deviation = sqrt(variance)
 		return standard_deviation
-	
+
 	def covariance(self, field_name_x: str, field_name_y: str) -> float:
 		"""
 		Get the covariance of two fields.
@@ -997,13 +964,13 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the covariance
 		covariance = self.aggregate(covariance=Avg((F(field_name_x) - mean_x) * (F(field_name_y) - mean_y)))['covariance']
 		return covariance
-	
+
 	def correlation(self, field_name_x: str, field_name_y: str) -> float:
 		"""
 		Get the correlation of two fields.
 
-		The correlation represents how strongly two fields are related. 
-		
+		The correlation represents how strongly two fields are related.
+
 		A higher correlation means that the two fields are more strongly related.
 		A lower correlation means that the two fields are less strongly related.
 
@@ -1027,7 +994,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the correlation
 		correlation = self.covariance(field_name_x, field_name_y) / (standard_deviation_x * standard_deviation_y)
 		return correlation
-	
+
 	def find_correlated_fields(self, field_name: str, threshold: float = 0.5) -> List[str]:
 		"""
 		Find the fields that are correlated with a given field.
@@ -1052,7 +1019,7 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		# Return the names of the correlated fields
 		return [field_name for field_name, _correlation in correlations]
-	
+
 	def linear_regression(self, field_name_x: str, field_name_y: str) -> Tuple[float, float]:
 		"""
 		Get the linear regression of two fields.
@@ -1066,14 +1033,14 @@ class QuerySet(auto_prefetch.QuerySet):
 			Predicting the processing time of a case given the number of cases in the queue
 			Predicting an employee's income given the number of years they have been employed
 			Predicting the time it will take to complete all remaining cases given the number of cases completed so far
-		
+
 		Args:
 			field_name_x (str): The name of the first field to get the linear regression of
 			field_name_y (str): The name of the second field to get the linear regression of
-			
+
 		Returns:
 			Tuple[float, float]: The linear regression of the two fields
-			
+
 		Example:
 			>>> Case.objects.linear_regression('processing_time', 'processing_time')
 			(0.0, 1.0)
@@ -1093,7 +1060,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		slope = correlation * (standard_deviation_y / standard_deviation_x)
 		intercept = mean_y - (slope * mean_x)
 		return slope, intercept
-	
+
 	def linear_regression_prediction(self, field_name_x: str, field_name_y: str, x: float) -> float:
 		"""
 		Get the linear regression prediction of two fields.
@@ -1104,15 +1071,15 @@ class QuerySet(auto_prefetch.QuerySet):
 			Predicting the processing time of a case given the number of cases in the queue
 			Predicting an employee's income given the number of years they have been employed
 			Predicting the time it will take to complete all remaining cases given the number of cases completed so far
-		
+
 		Args:
 			field_name_x (str): The name of the first field to get the linear regression prediction of
 			field_name_y (str): The name of the second field to get the linear regression prediction of
 			x (float): The value to predict
-			
+
 		Returns:
 			float: The linear regression prediction of the two fields
-			
+
 		Example:
 			>>> Case.objects.linear_regression_prediction('processing_time', 'processing_time', 1.0)
 			1.0
@@ -1123,21 +1090,21 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the linear regression prediction
 		y = (slope * x) + intercept
 		return y
-	
-	def linear_regression_residuals(self, field_name_x: str, field_name_y : str) -> List[float]:
+
+	def linear_regression_residuals(self, field_name_x: str, field_name_y: str) -> List[float]:
 		"""
 		Get the linear regression residuals of two fields.
 
-		The linear regression residuals are the difference between the actual value and the predicted value. 
+		The linear regression residuals are the difference between the actual value and the predicted value.
 		They are useful for determining the accuracy of the linear regression.
-		
+
 		Args:
 			field_name_x (str): The name of the first field to get the linear regression residuals of
 			field_name_y (str): The name of the second field to get the linear regression residuals of
-			
+
 		Returns:
 			List[float]: The linear regression residuals of the two fields
-			
+
 		Example:
 			>>> Case.objects.linear_regression_residuals('processing_time', 'processing_time')
 			[0.0, 0.0, 0.0, 0.0, 0.0]
@@ -1150,20 +1117,20 @@ class QuerySet(auto_prefetch.QuerySet):
 		for entry in self:
 			residuals.append(entry[field_name_y] - ((slope * entry[field_name_x]) + intercept))
 		return residuals
-	
+
 	def linear_regression_deviation(self, field_name_x: str, field_name_y: str) -> float:
 		"""
 		Get the standard deviation of the linear regression residuals of two fields.
 
 		The standard deviation of the linear regression residuals is useful for determining the overall accuracy of the linear regression.
-		
+
 		Args:
 			field_name_x (str): The name of the first field to use in the linear regression
 			field_name_y (str): The name of the second field to use in the linear regression
-			
+
 		Returns:
 			float: The standard deviation of the linear regression residuals of the two fields
-			
+
 		Example:
 			>>> Case.objects.linear_regression_deviation('processing_time', 'processing_time')
 			0.0
@@ -1181,10 +1148,10 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		Args:
 			sample_size (int): The size of the sample
-			
+
 		Returns:
 			Self: The random sample of the entries
-			
+
 		Example:
 			>>> Case.objects.random_sample(5)
 			[<Case: Case object (1)>, <Case: Case object (2)>, <Case: Case object (3)>, <Case: Case object (4)>, <Case: Case object (5)>]
@@ -1192,18 +1159,18 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Get the random sample
 		entries = self.order_by('?')[:sample_size]
 		return entries
-	
-	def search(self, search_term : str, fields : Optional[List[str]] = None) -> Self:
+
+	def search(self, search_term: str, fields: Optional[List[str]] = None) -> Self:
 		"""
 		Get the entries that match the search term.
 
 		Args:
 			search_term (str): The search term to filter by
 			fields (List[str]): The fields to search
-			
+
 		Returns:
 			Self: The entries that match the search term
-			
+
 		Example:
 			>>> Case.objects.filter_by_search('search term')
 			[<Case: Case object (1)>, <Case: Case object (2)>, <Case: Case object (3)>, <Case: Case object (4)>, <Case: Case object (5)>]
@@ -1216,7 +1183,7 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		entries = self.filter(Q(**{'{}__icontains'.format(field): search_term}) for field in fields)
 		return entries
-	
+
 	def annotate_duration(self, start_field: str, end_field: str, alias: str = 'duration') -> Self:
 		"""
 		Annotate the entries with the duration between two fields.
@@ -1225,10 +1192,10 @@ class QuerySet(auto_prefetch.QuerySet):
 			start_field (str): The name of the start field
 			end_field (str): The name of the end field
 			alias (str): The name of the alias, defaults to 'duration'
-			
+
 		Returns:
 			Self: The annotated entries
-			
+
 		Example:
 			>>> Case.objects.annotate_duration('start_time', 'end_time', 'duration')
 			[<Case: Case object (1)>, <Case: Case object (2)>, <Case: Case object (3)>, <Case: Case object (4)>, <Case: Case object (5)>]
@@ -1236,7 +1203,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		# Annotate the entries with the duration between two fields
 		entries = self.annotate(**{alias: F(end_field) - F(start_field)})
 		return entries
-	
+
 	def date_range(self, start_date: datetime, end_date: datetime, date_field: str) -> Self:
 		"""
 		Get the entries within a date range.
@@ -1245,17 +1212,16 @@ class QuerySet(auto_prefetch.QuerySet):
 			start_date (datetime): The start date
 			end_date (datetime): The end date
 			date_field (str): The name of the date field
-			
+
 		Returns:
 			Self: The entries within the date range
-			
+
 		Example:
 			>>> Case.objects.date_range(datetime(2020, 1, 1), datetime(2020, 1, 31), 'date')
 			[<Case: Case object (1)>, <Case: Case object (2)>, <Case: Case object (3)>, <Case: Case object (4)>, <Case: Case object (5)>]
 		"""
 		# Get the entries within a date range
-		entries = self.filter(
-			**{'{}__range'.format(date_field): [start_date, end_date]})
+		entries = self.filter(**{'{}__range'.format(date_field): [start_date, end_date]})
 		return entries
 
 	def rolling_mean(self, field_name: str, window: int) -> List[float]:
@@ -1265,11 +1231,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		The rolling mean represents the average of the last n values, where n is the window size.
 
 		It is useful for smoothing out the data and removing noise.
-		
+
 		Args:
 			field_name (str): The name of the field
 			window (int): The size of the window
-			
+
 		Returns:
 			List[float]: The rolling mean of the field
 		"""
@@ -1279,11 +1245,11 @@ class QuerySet(auto_prefetch.QuerySet):
 	def exponential_smoothing(self, field_name: str, alpha: float) -> List[float]:
 		"""
 		Get the exponential smoothing of a field.
-		
+
 		Args:
 			field_name (str): The name of the field
 			alpha (float): The smoothing factor
-			
+
 		Returns:
 			List[float]: The exponential smoothing of the field
 		"""
@@ -1297,11 +1263,11 @@ class QuerySet(auto_prefetch.QuerySet):
 		The seasonal decomposition represents the trend, seasonal, and residual components of the data.
 
 		It is useful for identifying the trend, seasonality, and noise in the data.
-		
+
 		Args:
 			field_name (str): The name of the field
 			freq (int): The frequency of the data
-			
+
 		Returns:
 			Tuple[List[float], List[float], List[float]]: The trend, seasonal, and residual components
 		"""
@@ -1316,18 +1282,18 @@ class QuerySet(auto_prefetch.QuerySet):
 		The autocorrelation represents the correlation between the field and a lagged version of itself.
 		It is useful for identifying the strength of the relationship between the field and a lagged version of itself.
 
-		The autocorrelation is a range between -1 and 1, where: 
-			1 is a perfect positive correlation, 
+		The autocorrelation is a range between -1 and 1, where:
+			1 is a perfect positive correlation,
 			0 is no correlation
 			-1 is a perfect negative correlation.
-		
+
 		Args:
 			field_name (str): The name of the field
 			lag (int): The lag
-			
+
 		Returns:
 			float: The autocorrelation of the field
-			
+
 		Example:
 			>>> Case.objects.autocorrelation('field', 1)
 			0.5
@@ -1340,18 +1306,18 @@ class QuerySet(auto_prefetch.QuerySet):
 		Get the partial autocorrelation of a field.
 
 		The partial autocorrelation differs from the autocorrelation in that it removes the effect of the intermediate lags.
-		It is useful for identifying the strength of the relationship between the field and a lagged version of itself, 
+		It is useful for identifying the strength of the relationship between the field and a lagged version of itself,
 		while controlling for the values of the intermediate lags.
 
 		A sample usecase for a partial autocorrelation would be a case where the data is seasonal, so the autocorrelation would be high for the seasonal lag.
-		
+
 		Args:
 			field_name (str): The name of the field
 			lag (int): The lag
-			
+
 		Returns:
 			float: The partial autocorrelation of the field (TODO)
-		
+
 		Example:
 			>>> Case.objects.partial_autocorrelation('field', 1)
 			0.5
@@ -1363,22 +1329,22 @@ class QuerySet(auto_prefetch.QuerySet):
 	def granger_causality(self, field_name_x: str, field_name_y: str, max_lag: int) -> List[float]:
 		"""
 		Get the granger causality of two fields.
-		
+
 		The granger causality represents the likelihood that the field x causes the field y.
 		It is useful for identifying the likelihood that the field x causes the field y.
 
 		The granger causality is a range between 0 and 1, where:
 			0 is no causality
-			1 is perfect causality. 
-		
+			1 is perfect causality.
+
 		Args:
 			field_name_x (str): The name of the field x
 			field_name_y (str): The name of the field y
 			max_lag (int): The maximum lag
-			
+
 		Returns:
 			List[float]: The granger causality of the two fields
-			
+
 		Example:
 			>>> Case.objects.granger_causality('field_x', 'field_y', 1)
 			[0.5]
@@ -1454,22 +1420,22 @@ class QuerySet(auto_prefetch.QuerySet):
 		lower_bound = q1 - multiplier * iqr
 		upper_bound = q3 + multiplier * iqr
 		return self.filter(**{f"{field_name}__gte": lower_bound, f"{field_name}__lte": upper_bound})
-	
+
 	def filter_anomalies_in(self, field_name: str, method: Union[str, None] = None, z_threshold: float = 2, iqr_multiplier: float = 1.5) -> Self:
 		"""
 		Detect anomalies in a field.
-		
+
 		Anomalies are identified using the z-score and interquartile range (IQR) methods.
-		
+
 		Args:
 			field_name (str): The name of the field
 			method (str): The method to use for detecting anomalies. Can be 'z_score', 'iqr' or None (default)
 			z_threshold (float): The threshold to use for the z-score method
 			iqr_multiplier (float): The multiplier to use for the IQR method
-			
+
 		Returns:
 			QuerySet: The anomalies
-			
+
 		Example:
 			>>> Case.objects.detect_anomalies('field')
 			<QuerySet [<Case: Case object (1)>, <Case: Case object (2)>]>
@@ -1477,41 +1443,41 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		if method == 'z_score':
 			return self.filter(self.get_zscore_Q(field_name, z_threshold))
-		
+
 		if method == 'iqr':
 			return self.filter(self.get_iqr_Q(field_name, iqr_multiplier))
-		
+
 		if method is None:
 			combined_filter = self.get_zscore_Q(field_name, z_threshold) | self.get_iqr_Q(field_name, iqr_multiplier)
 			return self.filter(combined_filter)
-			
+
 		raise ValueError("Invalid method specified. Use 'z_score', 'iqr', or None.")
-	
+
 	def get_zscore_Q(self, field_name: str, z_threshold: float = 2) -> Q:
 		z_scores = self.z_score(field_name)
 		z_score_anomalies = [i for i, z in enumerate(z_scores) if abs(z) > z_threshold]
 		z_score_ids = [self.values_list('id', flat=True)[i] for i in z_score_anomalies]
 		z_score_filter = Q(id__in=z_score_ids)
 		return z_score_filter
-	
+
 	def get_iqr_Q(self, field_name: str, iqr_multiplier: float = 1.5) -> Q:
 		iqr_outliers = self.iqr_outliers(field_name, multiplier=iqr_multiplier)
 		return Q(id__in=iqr_outliers.values_list('id', flat=True))
-	
+
 	def filter_anomalies(self, method: Union[str, None] = None, z_threshold: float = 2, iqr_multiplier: float = 1.5) -> Self:
 		"""
 		Detect anomalies in all fields.
-		
+
 		Anomalies are identified using the z-score and interquartile range (IQR) methods.
-		
+
 		Args:
 			method (str): The method to use for detecting anomalies. Can be 'z_score', 'iqr' or None (default)
 			z_threshold (float): The threshold to use for the z-score method
 			iqr_multiplier (float): The multiplier to use for the IQR method
-			
+
 		Returns:
 			QuerySet: The anomalies
-			
+
 		Example:
 			>>> Case.objects.detect_anomalies()
 			<QuerySet [<Case: Case object (1)>, <Case: Case object (2)>]>

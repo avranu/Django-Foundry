@@ -28,9 +28,9 @@ import auto_prefetch
 # App Imports
 
 class ForeignKey(auto_prefetch.ForeignKey):
-    pass
+	pass
 
 
 class OneToOneField(auto_prefetch.OneToOneField):
-    pass
+	pass
 

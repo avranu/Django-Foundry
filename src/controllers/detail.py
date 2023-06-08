@@ -32,33 +32,12 @@ from controllers.mixins import JSONResponseMixin
 # App Imports
 
 if TYPE_CHECKING:
-    from models.abstract import QuerySet
+    pass
 
 class DetailController(generic.DetailView):
     '''
     Generic controller for providing detail views for django models. All detail views in our application inherit from this.
     '''
-
-    def get_queryset(self) -> QuerySet:
-        """
-        Gets the queryset for the object to view.
-
-        Logs the 'view' once the queryset is retrieved, regardless of dispatch status.
-
-        Returns:
-            QuerySet: The queryset for the object to view
-        """
-        # Log that this user viewed this piece of data.
-        from dashboard.models.actions.action import Action
-        data_type = self.model.__class__.__name__
-        Action.objects.perform_view(
-            data_type   = data_type,
-            data_id     = self.kwargs['pk'],
-            user_id     = self.request.user.id
-        )
-
-        # Return the "normal" queryset our parent would have returned.
-        return super().get_queryset()
 
 class JsonDetailController(JSONResponseMixin, DetailController):
 

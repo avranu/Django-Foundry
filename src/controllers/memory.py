@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: memory.py
 		Project: Django Foundry
 		Created Date: 19 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Thu Apr 20 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 import tracemalloc
@@ -50,7 +50,7 @@ def memory_usage(request):
 		amount = mem_info.rss / (1024 * 1024)  # Convert to MB
 		celery_process_info.append(round(amount, 2))
 		celery_memory_usage += amount
-		
+
 	cpu_usage = psutil.cpu_percent()
 	total_system_memory = psutil.virtual_memory().total / (1024 * 1024)  # Convert to MB
 
@@ -93,7 +93,7 @@ def memory_usage(request):
 				python_processes.append(proc)
 		except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
 			celery_worker_info.append({'name': 'Terminated Python Process', 'memory': 0})
-			
+
 
 	python_process_info = []
 	for process in python_processes:

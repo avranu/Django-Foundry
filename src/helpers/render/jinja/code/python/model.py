@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: model.py
 		Project: Django Foundry
 		Created Date: 09 Apr 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Thu Apr 13 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 from __future__ import annotations
@@ -47,39 +47,39 @@ class ModelHelper(PythonHelper):
 		The name of the table to generate a model for.
 		"""
 		return self._table_name
-	
+
 	@property
 	def database(self) -> str:
 		"""
 		The name of the database to generate a model for.
 		"""
 		return self._database
-	
+
 	@property
 	def schema(self) -> str | None:
 		"""
 		The name of the schema to generate a model for.
 		"""
 		return self._schema
-	
+
 	@property
 	def connection(self):
 		"""
 		The django connection handler for the database to generate a model for.
 		"""
 		return connections[self.database]
-	
+
 	@property
 	def cursor(self) -> CursorWrapper:
 		"""
 		The django connection handler cursor for the database to generate a model for.
 		"""
 		return self.connection.cursor()
-	
+
 	def __init__(self, table_name: str, database: str, schema: Optional[str] = None, app_name: str = 'lib', template_path: str = 'templates/jinja', autoescape: list = [], template_suffix: str = '.py.jinja'):
 		"""
 		Initializes a new instance of the ModelHelper class.
-		
+
 		Args:
 			template_suffix (str): The suffix to use for template files (defaults to ".py.jinja")
 			table_name (str): The name of the table to generate a model for
@@ -92,10 +92,10 @@ class ModelHelper(PythonHelper):
 	def suggest_model_name(self, table_name: Optional[str] = None) -> str:
 		"""
 		Suggest a model name based on the DB table name
-		
+
 		Args:
 			table_name (str): The DB table name
-		
+
 		Returns:
 			str: The suggested model name
 		"""
@@ -108,16 +108,16 @@ class ModelHelper(PythonHelper):
 		if len(result) < 2:
 			logger.warn(f'suggest_model_name too short for {table_name} -> {cleaned_name} -> {result}')
 			return table_name
-		
+
 		return result
 
 	def humanize_table_name(self, table_name : Optional[str] = None) -> str:
 		"""
 		Converts a messy table name to a cleaner, more human-readable format.
-		
+
 		Args:
 			table_name (str): The table name to clean
-		
+
 		Returns:
 			str: The cleaned table name
 		"""
@@ -131,22 +131,22 @@ class ModelHelper(PythonHelper):
 		if not cleaned_name or len(cleaned_name) < 3:
 			logger.warning(f'Could not clean table name: "{table_name}" -> "{cleaned_name}"')
 			return table_name
-		
+
 		# Split into words, and capitalize each word
 		result = re.sub(r'[\s_]+', ' ', cleaned_name).title()
 		if len(result) < 2:
 			logger.warn(f'humanize_name too short for {table_name} -> {cleaned_name} -> {result}')
 			return table_name
 		return result
-	
+
 	@classmethod
 	def remove_duplicate_indexes(cls, indexes: List[IndexInfo]) -> List[IndexInfo]:
 		"""
 		Remove duplicate indexes from the list of indexes.
-		
+
 		Args:
 			indexes (List[IndexInfo]): The list of indexes to filter
-		
+
 		Returns:
 			List[IndexInfo]: The filtered list of indexes
 		"""
@@ -155,14 +155,14 @@ class ModelHelper(PythonHelper):
 			if index not in unique_indexes:
 				unique_indexes.append(index)
 		return unique_indexes
-	
+
 	def get_columns(self, table_name: Optional[str] = None) -> List[ColumnInfo]:
 		"""
 		Get the list of columns for the given table.
-		
+
 		Args:
 			table_name (str): The name of the table to get columns for
-		
+
 		Returns:
 			List[ColumnInfo]: The list of columns for the given table
 		"""
@@ -197,14 +197,14 @@ class ModelHelper(PythonHelper):
 					default=result[4]
 				))
 			return columns
-		
+
 	def get_constraints(self, table_name: Optional[str] = None) -> List[ConstraintInfo]:
 		"""
 		Get the list of constraints for the given table.
-		
+
 		Args:
 			table_name (str): The name of the table to get constraints for
-		
+
 		Returns:
 			List[ConstraintInfo]: The list of constraints for the given table
 		"""
@@ -234,14 +234,14 @@ class ModelHelper(PythonHelper):
 					r_constraint_name=result[5]
 				))
 			return constraints
-		
+
 	def get_indexes(self, table_name: Optional[str] = None) -> List[IndexInfo]:
 		"""
 		Get the list of indexes for the given table.
-		
+
 		Args:
 			table_name (str): The name of the table to get indexes for
-		
+
 		Returns:
 			List[IndexInfo]: The list of indexes for the given table
 		"""
@@ -269,14 +269,14 @@ class ModelHelper(PythonHelper):
 					uniqueness=result[3]
 				))
 			return self.remove_duplicate_indexes(indexes)
-		
+
 	def get_row_count(self, table_name: Optional[str] = None) -> int:
 		"""
 		Get the row count for the given table.
-		
+
 		Args:
 			table_name (str): The name of the table to get the row count for
-		
+
 		Returns:
 			int: The row count for the given table
 		"""
@@ -292,7 +292,7 @@ class ModelHelper(PythonHelper):
 	def render(self, variables: dict, template_name: str = 'model') -> str | None:
 		"""
 		Render a template with the given variables.
-		
+
 		Args:
 			variables (dict): The variables to pass to the template.
 			template_name (str): The name of the template to render (defaults to "model")

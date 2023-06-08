@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'peoplesoft/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
     <!-- Compiled and minified JavaScript -->
@@ -42,7 +42,7 @@
             <div class="nav-wrapper container">
                 <a id="logo-container" href="{% url 'app:homepage' %}" class="brand-logo">Django Foundry</a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="{% url 'peoplesoft:cache.regenerate.index' %}"><i class="material-icons material-symbols-outlined left">receipt_long</i> Sync Data</a></li>
+                    <li><a href="{% url 'app:cache.regenerate.index' %}"><i class="material-icons material-symbols-outlined left">receipt_long</i> Sync Data</a></li>
                 </ul>
 
                 <ul id="nav-mobile" class="sidenav">

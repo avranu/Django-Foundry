@@ -1,20 +1,20 @@
 """
-	
+
 	Metadata:
-	
+
 		File: thefuzz.py
 		Project: Django Foundry
 		Created Date: 26 Mar 2023
 		Author: Jess Mann
 		Email: jess.a.mann@gmail.com
-	
+
 		-----
-	
+
 		Last Modified: Wed May 10 2023
 		Modified By: Jess Mann
-	
+
 		-----
-	
+
 		Copyright (c) 2023 Jess Mann
 """
 
@@ -50,7 +50,7 @@ class TheFuzz(MatchingEngine):
 		# Not a sufficient match.
 		if confidence < required_confidence:
 			return (None, 100 - confidence)
-		
+
 		# Sufficient match!
 		return (matching_key, confidence)
 
@@ -58,7 +58,7 @@ class TheFuzz(MatchingEngine):
 		"""
 		Use the matching engine to determine the confidence that these two strings match.
 
-		For example: 
+		For example:
 			"John Smith" == "John Smith"
 			"John Edward Smith" != "John Smith"
 			"Smith, John" != "John Smith"
@@ -68,7 +68,7 @@ class TheFuzz(MatchingEngine):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
 
@@ -81,7 +81,7 @@ class TheFuzz(MatchingEngine):
 		"""
 		Use the matching engine to determine the confidence that these two strings have a partial match.
 
-		For example: 
+		For example:
 			"John Edward Smith" == "John Smith"
 
 		Args:
@@ -89,10 +89,10 @@ class TheFuzz(MatchingEngine):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
@@ -102,7 +102,7 @@ class TheFuzz(MatchingEngine):
 		"""
 		Use the matching engine to determine the confidence that each token (i.e. string part) of these two strings match.
 
-		For example: 
+		For example:
 			"Smith, John" == "John Smith"
 
 		Args:
@@ -110,10 +110,10 @@ class TheFuzz(MatchingEngine):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""
@@ -131,10 +131,10 @@ class TheFuzz(MatchingEngine):
 				The input to attempt to match
 
 		Returns:
-			int: 
+			int:
 				The confidence that these two strings match.
 			 	1 - 100
-				
+
 				100 means we are certain they match.
 				1 means we are certain they do not match.
 		"""

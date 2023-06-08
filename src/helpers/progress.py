@@ -109,7 +109,7 @@ class ProgressBar(ProgressRecorder):
         '''
         if settings is None:
             settings = {}
-            
+
         # Set our task if we were provided one
         self.task = task
 
