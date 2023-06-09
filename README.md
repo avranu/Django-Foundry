@@ -1,6 +1,6 @@
 # DjangoFoundry
 
-DjangoFoundry is a powerful Python library designed to enhance your Django projects by providing a rich set of tools to facilitate and expedite various aspects of the development process.
+DjangoFoundry is a Python library which intends to expedite various aspects of the development process. 
 
 ## Do I need another framework?
 
