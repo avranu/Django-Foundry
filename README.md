@@ -4,7 +4,7 @@ DjangoFoundry is a powerful Python library designed to enhance your Django proje
 
 ## Do I need another framework?
 
-No. You don't. This is entirely unnecessary for your project, but it includes tools that help me bootstrap my work, so I'm releasing. Feel free to modify it to your needs, or ignore it altogether. 
+No. You don't. This is entirely unnecessary for your project, but it includes tools that help me bootstrap my work, so I'm releasing it. Feel free to modify it to your needs, or ignore this project altogether. 
 
 ## Installation
 
@@ -71,7 +71,7 @@ Scripts are included to start up, monitor, and manage various processes, includi
 python scripts/db.py start
 ```
 
-It also includes an alpha version of a "GPT-4 linter", which scans your python files, sends them to the openai api to ask for feedback, and saves that feedback to a diff file. No embeddings are passed, so this will only be of so much help. An openai api key is needed: place it in scripts/conf/settings.yaml (a sample-settings.yaml is provided to copy)
+It also includes an alpha version of a "GPT-4 linter", which scans your python files, sends them to the openai api to ask for feedback, and saves that feedback to a diff file. No embeddings are passed, so this will only be of so much help. An openai api key is needed: a sample-settings.yaml is provided to copy
 ```python
 python scripts/lint.py --help
 ```
