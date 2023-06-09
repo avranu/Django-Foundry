@@ -77,7 +77,7 @@ python scripts/lint.py --help
 ```
 
 ## About the Author
-DjangoFoundry is developed by Jess Mann. For any queries, suggestions, or feedback, you can reach out at jess.a.mann+df@gmail.com.
+DjangoFoundry is developed by Jess Mann. For any queries, suggestions, or feedback, feel free to reach out.
 
 ## Contributing
 Contributions to DjangoFoundry are always welcome. If you find a bug or have a suggestion for improvement, please open an issue. Pull requests are also welcome.
