@@ -83,4 +83,4 @@ DjangoFoundry is developed by Jess Mann. For any queries, suggestions, or feedba
 Contributions to DjangoFoundry are always welcome. If you find a bug or have a suggestion for improvement, please open an issue. Pull requests are also welcome.
 
 ## License
-DjangoFoundry is released under the BSD 3-Clause License. You can find the full text of the license in the [LICENSE.md] file.
+DjangoFoundry is released under the [LICENSE.md](BSD 3-Clause License). 
