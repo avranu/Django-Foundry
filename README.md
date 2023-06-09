@@ -1,6 +1,6 @@
 # DjangoFoundry
 
-DjangoFoundry is a Python library which intends to expedite various aspects of the development process. 
+DjangoFoundry is a Python library which intends to expedite the development process by creating a few classes your code can inherit from.
 
 ## Do I need another framework?
 
@@ -82,5 +82,18 @@ DjangoFoundry is developed by Jess Mann. For any queries, suggestions, or feedba
 ## Contributing
 Contributions to DjangoFoundry are always welcome. If you find a bug or have a suggestion for improvement, please open an issue. Pull requests are also welcome.
 
+## Testing
+The unit tests work in my environment, but haven't been adapted to work without django. This will be done when I have a moment. 
+
+## TODO
+* Script to bootstrap django/angular project with a single command. 
+* Unit tests should work independent of django env
+* Expand app startup script to check for common env problems
+* requirements.txt and other setup
+* Opinionated dependencies fail gracefully
+* Script to create new controller/url/angular components with a single command
+* Standard pages (memory management, etc)
+* Standard way to tie in jinja generated code into admin ui
+
 ## License
-DjangoFoundry is released under the BSD 3-Clause License. You can find the full text of the license in the [LICENSE.md] file.
+DjangoFoundry is released under the [BSD 3-Clause License](LICENSE.md).
