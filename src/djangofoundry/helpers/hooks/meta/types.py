@@ -20,7 +20,7 @@
 """
 # Generic imports
 from __future__ import annotations
-from src.helpers.hooks.waypoint import Waypoint
+from djangofoundry.helpers.hooks.waypoint import Waypoint
 
 # A type representing { hook_name => Waypoint }
 # Waypoints store a list of registered hooks as well as metadata about the hook waypoint.

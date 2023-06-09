@@ -1,0 +1,254 @@
+Summarized as:
+#Directory
+Class
+	methods
+
+Omitted self/cls params, methods beginning with _
+
+--
+
+#controllers
+JsonDetailController(JSONResponseMixin, DetailController)
+	get(request) JsonResponse
+	render_to_response(context)
+MemoryMonitorView(View)
+	get(request)
+AngularController(GenericController)
+	get_queryset()
+	get(request)
+
+#exceptions
+AppException(Exception)
+	message() str
+	message(value)
+
+#helpers
+ProgressStates(TextChoices)
+	has_started(state) bool
+ProgressBar(ProgressRecorder)
+	meta() dict
+	start() int
+	restart_timer() int
+	restart(total, description)
+	elapsed() int
+	eta()
+	describe() str
+	description() str
+	description(value)
+	pending() bool
+	pending(value)
+	current() int
+	current(value)
+	next(description, advance) int
+	advance(amount, description) int
+	total() int
+	total(value)
+	percent() Decimal
+	state() str
+	state(value)
+	update(current, description, total)
+	set_progress(current, total, description)
+	get_task()
+	refresh_task_state()
+ChildProgressBar
+	parent() ProgressBar
+	total() int
+	total(value)
+	current() int
+	current(value)
+	update(current)
+	description() str
+	description(value)
+
+#helpers.hooks
+Hook
+	executions()
+	can_run() bool
+	run() (bool, Any)
+	force_run() Any
+Hooks
+	run(name, namespace) []
+	register(name, action, namespace, priority, max_executions)
+	get(name, namespace) list[Hook]
+	has_waypoint(name, namespace) bool
+	get_waypoint(name, namespace)
+	get_waypoints(name, namespace) Waypoint[]
+	count(name, namespace) int
+	register_waypoint(name, namespace, positional_arguments, named_arguments, return_type, hooks) Waypoint
+Waypoint
+	run() []
+
+#helpers.queue
+Queue
+	save_deferred() bool
+	save_deferred(value)
+	callback(callback_name) Any
+	defer_save(value)
+	clear() int
+	size() int
+	save() int
+	allow_save() int
+	append(model, defer_save) int
+
+#helpers.render
+TemplateHelper(ABC)
+	app_name() str
+	application() str
+	setup_environment()
+	render(variables, template_name)
+
+#helpers.render.jinja
+TemplateHelper(BaseTemplate)
+	env() Environment
+	setup_environment()
+	render(template_name, variables)
+
+#helpers.render.jinja.code
+CodeHelper(TemplateHelper)
+	suggest_class_name(input) str
+
+#helpers.render.jinja.code.python
+ModelHelper(PythonHelper)
+	table_name() str
+	database() str
+	schema()
+	connection()
+	cursor() CursorWrapper
+	suggest_model_name(table_name) str
+	humanize_table_name(table_name) str
+	remove_duplicate_indexes(indexes) IndexInfo[]
+	get_columns(table_name) ColumnInfo[]
+	get_constraints(table_name) ConstraintInfo[]
+	get_indexes(table_name) IndexInfo[]
+	get_row_count(table_name) int
+	render(variables, template_name)
+
+#helpers.render.meta
+TableInfo(DbInfo)
+	to_dict() dict
+ColumnInfo(DbInfo)
+	get_django_field_type() str
+IndexInfo(DbInfo)
+	add_column(column_name, column_position)
+
+#helpers.encoders
+JSONEncoder
+	default(obj)
+
+#matching
+MatchingEngine(ABC)
+	choose(input_str, choices, required_confidence) tuple[str, int]
+	match(input_str, compare) int
+	partial_match(input_str, compare) int
+	token_match(input_str, compare) int
+	token_partial_match(input_str, compare) int
+
+#matching.fuzzy
+TheFuzz(MatchingEngine)
+	choose(input_str, choices, required_confidence) tuple[str | None, int]
+	match(input_str, compare) int
+	partial_match(input_str, compare) int
+	token_match(input_str, compare) int
+	token_partial_match(input_str, compare) int
+
+#mixins
+DirtyFields(DirtyFieldsMixin)
+	is_dirty(check_relationship, check_m2m) bool
+Hookable
+	hook(name)
+	hook_filter(name, value) Any
+HasParams
+	get_param(name, sanitize, required)
+	get_required_param(name, sanitize) str
+	sanitize_str(value) str
+	sanitize_int(value) int
+	sanitize(value, param_type) T
+JSONResponseMixin
+	render_to_json_response(context)
+	get_data(context)
+
+#models
+TextChoices
+	valid(choice_name) bool
+	invalid(choice_name) bool
+	get_name(choice)
+Model(Hookable)
+	model_name() str
+	save(force_insert, force_update, using, update_fields)
+	presave()
+	to_dict() dict
+	get_related_models()
+	get_field_column(attribute_name) str
+	get_name() str
+	get_plural_name() str
+QuerySet
+	is_evaluated() bool
+	field_is_numeric(field_name) bool
+	latest_value(property_name) Any
+	min(property_name) loat| None
+	max(property_name) loat| None
+	filter_smallest(property_name, margin) Self
+	filter_largest(property_name, margin) Self
+	has_blank(property_name, include_null) Self
+	have_blanks(include_null, number_of_blank_fields) Self
+	total(property_name) loat| int| Decimal
+	request(request_str) elf| RawQuerySet
+	apply_filter(filter_name) elf| RawQuerySet
+	filter_by_related(foreign_key, filter_expression, alias_name) Self
+	foreignkey_exists(attribute_name) Self
+	summarize_x_by_average_y(x_field_name, y_field_name) dict[str, float]
+	summarize_x_by_sum_y(x_field_name, y_field_name) dict[str, float]
+	summarize_x_by_high_y(x_field_name, y_field_name) dict[str, int]
+	summarize_x_by_low_y(x_field_name, y_field_name) dict[str, int]
+	anomalies_in(field_name, deviations) Self
+	summarize_distribution(field_name, bins) dict[int, int]
+	summarize_x_by_y_distribution(x_field_name, y_field_name, bins) dict[str, dict[int, int]]
+	count_unique(field_name) int
+	count_x_by_unique_y(field_name_x, field_name_y) dict[str, int]
+	median(field_name)
+	filter_median(field_name, deviation) Self
+	percentile(field_name, percentile)
+	filter_percentile(field_name, percentile, deviation) Self
+	mode(field_name) float
+	filter_mode(field_name, deviation) Self
+	mean(field_name) float
+	filter_mean(field_name, deviation) Self
+	mean_nonzero(field_name) float
+	filter_mean_nonzero(field_name, deviation) Self
+	variance(field_name) float
+	standard_deviation(field_name) float
+	covariance(field_name_x, field_name_y) float
+	correlation(field_name_x, field_name_y) float
+	find_correlated_fields(field_name, threshold) str[]
+	linear_regression(field_name_x, field_name_y) (float, float)
+	linear_regression_prediction(field_name_x, field_name_y, x) float
+	linear_regression_residuals(field_name_x, field_name_y) float[]
+	linear_regression_deviation(field_name_x, field_name_y) float
+	random_sample(sample_size) Self
+	search(search_term, fields) Self
+	annotate_duration(start_field, end_field, alias) Self
+	date_range(start_date, end_date, date_field) Self
+	rolling_mean(field_name, window) float[]
+	exponential_smoothing(field_name, alpha) float[]
+	seasonal_decomposition(field_name, freq) (List[float], List[float], List[float])
+	autocorrelation(field_name, lag) float
+	partial_autocorrelation(field_name, lag) Any
+	granger_causality(field_name_x, field_name_y, max_lag) float[]
+	cumulative_sum(field_name) float[]
+	z_score(field_name) float[]
+	iqr_outliers(field_name, multiplier) Self
+	filter_anomalies_in(field_name, method, z_threshold, iqr_multiplier) Self
+	get_zscore_Q(field_name, z_threshold) Q
+	get_iqr_Q(field_name, iqr_multiplier) Q
+	filter_anomalies(method, z_threshold, iqr_multiplier) Self
+Serializer
+	get_fieldnames() list
+	get_native_fields() list
+ViewSet(HasParams)
+	apply_filters(queryset) QuerySet
+	get_queryset() QuerySet
+
+#signals
+Signal
+	broadcast(sender)
+

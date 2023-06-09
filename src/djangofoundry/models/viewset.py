@@ -23,7 +23,7 @@ from __future__ import annotations
 # Third party imports
 from rest_framework import viewsets, filters
 # App imports
-from src.mixins import HasParams
+from djangofoundry.mixins import HasParams
 from .queryset import QuerySet
 from .serializer import Serializer
 

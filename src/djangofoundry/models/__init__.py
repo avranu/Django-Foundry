@@ -21,8 +21,8 @@
 """
 # Generic imports
 from .exceptions import DoesNotExist, NotUnique
-from .abstract.queryset import QuerySet
-from .abstract.manager import Manager, PostgresManager
-from .abstract.model import Model
+from .queryset import QuerySet
+from .manager import Manager, PostgresManager
+from .model import Model
 from .choices import TextChoices
 from .fields import *

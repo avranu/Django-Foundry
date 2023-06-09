@@ -1,3 +1,22 @@
+[project]
+name = "djangofoundry"
+version = "0.0.1"
+authors = [
+  { name="Jess Mann", email="jess.a.mann+df@gmail.com" },
+]
+description = "A collection of classes built on Django to make it easier to build web applications."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/avranu/Django-Foundry"
+"Bug Tracker" = "https://github.com/avranu/Django-Foundry/issues"
+
 [tool.pydoctor]
 add-package = ["./src"]
 project-name = "Django Foundry"
@@ -547,3 +566,7 @@ column_limit = 250
 ignore_patterns = [
   "src/scripts/db.py", 
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

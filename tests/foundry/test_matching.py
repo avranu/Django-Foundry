@@ -18,8 +18,8 @@
 		Copyright (c) 2023 Jess Mann
 """
 from django.test import TestCase
-from src.matching.engine import MatchingEngine
-from src.matching.fuzzy import TheFuzz
+from djangofoundry.matching.engine import MatchingEngine
+from djangofoundry.matching.fuzzy import TheFuzz
 
 class TheFuzzTestCase(TestCase):
 	'''

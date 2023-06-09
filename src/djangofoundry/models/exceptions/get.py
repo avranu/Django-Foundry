@@ -19,7 +19,7 @@
 """
 from __future__ import annotations
 from django.core import exceptions
-from src.exceptions import AppException
+from djangofoundry.exceptions import AppException
 
 class DoesNotExist(exceptions.ObjectDoesNotExist, AppException):
 	"""

@@ -21,11 +21,8 @@
 """
 # Generic imports
 from __future__ import annotations
-
 # Django Imports
 from django.db import models
-# Lib Imports
-# App Imports
 
 class TextChoices(models.TextChoices):
 	'''

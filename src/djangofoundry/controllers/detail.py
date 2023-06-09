@@ -27,7 +27,7 @@ from django.core import serializers
 from django.views import generic
 from django.http import JsonResponse, HttpRequest
 # App Imports
-from src.mixins import JSONResponseMixin
+from djangofoundry.mixins import JSONResponseMixin
 
 if TYPE_CHECKING:
 	pass

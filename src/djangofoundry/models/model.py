@@ -32,7 +32,7 @@ import auto_prefetch
 # Lib Imports
 from mixins import Hookable
 # App Imports
-from models.abstract.manager import PostgresManager
+from .manager import PostgresManager
 
 # Set up a logger for this module.
 #
