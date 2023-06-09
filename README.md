@@ -28,6 +28,9 @@ DjangoFoundry includes classes to manage aspects of a Django application, such a
 - Simplified JSON encoding with the JSONEncoder class.
 - Model, queryset, and serializer management for data handling.
 - Readthedocs documentation
+- Finish pylint / prospector cleanup
+- Github actions
+- Easy access to various apis
 
 ## Sample Cases
 
