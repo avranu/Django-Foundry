@@ -23,11 +23,14 @@ from __future__ import annotations
 # Third party imports
 from rest_framework import viewsets, filters
 # App imports
-from mixins import HasParams
+from src.mixins import HasParams
 from .queryset import QuerySet
 from .serializer import Serializer
 
 class ViewSet(HasParams, viewsets.ReadOnlyModelViewSet):
+	"""
+	An abstract viewset class that provides a default implementation for the get_queryset method, and allows for filtering and ordering of the queryset.
+	"""
 	serializer_class = Serializer
 	filter_backends = [filters.OrderingFilter]
 	filterset_fields : list[str] = []

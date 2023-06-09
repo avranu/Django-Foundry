@@ -20,6 +20,7 @@
 from __future__ import annotations
 import logging
 from jinja2 import Environment, PackageLoader, select_autoescape, TemplateNotFound
+from pyparsing import Optional
 from helpers.render.template import TemplateHelper as BaseTemplate
 
 # Set up logging for this module
@@ -32,12 +33,12 @@ class TemplateHelper(BaseTemplate):
 	Attributes:
 		env (Environment): The jinja environment.
 	"""
-	_env: Environment = None
+	_env: Environment
 	template_path: str = 'templates/jinja'
 	template_suffix: str = '.jinja'
 	autoescape: list = ['html', 'xml']
 
-	def __init__(self, app_name: str, template_path: str = 'templates/jinja', autoescape: list = ['html', 'xml'], template_suffix: str = '.jinja'):
+	def __init__(self, app_name: str, template_path: str = 'templates/jinja', autoescape: Optional[list[str]] = None, template_suffix: str = '.jinja'):
 		"""
 		Initialize the code helper.
 
@@ -51,6 +52,9 @@ class TemplateHelper(BaseTemplate):
 		"""
 		if app_name is None:
 			raise ValueError('app_name cannot be None')
+		
+		if autoescape is None:
+			autoescape = ['html', 'xml']
 
 		super().__init__(app_name, template_path, template_suffix)
 

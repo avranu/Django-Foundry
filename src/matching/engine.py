@@ -23,6 +23,9 @@ from typing import Iterable
 
 
 class MatchingEngine(ABC):
+	"""
+	An abstract class that defines the interface for a matching engine.
+	"""
 
 	@abstractmethod
 	def choose( self, input_str : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str, int]:
@@ -59,6 +62,8 @@ class MatchingEngine(ABC):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -80,6 +85,8 @@ class MatchingEngine(ABC):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -101,6 +108,8 @@ class MatchingEngine(ABC):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -122,6 +131,8 @@ class MatchingEngine(ABC):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:

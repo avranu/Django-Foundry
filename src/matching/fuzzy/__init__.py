@@ -17,4 +17,4 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-from matching.fuzzy.thefuzz import TheFuzz
+from .thefuzz import TheFuzz

@@ -71,6 +71,8 @@ class TheFuzz(MatchingEngine):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -92,6 +94,8 @@ class TheFuzz(MatchingEngine):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -113,6 +117,8 @@ class TheFuzz(MatchingEngine):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:
@@ -134,6 +140,8 @@ class TheFuzz(MatchingEngine):
 		Args:
 			input_str (str):
 				The input_str to attempt to match
+			compare (str):
+				The string to compare against
 
 		Returns:
 			int:

@@ -36,6 +36,9 @@ from django.db.models import TextChoices
 # App Imports
 
 class ProgressStates(TextChoices):
+	"""
+	Enum for the possible states of a progress bar.
+	"""
 	PROGRESS = PROGRESS_STATE
 	SUCCESS = 'SUCCESS'
 	FAILURE = 'FAILURE'
@@ -46,7 +49,7 @@ class ProgressStates(TextChoices):
 	STARTED = 'STARTED'
 
 	@classmethod
-	def has_started(cls, state : Self) -> bool:
+	def has_started(cls, state : Self | str) -> bool:
 		'''
 		Checks if the given state is something AFTER "started".
 		'''
@@ -63,7 +66,7 @@ class ProgressBar(ProgressRecorder):
 	TODO: Rewrite the whole ProgressRecorder module for python3
 	'''
 	# Typehint the task. This doesn't change functionality at all, but helps with our IDE
-	task: Task
+	task: Task | None
 	_state: str = 'PENDING'
 	_start_time: int
 	_current: int = 0
@@ -188,7 +191,7 @@ class ProgressBar(ProgressRecorder):
 			Add support for passing in lambda functions for calculating this value
 		'''
 		# Avoid division by 0
-		if self.percent == 0:
+		if not self.percent:
 			return None
 
 		# Calculate ETA. elapsed / 1e9 converts nanoseconds to seconds (by dividing by 1,000,000,000)
@@ -200,8 +203,11 @@ class ProgressBar(ProgressRecorder):
 		return round(result)
 
 	def describe(self) -> str:
+		"""
+		Get the description for this progress bar. If show_eta is True, this will include an ETA.
+		"""
 		# If we've done "enough" work to generate a reasonable ETA, then append it to the description.
-		if self.settings['show_eta'] is True and self.percent >= 0.001 and self.current > 3:
+		if self.settings['show_eta'] is True and self.percent >= 0.001 and self.current > 3 and self.eta:
 			return f'{self.description}. ETA {humanize.naturaldelta(timedelta(seconds=self.eta))}'
 
 		# Otherwise, just return a plain description
@@ -332,8 +338,8 @@ class ProgressBar(ProgressRecorder):
 		The percent complete. Default 0
 		'''
 		# Avoid division by 0
-		if self.total == 0:
-			return 0
+		if not self.total:
+			return Decimal('0.0')
 
 		# Always calculate it
 		percent = (self.current / self.total) * 100
@@ -373,7 +379,7 @@ class ProgressBar(ProgressRecorder):
 		# Return the same thing as our parent
 		return self.state, self.meta
 
-	def get_task(self) -> Task:
+	def get_task(self) -> Task | None:
 		'''
 		Get the task object
 		'''

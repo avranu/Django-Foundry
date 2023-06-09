@@ -18,18 +18,21 @@
 		Copyright (c) 2023 Jess Mann
 """
 from django.test import TestCase
-from matching.engine import MatchingEngine
-from matching.fuzzy import TheFuzz
+from src.matching.engine import MatchingEngine
+from src.matching.fuzzy import TheFuzz
 
 class TheFuzzTestCase(TestCase):
+	'''
+	Tests the TheFuzz class
+	'''
 
 	def setUp(self):
 		self.fuzz = TheFuzz()
 
 	def test_find_best_match(self):
-		input = "apple"
+		input_str = "apple"
 		choices = ["apple", "banana", "orange"]
-		result = self.fuzz.choose(input, choices)
+		result = self.fuzz.choose(input_str, choices)
 		self.assertEqual(result, ('apple', 100))
 
 	def test_exact_match_ratio(self):
@@ -56,8 +59,10 @@ class TheFuzzTestCase(TestCase):
 		result = self.fuzz.token_partial_match(input1, input2)
 		self.assertEqual(result, 100)
 
-class TestMyMatchingEngine(TestCase):
-
+class TestMatchingEngine(TestCase):
+	'''
+	Tests the MatchingEngine class
+	'''
 	def setUp(self):
 		self.matching_engine: MatchingEngine = TheFuzz()
 

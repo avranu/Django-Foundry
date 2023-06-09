@@ -21,14 +21,19 @@
 """
 # Generic imports
 from __future__ import annotations
+from typing import Any
 # Django imports
 from django.db import models
 from django.db.models import Func
+from django.db.models.expressions import Combinable
 # 3rd Party imports
 from psqlextra import fields
 import picklefield.fields
 
 class HStoreField(fields.HStoreField):
+	"""
+	An HStoreField that uses the psqlextra library.
+	"""
 	pass
 
 class JSONField(models.JSONField):
@@ -51,10 +56,16 @@ class JSONField(models.JSONField):
 	'''
 
 class JsonFloatValues(Func):
+	"""
+	Extracts the values from a JSON object and casts them to floats.
+	"""
 	function = 'jsonb_each_text'
 
 	def __init__(self, expression, **extra):
 		super().__init__(expression, output_field=models.FloatField(), **extra)
 
 class PickledObjectField(picklefield.fields.PickledObjectField):
+	"""
+	A PickledObjectField that uses the picklefield library.
+	"""
 	pass

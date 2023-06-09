@@ -43,7 +43,7 @@ class OneCharField(CharField):
 		if max_length > 1:
 			raise ValueError(f'Trying to initialize a single character field with a length of {max_length}')
 
-		return super().__init__(max_length=max_length, **kwargs)
+		super().__init__(max_length=max_length, **kwargs)
 
 
 class RowIdField(CharField):
@@ -56,7 +56,7 @@ class RowIdField(CharField):
 				 editable   : bool = False,
 				 **kwargs):
 		# Call the parent init function first
-		return super().__init__(max_length  = max_length,
+		super().__init__(max_length  = max_length,
 								map_field   = map_field,
 								unique	  = unique,
 								null		= null,
@@ -80,7 +80,7 @@ class GuidField(CharField):
 		Redefine init to only accept named args
 		'''
 		# Call the parent init function first
-		return super().__init__(max_length  = max_length,
+		super().__init__(max_length  = max_length,
 								map_field   = map_field,
 								unique	  = unique,
 								null		= null,

@@ -24,13 +24,15 @@ from __future__ import annotations
 
 # Django Imports
 import auto_prefetch
-# Lib Imports
 # App Imports
 
 class ForeignKey(auto_prefetch.ForeignKey):
-	pass
+	"""
+	A ForeignKey that uses the auto_prefetch library.
+	"""
 
 
 class OneToOneField(auto_prefetch.OneToOneField):
-	pass
-
+	"""
+	A OneToOneField that uses the auto_prefetch library.
+	"""

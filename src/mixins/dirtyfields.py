@@ -50,4 +50,3 @@ class DirtyFields(DirtyFieldsMixin):
 
 		# Outsource the work to our parent implementation. We only wanted to change the defaults.
 		return super().is_dirty(check_relationship=check_relationship, check_m2m=check_m2m)
-

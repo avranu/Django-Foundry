@@ -24,7 +24,7 @@
 # Generic imports
 from __future__ import annotations
 from typing import Any, Callable, Iterable, Optional
-from .meta import WaypointMap, NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from .meta import NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
 from .hook import Hook
 from .waypoint import Waypoint
 
@@ -249,12 +249,17 @@ class Hooks:
 			name : str,
 			namespace : str = DEFAULT_NAMESPACE,
 			positional_arguments : int = 0,
-	 		named_arguments : list[str] = [],
+	 		named_arguments : Optional[list[str]] = None,
 		 	return_type : Any = Any,
-		  	hooks : list[Hook] = []) -> Waypoint:
+		  	hooks : Optional[list[Hook]] = None) -> Waypoint:
 		"""
 		Creates and registers a new waypoint.
   		"""
+		if named_arguments is None:
+			named_arguments = []
+		if hooks is None:
+			hooks = []
+
 		# Make sure one doesn't exist first.
 		if cls.has_waypoint(name=name, namespace=namespace):
 			raise ValueError(f'Waypoint already exists at {namespace}.{name}')

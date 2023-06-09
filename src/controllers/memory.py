@@ -24,16 +24,21 @@ from django.shortcuts import render
 import psutil
 
 class MemoryMonitorView(View):
+	"""
+	Display the current memory usage of the application
+	"""
 	template_name = 'memory.html'
 
 	def get(self, request, *args, **kwargs):
 		return render(request, self.template_name)
 
-
 def memory_usage(request):
+	"""
+	Return the current memory usage of the application
+	"""
 	process = psutil.Process()
 	mem_info = process.memory_info()
-	memory_usage = mem_info.rss / (1024 * 1024)  # Convert to MB
+	total_memory_usage = mem_info.rss / (1024 * 1024)  # Convert to MB
 
 	celery_processes = []
 	for proc in psutil.process_iter():
@@ -82,7 +87,7 @@ def memory_usage(request):
 			except IndexError:
 				pass
 			celery_worker_info.append({'name': task_name, 'memory': round(worker_memory, 2)})
-		except psutil.NoSuchProcess as e:
+		except psutil.NoSuchProcess:
 			celery_worker_info.append({'name': 'Terminated Worker', 'memory': 0})
 
 	# Get memory usage of Python processes
@@ -108,7 +113,7 @@ def memory_usage(request):
 	memory_percent = psutil.virtual_memory().percent
 
 	return JsonResponse({
-		'memory_usage': round(memory_usage, 2),
+		'memory_usage': round(total_memory_usage, 2),
 		'celery': round(celery_memory_usage, 2),
 		'celery_tasks': celery_process_info,
 		'cpu_usage': round(cpu_usage, 2),

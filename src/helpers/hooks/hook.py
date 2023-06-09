@@ -20,8 +20,7 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import Any, Callable, Iterable, Optional, Tuple
-from helpers.hooks.exceptions import MaxExecutionsError
+from typing import Any, Callable, Tuple
 from helpers.hooks.meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
 
 class Hook:
@@ -72,7 +71,7 @@ class Hook:
 		self.priority = priority
 
 		# Sanity checking
-		if max_executions == 0:
+		if not max_executions:
 			raise ValueError('Hook created with 0 maximum executions, so will never run.')
 
 	def can_run(self) -> bool:

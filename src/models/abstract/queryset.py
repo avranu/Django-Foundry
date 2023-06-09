@@ -24,12 +24,11 @@ from __future__ import annotations
 from decimal import Decimal
 from functools import reduce
 import operator
-from typing import List, Tuple, Union, Callable, Any, Iterable, Optional
+from typing import List, Tuple, Union, Callable, Any, Optional
 from datetime import datetime
 from math import sqrt
 from time import perf_counter_ns
 import logging
-from numbers import Number, Real
 from typing_extensions import Self
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import grangercausalitytests
@@ -37,12 +36,10 @@ from scipy import stats
 import pandas as pd
 import numpy as np
 # Django Imports
-from django.db import models
 from django.db.models import Sum, Count, Q, Avg, Min, Max, StdDev, ExpressionWrapper, fields, F, FloatField
 from django.db.models.query import RawQuerySet
 # Django extensions
 import auto_prefetch
-# Lib Imports
 # App Imports
 
 #
@@ -116,7 +113,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		]
 		attr = getattr(self.model, field_name)
 
-		return any([isinstance(attr, field) for field in numeric_fields])
+		return any(isinstance(attr, field) for field in numeric_fields)
 
 	def latest_value(self, property_name: str) -> Any:
 		'''
@@ -155,11 +152,9 @@ class QuerySet(auto_prefetch.QuerySet):
 		try:
 			return self.aggregate(Min(property_name))[f'{property_name}__min']
 
-		except Exception as e:
+		except Exception as _e:
 			logger.debug(f"No result found for min {property_name}")
 			return None
-
-	from typing import Union
 
 	def max(self, property_name: str) -> Union[float, None]:
 		'''
@@ -626,7 +621,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			1.5
 		"""
 		row_count = self.count()
-		if row_count == 0:
+		if not row_count:
 			return None
 
 		median_index = row_count // 2
@@ -660,7 +655,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		# If deviation is 0, we can skip calculating the deviation
-		if deviation == 0:
+		if not deviation:
 			return self.filter(**{field_name: median})
 
 		standard_deviation = self.standard_deviation(field_name)
@@ -691,7 +686,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			1.5
 		"""
 		row_count = self.count()
-		if row_count == 0:
+		if not row_count:
 			return None
 
 		percentile_index = int(row_count * percentile)
@@ -725,7 +720,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		# If deviation is 0, we can skip calculating the deviation
-		if deviation == 0:
+		if not deviation:
 			return self.filter(**{field_name: result})
 
 		standard_deviation = self.standard_deviation(field_name)
@@ -781,7 +776,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		# If deviation is 0, we can skip calculating the deviation
-		if deviation == 0:
+		if not deviation:
 			return self.filter(**{field_name: mode})
 
 		standard_deviation = self.standard_deviation(field_name)
@@ -829,7 +824,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		# If deviation is 0, we can skip calculating the deviation
-		if deviation == 0:
+		if not deviation:
 			return self.filter(**{field_name: mean})
 
 		standard_deviation = self.standard_deviation(field_name)
@@ -877,7 +872,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			return self.none()
 
 		# If deviation is 0, we can skip calculating the deviation
-		if deviation == 0:
+		if not deviation:
 			return self.filter(**{field_name: mean})
 
 		standard_deviation = self.standard_deviation(field_name)

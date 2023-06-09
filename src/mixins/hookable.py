@@ -24,6 +24,9 @@ from __future__ import annotations
 from typing import Any
 
 class Hookable:
+	"""
+	An abstract class that allows subclasses to hook into methods of this class without overriding them.
+	"""
 	@classmethod
 	def hook(cls, name: str, **kwargs) -> None:
 		'''

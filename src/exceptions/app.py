@@ -38,52 +38,39 @@ class ValidationError(AppException):
 	"""
 	Raised when input validation fails.
 	"""
-	pass
 
 
 class PermissionDeniedError(AppException):
 	"""
 	Raised when a user tries to access a resource they do not have permission to access.
 	"""
-	pass
 
 class NotFoundError(AppException):
 	"""
 	Raised when a requested resource cannot be found.
 	"""
-	pass
-
 
 class AuthenticationFailedError(AppException):
 	"""
 	Raised when authentication fails.
 	"""
-	pass
-
 
 class MethodNotAllowedError(AppException):
 	"""
 	Raised when an HTTP method is not allowed for a resource.
 	"""
-	pass
-
 
 class InternalServerError(AppException):
 	"""
 	Raised when an internal server error occurs.
 	"""
-	pass
-
 
 class BadRequestError(AppException):
 	"""
 	Raised when a client request is invalid.
 	"""
-	pass
-
 
 class ConflictError(AppException):
 	"""
 	Raised when a request conflicts with the current state of the server.
 	"""
-	pass

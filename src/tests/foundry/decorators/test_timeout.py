@@ -17,8 +17,8 @@
 
 		Copyright (c) 2023 Jess Mann
 """
-from django.test import TestCase
 from time import sleep
+from django.test import TestCase
 from decorators.timeout import timeout
 
 '''

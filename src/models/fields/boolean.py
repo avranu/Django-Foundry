@@ -31,4 +31,3 @@ class BooleanField(models.BooleanField):
 	'''
 	Override the default django field
 	'''
-

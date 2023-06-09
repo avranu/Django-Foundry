@@ -29,4 +29,7 @@ from django.views import generic
 
 
 class ListController(generic.ListView):
+	"""
+	Generic controller for providing list views for django models. All list views in our application inherit from this.
+	"""
 	pass

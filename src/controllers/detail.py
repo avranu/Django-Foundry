@@ -21,15 +21,13 @@
 """
 # Generic imports
 from __future__ import annotations
-import re
 from typing import TYPE_CHECKING, Any
 # Django Imports
 from django.core import serializers
 from django.views import generic
 from django.http import JsonResponse, HttpRequest
-from controllers.mixins import JSONResponseMixin
-# Lib Imports
 # App Imports
+from src.mixins import JSONResponseMixin
 
 if TYPE_CHECKING:
 	pass
@@ -40,7 +38,9 @@ class DetailController(generic.DetailView):
 	'''
 
 class JsonDetailController(JSONResponseMixin, DetailController):
-
+	"""
+	Controller for providing detail views for django models. All detail views in our application inherit from this.
+	"""
 	def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
 		data = super().get(request, *args, **kwargs)
 		return self.render_to_response(data)
