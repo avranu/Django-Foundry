@@ -112,7 +112,7 @@ class Hooks:
 
 
 	@classmethod
-	def get(cls, name : Optional[str] = None, namespace : str = DEFAULT_NAMESPACE) -> Iterable[Hook]:
+	def get(cls, name : Optional[str] = None, namespace : str = DEFAULT_NAMESPACE) -> list[Hook]:
 		"""
 		Get a list of hooks registered to this name and namespace.
 

@@ -29,6 +29,7 @@ from typing import Any, Callable, Optional
 from utils.action import EnumAction
 from utils.exceptions import *
 from utils.settings import Settings
+from db import Db
 
 logger = Settings.getLogger(__name__)
 
@@ -97,8 +98,8 @@ class App:
 
 			# Subprocess wants each arg as a separate entry in a list... combine args into our known command string.
 			script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../manage.py')
-			input = ['python', script_path, f'{command}'] + [arg for arg in args]
-			process = subprocess.Popen(input, stdout=subprocess.PIPE, encoding="utf-8")
+			input_str = ['python', script_path, f'{command}'] + [arg for arg in args]
+			process = subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8")
 
 			if not process.stdout:
 				raise ValueError('No output from subprocess')
@@ -183,9 +184,9 @@ class App:
 		We currently use browser-sync for this. When our app files change, the browser will automatically refresh the page.
   		"""
 		# Subprocess wants each arg as a separate entry in a list... combine args into our known command string.
-		input = ['npm', 'run', 'serve']
+		input_str = ['npm', 'run', 'serve']
 		logger.debug('Starting browsersync')
-		process = subprocess.Popen(input, stdout=subprocess.PIPE, encoding="utf-8", shell=True)
+		process = subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8", shell=True)
 
 		if not process.stdout:
 			raise ValueError('No output from subprocess')
@@ -261,7 +262,6 @@ class App:
 		Returns:
 			None
 		"""
-		from db import Db
 		db = Db()
 		if db.is_running():
 			logger.debug('DB is already running')
@@ -305,11 +305,11 @@ if __name__ == '__main__':
 		except ValueError as ve:
 			# One of the options contains bad data. Print the message and exit.
 			logger.error(f'Bad option provided: {ve}')
-			exit()
+			sys.exit(0)
 		except FileNotFoundError as fnf:
 			# The options were okay, but we can't find a necessary file (probably the executable)
 			logger.error(f'Unable to find a necessary file: {fnf}')
-			exit()
+			sys.exit(0)
 
 		try:
 			result = app.perform(options.action)
@@ -317,11 +317,11 @@ if __name__ == '__main__':
 				logger.debug(f'App returned ({result})')
 		except UnsupportedCommandError as e:
 			logger.error("Error: Unknown action. Try --help to see how to call this script.")
-			exit()
+			sys.exit(0)
 
 	except KeyboardInterrupt as e:
 		logger.info(f'Shutting down server...')
-		exit()
+		sys.exit(0)
 	except DbStartError as e:
 		logger.error('Could not start DB. Cannot continue')
-		exit()
+		sys.exit(0)
