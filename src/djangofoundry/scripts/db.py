@@ -27,7 +27,7 @@ import subprocess
 from shutil import which
 import time
 # Our imports
-from .utils.action import EnumAction
+from utils.action import EnumAction
 
 # Default path to the data directory, which we pass directly to postgres
 DEFAULT_DATA_PATH = os.environ.get('django_foundry_db_data_path', './pgsql/data')

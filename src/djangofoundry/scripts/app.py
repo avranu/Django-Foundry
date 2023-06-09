@@ -25,13 +25,17 @@ import argparse, textwrap, os, re, sys
 from enum import Enum
 import subprocess
 from typing import Any, Callable, Optional
+import json
+import getpass
 # Our imports
 from utils.action import EnumAction
 from utils.exceptions import *
 from utils.settings import Settings
 from db import Db
+import logging
 
-logger = Settings.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+logger = logging.getLogger(__name__)
 
 class Actions(Enum):
 	"""
@@ -43,11 +47,12 @@ class Actions(Enum):
 		test:
 			runs our unit/integration tests
 	"""
-	start = "runserver"
-	test = "test"
-	#stop = "not-implemented"
-	#restart = "not-implemented"
-	#status = "not-implemented"
+	START = "runserver"
+	TEST = "test"
+	STOP = "stop"
+	RESTART = "restart"
+	STATUS = "status"
+	SETUP = 'setup'
 
 	def __str__(self):
 		"""
@@ -61,6 +66,19 @@ class Actions(Enum):
 class App:
 	_command : Actions
 	_output_buffer : str = ''
+	project_name : str
+	directory : str
+	frontend_dir : str
+	backend_dir : str
+	settings : Settings | None = None
+
+	def __init__(self, project_name='myproject', author_name=None, settings = None, directory : str = '.', frontend_dir='frontend', backend_dir='backend'):
+		self.project_name = project_name
+		self.directory = directory
+		self.frontend_dir = directory + '/' + frontend_dir
+		self.backend_dir = directory + '/' + backend_dir
+		self.author_name = author_name or getpass.getuser()
+		self.settings = settings
 
 	@property
 	def command(self) -> Actions:
@@ -70,6 +88,53 @@ class App:
 		if self._command is None:
 			raise ValueError('Command has not been set yet')
 		return self._command
+	
+	def django_setup(self) -> str:
+		"""
+		Setup the Django project and app with given names.
+		"""
+		os.makedirs(self.backend_dir, exist_ok=True)
+		self.run_subprocess(["pip", "install", "django"])
+		self.run_subprocess(["django-admin", "startproject", self.project_name, '.'])
+		self.run_subprocess(["python", "manage.py", "startapp", self.project_name])
+		return f"Django setup completed for {self.project_name}"
+
+	def angular_setup(self) -> str:
+		"""
+		Setup the Angular project and app with given names.
+		"""
+		os.makedirs(self.frontend_dir, exist_ok=True)
+		self.run_subprocess(["npm", "init", "-y"])
+
+		with open('package.json') as f:
+			data = json.load(f)
+
+		data['name'] = self.project_name
+		data['version'] = '1.0.0'
+		data['description'] = f'{self.project_name} - an Angular-Django project'
+		data['main'] = 'index.js'
+		data['scripts'] = {
+			'test': 'echo "Error: no test specified" && exit 1'
+		}
+		data['author'] = getpass.getuser()
+		data['license'] = 'BSD-3-Clause'
+
+		with open('package.json', 'w') as f:
+			json.dump(data, f, indent=2)
+
+		self.run_subprocess(["npm", "install"])
+		self.run_subprocess(["npm", "install", "@angular/cli"])
+		self.run_subprocess(["ng", "new", self.project_name, "--skip-git", "--skip-install"])
+		return f"Angular setup completed for {self.project_name}"
+	
+	def setup(self):
+		"""
+		Setup both Django and Angular projects and apps with given names.
+		"""
+		os.makedirs(self.directory, exist_ok=True)
+		self.django_setup()
+		self.angular_setup()
+
 
 	def run(self, command : Actions, callback : Optional[Callable] = None, *args, **kwargs) -> str:
 		"""
@@ -88,9 +153,6 @@ class App:
 		Returns:
 			str: The output returned by django.
 		"""
-		# Combine our additional arguments into a single string.
-		#additional_args = ' '.join(option for option in args)
-
 		# Run the django dev server in a subprocess, and pipe output to the command.stdout property.
 		try:
 			# Clear the output buffer for this run
@@ -122,6 +184,19 @@ class App:
 			logger.info('Stopping server...')
 
 		return self._output_buffer
+	
+	def run_subprocess(self, cmd_list: list[str], print_output: bool = True) -> None:
+		"""
+		Run the subprocess with the given command list.
+		"""
+		process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, encoding="utf-8")
+		if not process.stdout:
+			raise ValueError('No output from subprocess')
+
+		for line in process.stdout:
+			self.handle_output(line, print_output)
+		process.wait()
+
 
 	def run_typical_command(self, command : Actions, callback : Optional[Callable] = None, *args, **kwargs) -> str:
 		"""
@@ -153,7 +228,7 @@ class App:
 		Returns:
 			str: The output returned by django
 		"""
-		return self.run_typical_command(Actions.start)
+		return self.run_typical_command(Actions.START)
 
 	def test(self) -> str:
 		"""
@@ -162,7 +237,7 @@ class App:
 		Returns:
 			str: The output returned by django
 		"""
-		return self.run_typical_command(Actions.test, None, '--noinput', '--verbosity=0')
+		return self.run_typical_command(Actions.TEST, None, '--noinput', '--verbosity=0')
 
 	def stop(self):
 		"""
@@ -204,31 +279,18 @@ class App:
 		Called when the django dev server is fully started.
   		"""
 		# If we're trying to start our app, then run our next action
-		if self.command == Actions.start:
+		if self.command == Actions.START:
 			self.sync_browser()
 
-	def handle_output(self, line : str) -> None:
+	def handle_output(self, line : str, print_output: bool = True) -> None:
 		"""
 		Called for each line of input from django.
-
-		Args:
-			line (str):
-				A line of output printed by django.
-
-		Returns:
-			None
 		"""
-		# Sanitize the value so we have something simple to compare to.
 		value = re.sub(r'[\n\r\\]+', '', line or '')
-
-		# Append the line to our output buffer.
 		self._output_buffer += f'\n{value}'
-
-		# Show the output to the console (if it's not empty)
-		if (value) != '':
+		if (value) != '' and print_output:
 			print(value)
 
-		# For each line, fire appropriate events.
 		match value.lower():
 			case 'quit the server with ctrl-break.':
 				logger.debug('Django started successfully')
@@ -246,12 +308,15 @@ class App:
 
 		# Determine what method to run.
 		match command:
-			case Actions.start:
+			case Actions.START:
 				# Start our entire app
-				return app.start()
-			case Actions.test:
+				return self.start()
+			case Actions.TEST:
 				# Run tests
-				return app.test()
+				return self.test()
+			case Actions.SETUP:
+				# Setup our app
+				return self.setup()
 			case _:
 				raise UnsupportedCommandError(f"Unknown command {command}.")
 
@@ -272,56 +337,39 @@ class App:
 			if not db.is_running():
 				raise DbStartError('DB not running after start')
 
-if __name__ == '__main__':
+def main():
 	"""
 	This code is only run when this script is called directly (i.e. python bin/app.py)
 	"""
+	parser = argparse.ArgumentParser(description='Setup and manage the Django application.')
+	parser.add_argument('action', choices=[e.value for e in Actions], help='The action to perform.')
+	parser.add_argument('-p', '--project-name', default='myproject', help='The name of the project.')
+	parser.add_argument('-a', '--author-name', help='The name of the author.')
+	parser.add_argument('-d', '--directory', default='.', help='The directory for the project.')
+	parser.add_argument('-f', '--frontend-dir', default='frontend', help='The directory for the frontend (relative to -d).')
+	parser.add_argument('-b', '--backend-dir', default='backend', help='The directory for the backend (relative to -d).')
+	parser.add_argument('-s', '--settings', default='conf/settings.yaml', help='The settings file to use.')
+	args = parser.parse_args()
+
+	# Load settings
+	settings = Settings(args.settings)
+
+	app = App(args.project_name, args.author_name, settings, args.directory, args.frontend_dir, args.backend_dir)
+	command = Actions(args.action)
+
+	result = app.perform(command)
+	if result is not None:
+		print(f'App returned ({result})')
+
+if __name__ == '__main__':
 	try:
-		# Setup the basic configuration for the parser
-		parser = argparse.ArgumentParser(
-				formatter_class=argparse.RawTextHelpFormatter,
-				description=textwrap.dedent("""
-					Interact with the django application (similar to manage.py)
-				"""),
-				epilog="",
-		)
-
-		# Define the arguments we will accept from the command line.
-		parser.add_argument('action',
-						type=Actions,
-						action=EnumAction,
-						help=textwrap.dedent("""\
-							start: Start the django application, and any other tools it depends on.
-							test: Run our unit and integration tests
-						"""))
-
-		# Parse the arguments provided to our script from the command line
-		# These are used as attributes. For example: options.action
-		options = parser.parse_args()
-
-		try:
-			# Instantiate a new DB object based on our arguments
-			app = App()
-		except ValueError as ve:
-			# One of the options contains bad data. Print the message and exit.
-			logger.error(f'Bad option provided: {ve}')
-			sys.exit(0)
-		except FileNotFoundError as fnf:
-			# The options were okay, but we can't find a necessary file (probably the executable)
-			logger.error(f'Unable to find a necessary file: {fnf}')
-			sys.exit(0)
-
-		try:
-			result = app.perform(options.action)
-			if result is not None:
-				logger.debug(f'App returned ({result})')
-		except UnsupportedCommandError as e:
-			logger.error("Error: Unknown action. Try --help to see how to call this script.")
-			sys.exit(0)
-
+		main()
 	except KeyboardInterrupt as e:
 		logger.info(f'Shutting down server...')
 		sys.exit(0)
 	except DbStartError as e:
 		logger.error('Could not start DB. Cannot continue')
+		sys.exit(0)
+	except Exception as e:
+		print(f"Error: {e}")
 		sys.exit(0)

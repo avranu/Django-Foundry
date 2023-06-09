@@ -37,73 +37,83 @@ class Settings:
 
 	These are loaded from the file at SETTINGS_PATH (currently bin/conf/settings.yaml).
 	"""
-	_settings : SettingsFile
+	_settings : SettingsFile | None = None
 	_logging_setup : bool = False
 
-	@classmethod
+	def __init__(self, settings_path : str = SETTINGS_PATH):
+		# Load our settings
+		self.load_config(settings_path)
+
+		# If we still don't have any settings, then raise an error
+		if not self._settings:
+			raise FileEmptyError(f'No settings found in {settings_path}')
+	
 	@property
-	def settings(cls) -> SettingsFile:
+	def settings(self) -> SettingsFile:
 		# If settings has never been loaded, then load it.
-		if cls._settings is None:
-			cls.load_config()
+		if not self._settings:
+			self.load_config()
+
+			if not self._settings:
+				raise FileEmptyError(f'No settings found in {SETTINGS_PATH}')
 
 		# It should exist now
-		return cls._settings
+		return self._settings
 
-	@classmethod
+	
 	@property
-	def logging(cls) -> SettingsLog:
-		return cls.settings.get('logging')
+	def logging(self) -> SettingsLog:
+		return self.settings.get('logging')
 
-	@classmethod
-	def getLogger(cls, namespace : str):
+	
+	def getLogger(self, namespace : str):
 		"""
 		Sets up the logger once (and only once), then returns a logger for the module requested.
 		"""
 		# Setup logging if it isn't already
-		if cls._logging_setup is not True:
+		if self._logging_setup is not True:
 			try:
 				logging.config.dictConfig(Settings.logging.__dict__)
 			except Exception as e:
 				print(f'Unable to set up logging: {e}')
 				raise e from e
-			cls._logging_setup = True
+			self._logging_setup = True
 
 		# Create a new logger
 		return logging.getLogger(namespace)
 
-	@classmethod
-	def load_config(cls) -> SettingsFile:
+	
+	def load_config(self, settings_path : str = SETTINGS_PATH) -> SettingsFile:
 		# Read our default sensitivity settings (if available)
-		filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), SETTINGS_PATH)
+		filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings_path)
 
 		if os.path.exists(filepath):
 			# If it exists, then open it
 			with open(filepath) as file:
 				# Load the contents into a variable
-				cls._settings = yaml.load(file, Loader=SafeLoader)
+				self._settings = yaml.load(file, Loader=SafeLoader)
 		else:
 			# Let everyone know we couldn't find the settings. This likely exits.
 			raise FileNotFoundError(f"Could not load bin settings from {filepath}")
 
 		# Validate contents of settings file.
-		if cls._settings == {}:
+		if self._settings == {}:
 			raise FileEmptyError(f'No data in settings file at f{filepath}')
 
-		return cls._settings
+		return self._settings
 
-	@classmethod
-	def all(cls) -> SettingsFile:
+	
+	def all(self) -> SettingsFile:
 		"""
 		Makes the syntax for getting the settings dict a little less clunky (i.e. Settings.all() instead of Settings.settings)
 
 		Returns:
 			dict: A dictionary of settings.
   		"""
-		return cls.settings
+		return self.settings
 
-	@classmethod
-	def get(cls, key : str) -> Any:
+	
+	def get(self, key : str) -> Any:
 		"""
 		Retrieves the value at the provided key.
 
@@ -113,7 +123,7 @@ class Settings:
 		Returns:
 			Any: The value stored at the provided key
   		"""
-		return cls.settings.get(key)
+		return self.settings.get(key)
 
 if __name__ == '__main__':
 	conf = Settings.settings
