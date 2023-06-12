@@ -22,6 +22,9 @@ from __future__ import annotations
 from rest_framework import serializers
 
 class Serializer(serializers.ModelSerializer):
+	"""
+	A base serializer class that can be used to dynamically include or exclude fields based on context.
+	"""
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -44,6 +47,9 @@ class Serializer(serializers.ModelSerializer):
 
 	@classmethod
 	def get_fieldnames(cls) -> list:
+		"""
+		Get a list of field names for this model.
+		"""
 		return cls.Meta.fields
 
 	@classmethod
@@ -61,6 +67,9 @@ class Serializer(serializers.ModelSerializer):
 		return fields
 
 	class Meta:
+		"""
+		Serializer metadata.
+		"""
 		fields = [
 			'id'
 		]

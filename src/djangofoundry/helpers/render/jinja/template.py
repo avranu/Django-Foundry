@@ -52,7 +52,7 @@ class TemplateHelper(BaseTemplate):
 		"""
 		if app_name is None:
 			raise ValueError('app_name cannot be None')
-		
+
 		if autoescape is None:
 			autoescape = ['html', 'xml']
 
@@ -80,7 +80,7 @@ class TemplateHelper(BaseTemplate):
 			autoescape=select_autoescape(self.autoescape)
 		)
 
-	def render(self, template_name: str, variables: dict) -> str | None:
+	def render(self, variables: dict, template_name: str) -> str | None:
 		"""
 		Render a template with the given variables.
 

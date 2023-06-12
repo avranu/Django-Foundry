@@ -20,7 +20,7 @@
 # Generic imports
 from __future__ import annotations
 from enum import Enum
-from typing import Any, TypedDict
+from typing import TypedDict
 
 class LoggerLevels(Enum):
 	"""
@@ -65,6 +65,9 @@ class LogHandler(TypedDict):
 	#class: str
 
 class LogRoot(TypedDict):
+	"""
+	Expected format for the "root" logger in the settings file.
+	"""
 	level: LoggerLevels
 	handlers: list[LogHandler]
 

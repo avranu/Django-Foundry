@@ -21,7 +21,6 @@
 """
 # Generic imports
 from __future__ import annotations
-import re
 # Django Imports
 from django.views import generic
 # Lib Imports

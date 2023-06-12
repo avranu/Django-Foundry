@@ -55,9 +55,9 @@ class Waypoint:
 			name : str,
 			namespace : str = DEFAULT_NAMESPACE,
 			positional_arguments : int = 0,
-	 		named_arguments : list[str] = [],
+	 		named_arguments : list[str] = list,
 		 	return_type : Any = Any,
-		  	hooks : list[Hook] = []):
+		  	hooks : list[Hook] = list):
 		self.name = name
 		self.namespace = namespace
 		self.positional_arguments = positional_arguments

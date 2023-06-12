@@ -9,6 +9,12 @@ logging.basicConfig(level=logging.DEBUG, handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
 class PythonClassParser:
+	"""
+	Parser for Python classes in a directory. 
+
+	This class will parse all Python files in a directory and output a summary of all classes found in those files, which can be used
+	to generate documentation for the project, or to pass to other tools (like LLMs).
+	"""
 	def __init__(self, directory: str, output_file: str, ignored_paths: List[str], recursive: bool) -> None:
 		logger.debug(f"Initializing PythonClassParser: {directory} : {output_file}")
 		self.directory: str = directory
@@ -25,6 +31,9 @@ class PythonClassParser:
 		return False
 
 	def find_python_files(self, directory: str) -> List[str]:
+		"""
+		Recursively find all Python files in a directory.
+		"""
 		python_files: List[str] = []
 		try:
 			for root, dirs, files in os.walk(directory):
@@ -41,6 +50,9 @@ class PythonClassParser:
 
 	@classmethod
 	def parse_file(cls, file: str) -> Union[ast.Module, None]:
+		"""
+		Parse a Python file and return the AST.
+		"""
 		try:
 			with open(file, "r") as source:
 				return ast.parse(source.read())
@@ -53,6 +65,9 @@ class PythonClassParser:
 
 	@classmethod
 	def get_return_type(cls, node: ast.FunctionDef) -> str:
+		"""
+		Get the return type of a function.
+		"""
 		try:
 			if isinstance(node.returns, ast.Name):
 				result = node.returns.id
@@ -62,7 +77,7 @@ class PythonClassParser:
 				result = ast.unparse(node.returns).strip()
 			else:
 				result = 'None'
-				
+
 			return cls.shorten_return_type(result)
 		except TypeError as e:
 			logger.error(f"Failed to get return type for {node.name}: {e}")
@@ -71,30 +86,34 @@ class PythonClassParser:
 
 	@classmethod
 	def shorten_return_type(cls, return_type: str) -> str:
+		"""
+		Shorten a return type to a more readable format (and one which uses fewer tokens, when passed to an LLM)
+		"""
+
 		# Turn 'Union[None, str]' into 'str'
 		if return_type.startswith('Union[None'):
 			return_type = return_type[return_type.rfind(',') + 2:-1]
-		
+
 		# Turn 'Optional[str]' into 'str'
 		if return_type.startswith('Optional['):
 			return_type = return_type[return_type.rfind('[') + 1:-1]
-		
+
 		# Turn List[str] into str[]
 		if return_type.startswith('List['):
 			return_type = return_type.replace('List[', '')[:-1] + '[]'
-		
+
 		# Turn Dict[str, int] into {int}
 		if return_type.startswith('Dict['):
 			return_type = return_type.replace('Dict[', '{')[:-1] + '}'
-		
+
 		# Turn Tuple[str, int] into (str, int)
 		if return_type.startswith('Tuple['):
 			return_type = return_type.replace('Tuple[', '(')[:-1] + ')'
-		
+
 		# Turn Union[str, int] into str|int
 		if return_type.startswith('Union['):
 			return_type = return_type.replace('Union[', '').replace(',', '|')[1:-1]
-		
+
 		# Turn Iterable[str] into str[]
 		if return_type.startswith('Iterable['):
 			return_type = return_type.replace('Iterable[', '')[:-1] + '[]'
@@ -107,8 +126,11 @@ class PythonClassParser:
 
 	@classmethod
 	def get_method_signature(cls, node: ast.FunctionDef) -> str:
+		"""
+		Get the signature of a method.
+		"""
 		try:
-			args = [arg.arg for arg in node.args.args if arg.arg not in ['self', 'cls']]
+			args = [param.arg for param in node.args.args if param.arg not in ['self', 'cls']]
 
 			method = f"{node.name}({', '.join(args)})"
 			return_type = cls.get_return_type(node)
@@ -121,6 +143,9 @@ class PythonClassParser:
 
 	@classmethod
 	def find_classes_and_methods(cls, tree: ast.Module) -> Dict[str, Dict[str, Any]]:
+		"""
+		Find all classes and methods in a Python file.
+		"""
 		classes: Dict[str, Dict[str, Any]] = {}
 		for node in ast.walk(tree):
 			if isinstance(node, ast.ClassDef):
@@ -130,14 +155,20 @@ class PythonClassParser:
 				if method_names:  # Ignore classes with no methods (other than __init__)
 					classes[class_name] = {"name": class_name, "base_classes": base_classes, "methods": method_names}
 		return classes
-	
+
 	@classmethod
 	def group_classes_by_module(cls, classes: Dict[str, List[Dict[str, Any]]], module_name: str) -> List[Dict[str, Any]]:
+		"""
+		Group classes by module name.
+		"""
 		if module_name not in classes:
 			classes[module_name] = []
 		return classes[module_name]
 
 	def write_to_file(self, grouped_classes: Dict[str, List[Dict[str, Any]]]) -> None:
+		"""
+		Write classes and methods to a file.
+		"""
 		with open(self.output_file, 'a') as f:
 			for module_name, classes in grouped_classes.items():
 				if not classes:  # Skip empty modules
@@ -159,6 +190,9 @@ class PythonClassParser:
 				f.write("\n")
 
 	def run(self) -> None:
+		"""
+		Run the summarizer.
+		"""
 		# Clear output file
 		if os.path.exists(self.output_file):
 			os.remove(self.output_file)
@@ -182,6 +216,9 @@ class PythonClassParser:
 		logger.info(f"Finished parsing {self.directory}")
 
 def parse_args() -> argparse.Namespace:
+	"""
+	Parse command line arguments.
+	"""
 	parser = argparse.ArgumentParser(description="Find all classes and their methods in Python files in a directory.")
 	parser.add_argument('-d', '--directory', type=str, default='.', help="Directory to search for Python files")
 	parser.add_argument('-o', '--output', type=str, default='project_summary.txt', help="Output file")

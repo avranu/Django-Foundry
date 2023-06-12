@@ -33,7 +33,7 @@ class CodeHelper(TemplateHelper):
 		env (Environment): The jinja environment.
 	"""
 
-	def suggest_class_name(self, input: str) -> str:
+	def suggest_class_name(self, input_str: str) -> str:
 		"""
 		Suggest a class name based on a set of input. This method exists primarily to establish an interface for subclasses.
 
@@ -45,7 +45,7 @@ class CodeHelper(TemplateHelper):
 		"""
 
 		# Remove any non-alpha and title case
-		cleaned_name = re.sub(r'[^a-zA-Z]+', ' ', input).title().replace(' ', '')
+		cleaned_name = re.sub(r'[^a-zA-Z]+', ' ', input_str).title().replace(' ', '')
 
 		# Limit to 30 characters
 		cleaned_name = cleaned_name[:30]

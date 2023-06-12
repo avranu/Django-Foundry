@@ -28,6 +28,7 @@ from django.db.backends.utils import CursorWrapper
 # LIB imports
 from djangofoundry.helpers.render.meta.model import IndexInfo, IndexColumnInfo, ColumnInfo, ConstraintInfo
 from djangofoundry.helpers.render.jinja.code.python.template import PythonHelper
+from djangofoundry.models import Model
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
@@ -106,7 +107,7 @@ class ModelHelper(PythonHelper):
 		cleaned_name = self.humanize_table_name(table_name)
 		result = "".join(part.capitalize() for part in cleaned_name.split(' '))
 		if len(result) < 2:
-			logger.warn(f'suggest_model_name too short for {table_name} -> {cleaned_name} -> {result}')
+			logger.warning(f'suggest_model_name too short for {table_name} -> {cleaned_name} -> {result}')
 			return table_name
 
 		return result
@@ -135,7 +136,7 @@ class ModelHelper(PythonHelper):
 		# Split into words, and capitalize each word
 		result = re.sub(r'[\s_]+', ' ', cleaned_name).title()
 		if len(result) < 2:
-			logger.warn(f'humanize_name too short for {table_name} -> {cleaned_name} -> {result}')
+			logger.warning(f'humanize_name too short for {table_name} -> {cleaned_name} -> {result}')
 			return table_name
 		return result
 
@@ -166,7 +167,6 @@ class ModelHelper(PythonHelper):
 		Returns:
 			List[ColumnInfo]: The list of columns for the given table
 		"""
-		from djangofoundry.models import Model
 		if not table_name:
 			table_name = self.table_name
 
@@ -289,7 +289,7 @@ class ModelHelper(PythonHelper):
 
 			if not result:
 				return 0
-			
+
 			return result[0]
 
 	def render(self, variables: dict, template_name: str = 'model') -> str | None:

@@ -22,8 +22,8 @@ from djangofoundry.scripts.utils.exceptions import (
     AppException,
     FileEmptyError,
     DbError,
-    DbConnectionError,  
+    DbConnectionError,
     DbStartError,
-    UnsupportedCommandError  
+    UnsupportedCommandError
 )
 from djangofoundry.scripts.utils.settings import Settings

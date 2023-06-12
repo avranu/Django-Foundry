@@ -27,8 +27,6 @@ class Response(response.Response):
 	"""
 	Represents a generic response. This is the base class for all responses.
 	"""
-	def __init__(self, data=None, status=None, template_name=None, headers=None, exception=False, content_type=None):
-		super().__init__(data, status, template_name, headers, exception, content_type)
 
 class SuccessResponse(Response):
 	"""
@@ -71,8 +69,6 @@ class PaginatedResponse(DataResponse):
 	"""
 	Represents a successful HTTP Code 200 response with paginated data. This is the base class for all successful responses with paginated data.
 	"""
-	from typing import Any
-
 	class DataResponse(OkResponse):
 		"""
 		Represents a successful HTTP Code 200 response with data. This is the base class for all successful responses with data.

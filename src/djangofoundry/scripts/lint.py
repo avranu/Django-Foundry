@@ -21,8 +21,8 @@ from __future__ import annotations
 import os
 import argparse
 import re
-import yaml
 import glob
+import yaml
 import openai
 from tqdm import tqdm
 
@@ -173,7 +173,7 @@ class ChatGPTBugFixer:
 def main(args):
 	try:
 		try:
-			with open(args.settings, "r") as file:
+			with open(args.settings, "r", encoding="utf-8") as file:
 				settings = yaml.safe_load(file)
 				openai_api_key = settings['lint']["key"]
 		except Exception as e:
@@ -182,7 +182,7 @@ def main(args):
 
 		bugfixer = ChatGPTBugFixer(openai_api_key, args.path)
 		bugfixer.process_python_files()
-	except KeyboardInterrupt as e:
+	except KeyboardInterrupt:
 		print("Exiting...")
 
 if __name__ == "__main__":
@@ -190,6 +190,6 @@ if __name__ == "__main__":
 	parser.add_argument("--settings", default="conf/settings.yaml", help="Path to the settings.yaml file")
 	parser.add_argument("--path", "-p", default="../lib/", help="Path to the project folder")
 	parser.add_argument("--max", "-m", default=0, type=int, help="Maximum number of files to process (default: 0, i.e. no limit)")
-	args = parser.parse_args()
+	parser_args = parser.parse_args()
 
-	main(args)
+	main(parser_args)

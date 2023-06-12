@@ -336,10 +336,10 @@ class QuerySet(auto_prefetch.QuerySet):
 		Filters this model based on the existence of a related model with a given property
 
 		Args:
-			filter (django.db.models.Q):
-				The filter to test against the related model
 			foreign_key (str):
 				The name of the foreign key on this model
+			filter_expression (Q):
+				The filter to apply to the related model
 			alias_name (str, optional):
 				The name of the alias to use. If None is provided, we will generate one. Defaults to None.
 
@@ -1006,14 +1006,14 @@ class QuerySet(auto_prefetch.QuerySet):
 			['tasks']
 		"""
 		# Get the correlation of the field with every other field
-		correlations = {field_name: self.correlation(field_name, field_name) for field_name in self.model._meta.get_fields() if (field_name != field_name and self.field_is_numeric(field_name))}
-		correlations = {field_name: correlation for field_name, correlation in correlations.items() if correlation >= threshold}
+		correlations = {correlated_field_name: self.correlation(field_name, correlated_field_name) for correlated_field_name in self.model._meta.get_fields() if (field_name != correlated_field_name and self.field_is_numeric(correlated_field_name))}
+		correlations = {correlated_field_name: correlation for correlated_field_name, correlation in correlations.items() if correlation >= threshold}
 
 		# Sort the correlations by their correlation
 		correlations = sorted(correlations.items(), key=lambda item: item[1], reverse=True)
 
 		# Return the names of the correlated fields
-		return [field_name for field_name, _correlation in correlations]
+		return [correlated_field_name for correlated_field_name, _correlation in correlations]
 
 	def linear_regression(self, field_name_x: str, field_name_y: str) -> Tuple[float, float]:
 		"""
@@ -1176,7 +1176,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			# Get fields that are searchable
 			fields = [field.name for field in self.model._meta.get_fields() if not field.is_relation]
 
-		entries = self.filter(Q(**{'{}__icontains'.format(field): search_term}) for field in fields)
+		entries = self.filter(Q(**{f'{format(field)}__icontains': search_term}) for field in fields)
 		return entries
 
 	def annotate_duration(self, start_field: str, end_field: str, alias: str = 'duration') -> Self:
@@ -1216,7 +1216,7 @@ class QuerySet(auto_prefetch.QuerySet):
 			[<Case: Case object (1)>, <Case: Case object (2)>, <Case: Case object (3)>, <Case: Case object (4)>, <Case: Case object (5)>]
 		"""
 		# Get the entries within a date range
-		entries = self.filter(**{'{}__range'.format(date_field): [start_date, end_date]})
+		entries = self.filter(**{f"{format(date_field)}__range": [start_date, end_date]})
 		return entries
 
 	def rolling_mean(self, field_name: str, window: int) -> List[float]:
@@ -1478,13 +1478,13 @@ class QuerySet(auto_prefetch.QuerySet):
 			<QuerySet [<Case: Case object (1)>, <Case: Case object (2)>]>
 		"""
 		# Get all fields that are numeric
-		fields = [field.name for field in self.model._meta.get_fields() if self.field_is_numeric(field)]
+		numeric_fields = [field.name for field in self.model._meta.get_fields() if self.field_is_numeric(field)]
 
 		# Construct a filter for each field, so that we return all anomalies (using OR) rather than just entries that are anomalous in all fields (using AND)
 		filters = []
-		for i, field in enumerate(fields):
-			filter = Q(**{f"{field}__in": self.filter_anomalies_in(field, method, z_threshold, iqr_multiplier).values_list(field, flat=True)})
-			filters.append(filter)
+		for _i, field in enumerate(numeric_fields):
+			filter_q = Q(**{f"{field}__in": self.filter_anomalies_in(field, method, z_threshold, iqr_multiplier).values_list(field, flat=True)})
+			filters.append(filter_q)
 
 		# Filter the queryset using the OR of all the filters
 		return self.filter(reduce(operator.or_, filters))

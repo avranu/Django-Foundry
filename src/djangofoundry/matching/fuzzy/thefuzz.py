@@ -24,6 +24,9 @@ from thefuzz import fuzz, process
 from djangofoundry.matching.engine import MatchingEngine
 
 class TheFuzz(MatchingEngine):
+	"""
+	A matching engine that uses thefuzz library to match strings
+	"""
 
 	def choose( self, input_str : str, choices : Iterable[str], required_confidence : int = 90 ) -> tuple[str | None, int]:
 		"""
@@ -49,7 +52,7 @@ class TheFuzz(MatchingEngine):
 
 		if results is None:
 			return (None, 0)
-		
+
 		# Check if there are 2 or 3 values in the tuple, and unpack
 		if len(results) == 2:
 			(matching_key, confidence) = results

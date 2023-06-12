@@ -21,10 +21,10 @@
 from __future__ import annotations
 import os
 from typing import Any
-import yaml
-from yaml.loader import SafeLoader
 import logging
 import logging.config
+import yaml
+from yaml.loader import SafeLoader
 # App imports
 from djangofoundry.scripts.utils.exceptions import FileEmptyError
 from djangofoundry.scripts.utils.types import SettingsFile, SettingsLog
@@ -47,7 +47,7 @@ class Settings:
 		# If we still don't have any settings, then raise an error
 		if not self._settings:
 			raise FileEmptyError(f'No settings found in {settings_path}')
-	
+
 	@property
 	def settings(self) -> SettingsFile:
 		# If settings has never been loaded, then load it.
@@ -60,12 +60,12 @@ class Settings:
 		# It should exist now
 		return self._settings
 
-	
+
 	@property
 	def logging(self) -> SettingsLog:
 		return self.settings.get('logging')
 
-	
+
 	def getLogger(self, namespace : str):
 		"""
 		Sets up the logger once (and only once), then returns a logger for the module requested.
@@ -82,15 +82,15 @@ class Settings:
 		# Create a new logger
 		return logging.getLogger(namespace)
 
-	
+
 	def load_config(self, settings_path : str = SETTINGS_PATH) -> SettingsFile:
 		# Read our default sensitivity settings (if available)
 		filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings_path)
 
 		if os.path.exists(filepath):
 			# If it exists, then open it
-			with open(filepath) as file:
-				# Load the contents into a variable
+			with open(filepath, encoding='utf-8') as file:
+	     		# Load the contents into a variable
 				self._settings = yaml.load(file, Loader=SafeLoader)
 		else:
 			# Let everyone know we couldn't find the settings. This likely exits.
@@ -102,7 +102,7 @@ class Settings:
 
 		return self._settings
 
-	
+
 	def all(self) -> SettingsFile:
 		"""
 		Makes the syntax for getting the settings dict a little less clunky (i.e. Settings.all() instead of Settings.settings)
@@ -112,7 +112,7 @@ class Settings:
   		"""
 		return self.settings
 
-	
+
 	def get(self, key : str) -> Any:
 		"""
 		Retrieves the value at the provided key.

@@ -31,7 +31,7 @@ from djangofoundry.scripts.utils import (
     AppException,
     FileEmptyError,
     DbError,
-    DbConnectionError,  
+    DbConnectionError,
     DbStartError,
     UnsupportedCommandError
 )

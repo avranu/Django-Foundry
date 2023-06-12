@@ -47,6 +47,9 @@ class OneCharField(CharField):
 
 
 class RowIdField(CharField):
+	"""
+	A charfield that is used for storing row ids (from databases like Oracle)
+	"""
 	def __init__(self, *,
 				 map_field  : Optional[str] = None,
 				 max_length : int = 18,

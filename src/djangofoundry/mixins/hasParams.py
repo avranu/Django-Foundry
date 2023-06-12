@@ -19,7 +19,7 @@
 """
 from __future__ import annotations
 # Generic imports
-from typing import Any, Iterable, TypeVar
+from typing import Iterable, TypeVar
 import re
 import logging
 

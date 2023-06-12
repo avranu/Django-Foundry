@@ -110,7 +110,7 @@ class ColumnInfo(DbInfo):
 		precision: Optional[int] = None,
 		scale: Optional[int] = None,
 	):
-		self.name = name
+		super().__init__(name)
 		self.data_type = data_type
 		self.data_length = data_length
 		self.precision = precision
@@ -195,7 +195,7 @@ class IndexColumnInfo(DbInfo):
 		position (int): The position of the column in the index
 	"""
 	def __init__(self, name: str, position: int):
-		self.name = name
+		super().__init__(name)
 		self.position = position
 
 	def __eq__(self, other: 'IndexColumnInfo') -> bool:
@@ -232,7 +232,7 @@ class IndexInfo(DbInfo):
 	def __init__(self, name: str, columns: Optional[list[IndexColumnInfo]] = None, uniqueness: str = ''):
 		if not name or name == '':
 			name = f'index.{"-".join([column.name for column in columns or []])}'
-		self.name = name
+		super().__init__(name)
 		self.uniqueness = uniqueness
 		self.columns = columns if columns is not None else []
 

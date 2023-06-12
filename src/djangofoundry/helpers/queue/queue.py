@@ -19,8 +19,7 @@
 """
 # Generic imports
 from __future__ import annotations
-from ctypes import Array
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Optional
 from typing_extensions import Self
 from psqlextra.query import ConflictAction
 import queue
@@ -181,7 +180,7 @@ class Queue(queue.Queue):
 		else:
 			# Allow setting callbacks in the subclass definition (even though doing that is probably a bad idea... supporting it eliminates unexpected behavior)
 			self.callbacks = { callback : None for callback, _x in Callbacks.choices } | self.callbacks
-		
+
 		if callbacks:
 			self.callbacks.update(callbacks)
 
@@ -228,7 +227,7 @@ class Queue(queue.Queue):
 
 		if cb:
 			return cb(**kwargs)
-		
+
 		return None
 
 	# TODO: warning on unsaved queue on __del__

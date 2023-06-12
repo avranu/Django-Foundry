@@ -21,11 +21,9 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import Any
 # Django imports
 from django.db import models
 from django.db.models import Func
-from django.db.models.expressions import Combinable
 # 3rd Party imports
 from psqlextra import fields
 import picklefield.fields

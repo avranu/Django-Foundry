@@ -34,7 +34,7 @@ import psutil
 from jinja2 import Environment, FileSystemLoader
 
 # Our imports
-from djangofoundry.scripts.utils.exceptions import AppException, DbStartError, UnsupportedCommandError
+from djangofoundry.scripts.utils.exceptions import DbStartError, UnsupportedCommandError
 from djangofoundry.scripts.utils.settings import Settings
 from djangofoundry.scripts.db import Db
 
@@ -70,6 +70,9 @@ class Actions(Enum):
 		return self.value
 
 class App:
+	"""
+	Our main application class. This script allows us to start, stop, and restart our django server.
+	"""
 	_command : Actions
 	_output_buffer : str = ''
 	project_name : str
@@ -94,10 +97,15 @@ class App:
 		if self._command is None:
 			raise ValueError('Command has not been set yet')
 		return self._command
-	
+
 	def django_setup(self) -> str:
 		"""
 		Setup the Django project and app with given names.
+
+		Note: This is a work in progress.
+
+		Returns:
+			A string indicating the status of the setup.
 		"""
 		os.makedirs(self.backend_dir, exist_ok=True)
 		os.chdir(self.backend_dir) # Switch to the backend directory before running Django commands
@@ -110,6 +118,9 @@ class App:
 	def angular_setup(self) -> str:
 		"""
 		Setup the Angular project and app with given names.
+
+		Returns:
+			A string indicating the status of the setup.
 		"""
 		os.makedirs(self.frontend_dir, exist_ok=True)
 		os.chdir(self.frontend_dir) # Switch to the frontend directory before running Angular commands
@@ -138,6 +149,9 @@ class App:
 	def install_dependencies(self) -> None:
 		"""
 		Check if npm is installed and call install_npm() if it's not.
+
+		Returns:
+			None
 		"""
 		if not shutil.which('npm'):
 			logger.info('NPM not found. Attempting to install...')
@@ -146,6 +160,9 @@ class App:
 	def install_npm(self) -> str:
 		"""
 		Attempt to install npm on the system.
+
+		Returns:
+			A string indicating the status of the installation.
 		"""
 		os_name = platform.system()
 
@@ -153,32 +170,39 @@ class App:
 			try:
 				self.run_subprocess(['curl', 'https://www.npmjs.com/install.sh', '|', 'sh'])
 				return "npm installed successfully on Linux or macOS"
-			except subprocess.CalledProcessError as e:
-				raise EnvironmentError(f"Error installing npm on Linux or macOS: {e}")
+			except subprocess.CalledProcessError as process_e:
+				raise EnvironmentError(f"Error installing npm on Linux or macOS: {process_e}")
 		elif os_name == 'Windows':
 			try:
 				self.run_subprocess(['powershell', '-Command', 'iex (New-Object Net.WebClient).DownloadString("https://www.npmjs.com/install.ps1")'])
 				return "npm installed successfully on Windows"
-			except subprocess.CalledProcessError as e:
-				raise EnvironmentError(f"Error installing npm on Windows: {e}")
+			except subprocess.CalledProcessError as process_e:
+				raise EnvironmentError(f"Error installing npm on Windows: {process_e}")
 		else:
 			raise EnvironmentError("Unsupported operating system")
 
-	
-	def check_environment(self):
+
+	def check_environment(self) -> None:
 		"""
 		Check the environment to make sure the setup will run smoothly.
+
+		Returns:
+			None
+
+		Raises:
+			EnvironmentError: If the environment is not suitable for running the setup.
+			OSError: If the operating system is not supported.
 		"""
 		# Check Python version
 		if sys.version_info < (3, 10):
 			raise EnvironmentError("Python 3.10 or above is required.")
 		logger.debug("Python version check passed.")
-		
+
 		# Check directory permissions
 		if not os.access(self.directory, os.W_OK):
 			raise EnvironmentError("The provided directory does not have write permissions.")
 		logger.debug("Directory permissions check passed.")
-		
+
 		# Check disk space
 		disk_usage = psutil.disk_usage('/')
 		if disk_usage.free < 10**9:  # less than 1GB
@@ -190,10 +214,19 @@ class App:
 		if ram_usage.available < 10**6:  # less than 1MB
 			raise EnvironmentError("Insufficient RAM. At least 1MB is required.")
 		logger.debug("RAM check passed.")
-		
+
 		logger.info("All environment checks passed.")
 
-	def confirm_setup(self):
+	def confirm_setup(self) -> None:
+		"""
+		Confirm the setup has been completed successfully.
+		
+		Returns:
+			None
+			
+		Raises:
+			EnvironmentError: If the setup was not completed successfully.
+		"""
 		# Check for package dependencies
 		dependencies = ["npm"]
 		for dependency in dependencies:
@@ -210,9 +243,12 @@ class App:
 				raise EnvironmentError(f"The {dependency} package isn't available. Please install it.")
 		logger.debug("python dependency check passed.")
 
-	def setup(self):
+	def setup(self) -> None:
 		"""
 		Setup both Django and Angular projects and apps with given names.
+
+		Returns:
+			None
 		"""
 		os.makedirs(self.directory, exist_ok=True)
 
@@ -238,6 +274,9 @@ class App:
 
 		Returns:
 			str: The output returned by django.
+
+		Raises:
+			ValueError: If the subprocess doesn't return any output.
 		"""
 		# Run the django dev server in a subprocess, and pipe output to the command.stdout property.
 		try:
@@ -265,15 +304,24 @@ class App:
 				logger.debug('Issuing callback on completion')
 				callback(process)
 
-		except KeyboardInterrupt as ki:
+		except KeyboardInterrupt:
 			# Allow terminating the dev server from the command line.
 			logger.info('Stopping server...')
 
 		return self._output_buffer
-	
+
 	def run_subprocess(self, cmd_list: list[str], print_output: bool = True) -> None:
 		"""
 		Run the subprocess with the given command list.
+
+		Args:
+			cmd_list (list[str]):
+				A list of strings to pass to the subprocess.
+			print_output (bool):
+				Whether to print the output of the subprocess to the console.
+
+		Raises:
+			ValueError: If the subprocess has no output.
 		"""
 		process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, encoding="utf-8")
 		if not process.stdout:
@@ -295,7 +343,7 @@ class App:
 				A function to call after the command completes.
 			*args:
 				positional arguments to pass to django
-			**options:`
+			**kwargs:
 				named arguments to pass to django
 
 		Returns:
@@ -376,6 +424,15 @@ class App:
 	def handle_output(self, line : str, print_output: bool = True) -> None:
 		"""
 		Called for each line of input from django.
+
+		Args:
+			line (str):
+				A line of output from django.
+			print_output (bool):
+				Whether to print the output of the subprocess to the console.
+
+		Raises:
+			ValueError: If the subprocess has no output.
 		"""
 		value = re.sub(r'[\n\r\\]+', '', line or '')
 		self._output_buffer += f'\n{value}'
@@ -393,6 +450,11 @@ class App:
 
 		Args:
 			command (Actions): The action to perform.
+			page_name (str): The name of the page to create.
+			model_name (str): The name of the model to create.
+
+		Returns:
+			Any: The result of the action.
   		"""
 		# Save the command for later
 		self._command = command
@@ -448,6 +510,12 @@ class App:
 	def create_new_page(self, page_name: str) -> None:
 		"""
 		Create a new page in Django and Angular.
+
+		Args:
+			page_name (str): The name of the page to create.
+
+		Returns:
+			None
 		"""
 		try:
 			self.create_angular_component(page_name)
@@ -460,20 +528,32 @@ class App:
 	def create_angular_component(self, page_name: str) -> None:
 		"""
 		Create a new Angular component.
+
+		Args:
+			page_name (str): The name of the page to create.
+
+		Returns:
+			None
 		"""
 		try:
 			subprocess.run(["ng", "generate", "component", page_name], check=True)
-		except subprocess.CalledProcessError as e:
-			logging.error(f"Failed to create Angular component '{page_name}': {e}")
+		except subprocess.CalledProcessError as process_e:
+			logging.error(f"Failed to create Angular component '{page_name}': {process_e}")
 			raise
 
 	def setup_routing(self, page_name: str) -> None:
 		"""
 		Set up routing for the new Angular component.
+
+		Args:
+			page_name (str): The name of the page to create.
+
+		Returns:
+			None
 		"""
 		routing_file = "src/app/app-routing.module.ts"
 		try:
-			with open(routing_file, "r") as file:
+			with open(routing_file, "r", encoding="utf-8") as file:
 				lines = file.readlines()
 
 			# Add import statement for the new component
@@ -490,13 +570,19 @@ class App:
 			with open(routing_file, "w") as file:
 				file.writelines(lines)
 
-		except FileNotFoundError as e:
-			logging.error(f"Failed to set up routing for '{page_name}': {e}")
+		except FileNotFoundError as fnf:
+			logging.error(f"Failed to set up routing for '{page_name}': {fnf}")
 			raise
 
 	def create_django_controller(self, page_name: str) -> None:
 		"""
 		Create a new Django controller.
+
+		Args:
+			page_name (str): The name of the page to create.
+
+		Returns:
+			None
 		"""
 		controllers_dir = "backend/controllers"
 		os.makedirs(controllers_dir, exist_ok=True)
@@ -507,13 +593,19 @@ class App:
 				file.write(f"from django.shortcuts import render\n\n")
 				file.write(f"def {page_name}_view(request):\n")
 				file.write(f"    return render(request, '{page_name}.html')\n")
-		except IOError as e:
-			logging.error(f"Failed to create Django controller '{page_name}': {e}")
+		except IOError as ioe:
+			logging.error(f"Failed to create Django controller '{page_name}': {ioe}")
 			raise
 
 	def create_new_model(self, model_name: str) -> None:
 		"""
 		Create a new Django model using Jinja2 templates.
+
+		Args:
+			model_name (str): The name of the model to create.
+
+		Returns:
+			None
 		"""
 		env = Environment(loader=FileSystemLoader("templates/jinja/model"))
 
@@ -557,14 +649,14 @@ def main():
 if __name__ == '__main__':
 	try:
 		main()
-	except KeyboardInterrupt as e:
+	except KeyboardInterrupt:
 		logger.info(f'Shutting down server...')
 		sys.exit(0)
-	except DbStartError as e:
+	except DbStartError:
 		logger.error('Could not start DB. Cannot continue')
 		sys.exit(0)
-	except EnvironmentError as e:
-		logger.error(f'Cannot run script in the current environment. {e}')
+	except EnvironmentError as env_error:
+		logger.error(f'Cannot run script in the current environment. {env_error}')
 		sys.exit(0)
 	except Exception as e:
 		print(f"Error: {e}")
