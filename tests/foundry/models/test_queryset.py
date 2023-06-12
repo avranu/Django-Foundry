@@ -20,9 +20,9 @@
 from math import sqrt
 from django.test import TestCase
 from model_bakery import baker
-from models.abstract import QuerySet
 from django.db.models import Q
 from unittest.mock import MagicMock
+from djangofoundry.models import QuerySet
 
 # Create a mock model using model_bakery
 class Case:

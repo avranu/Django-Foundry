@@ -27,9 +27,9 @@ import queue
 from collections import deque
 # Django Imports
 # Lib Imports
-from helpers.queue import signals
-from models import Model
-from models.choices import TextChoices
+from djangofoundry.helpers.queue import signals
+from djangofoundry.models import Model
+from djangofoundry.models.choices import TextChoices
 # App Imports
 
 class Callbacks(TextChoices):
@@ -66,14 +66,14 @@ class Queue(queue.Queue):
 	limit: int = 100
 
 	# The key on this model to check for collisions during save() - if a collision happens, we update instead
-	unique_key: Array[str] = None
+	unique_key: list[str] = list()
 
 	# A queue ONLY works on a single model. This can be specified in __init__, or determined by the first append
-	model: Model = None
+	model: Model
 
 	# Optional callbacks to be used when certain actions occur (like saving the queue, clearing the queue, etc)
 	# NOTE: The signature uses "str" instead of "Callbacks" so that subclasses of Queue can implement additional callback points.
-	callbacks: dict[str: Callable] = None
+	callbacks: dict[str, Callable | None] = dict()
 
 	# If True, saving the queue will be deferred until it is turned back on
 	# Saving will still occur at the end of a with block.
@@ -111,7 +111,7 @@ class Queue(queue.Queue):
 		self._save_deferred = value
 
 	def __init__(self,
-				 unique_key: str | Array | None = None,
+				 unique_key: str | list[str] | None = None,
 				 model: Optional[Model] = None,
 				 limit: int = 100,
 				 save_deferred : bool = False,
@@ -152,10 +152,13 @@ class Queue(queue.Queue):
 
 		# Set the unique key (or convert to an array and set it). If not provided, we assume that a subclass has set it manually in the class def.
 		if unique_key is not None:
-			self.unique_key : Array = unique_key if unique_key is Array else [unique_key]
+			if isinstance(unique_key, list):
+				self.unique_key = unique_key
+			else:
+				self.unique_key = list(unique_key)
 
 		# If no unique key is available from the class def or __init__, then we can't do bulk_inserts.
-		if self.unique_key is None:
+		if not self.unique_key:
 			raise TypeError(f'No unique key provided to django-foundry.models.Queue: {unique_key}')
 
 		# Allow the default python queue to handle the generic init.
@@ -166,18 +169,21 @@ class Queue(queue.Queue):
 		self.limit = limit
 
 		# Initialize the model (if provided). If set to none, this will be determined on the first queue.append()
-		if self.model is Model:
-			self.model = model.__class__
+		if model:
+			self.model = model
 
 		# Allow us to start off deferring saves if desired.
 		self._save_deferred = save_deferred
 
 		# Initialize the callbacks and merge with anything we passed in.
 		if self.callbacks is None:
-			self.callbacks = { callback : None for callback in Callbacks.choices } | callbacks
+			self.callbacks = { callback : None for callback, _x in Callbacks.choices }
 		else:
 			# Allow setting callbacks in the subclass definition (even though doing that is probably a bad idea... supporting it eliminates unexpected behavior)
-			self.callbacks = { callback : None for callback in Callbacks.choices } | self.callbacks | callbacks
+			self.callbacks = { callback : None for callback, _x in Callbacks.choices } | self.callbacks
+		
+		if callbacks:
+			self.callbacks.update(callbacks)
 
 	def __enter__(self) -> Self:
 		'''
@@ -218,7 +224,12 @@ class Queue(queue.Queue):
 			return None
 
 		# Call the callback with any args we passed in, and return any result we get.
-		return self.callbacks[callback_name](**kwargs)
+		cb = self.callbacks[callback_name]
+
+		if cb:
+			return cb(**kwargs)
+		
+		return None
 
 	# TODO: warning on unsaved queue on __del__
 
@@ -373,7 +384,7 @@ class Queue(queue.Queue):
 		'''
 		# If the queue's model is not set, determine it from this first append
 		if self.model is None:
-			self.model = model.__class__
+			self.model = model
 
 		# Validate the model is the correct type
 		if model.__class__ is not self.model:

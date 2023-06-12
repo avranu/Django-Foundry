@@ -30,9 +30,9 @@ from django.db import models
 # Django extensions
 import auto_prefetch
 # Lib Imports
-from mixins import Hookable
+from djangofoundry.mixins import Hookable
 # App Imports
-from .manager import PostgresManager
+from djangofoundry.models.manager import PostgresManager
 
 # Set up a logger for this module.
 #

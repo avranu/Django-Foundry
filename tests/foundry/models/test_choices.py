@@ -29,7 +29,7 @@ from dateutil.parser import ParserError
 # Django imports
 from django.test import TestCase
 # Lib imports
-from models.choices import TextChoices
+from djangofoundry.models.choices import TextChoices
 # App imports
 
 

@@ -21,7 +21,7 @@
 from __future__ import annotations
 from typing import Iterable
 from thefuzz import fuzz, process
-from matching.engine import MatchingEngine
+from djangofoundry.matching.engine import MatchingEngine
 
 class TheFuzz(MatchingEngine):
 

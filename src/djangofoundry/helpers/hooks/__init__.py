@@ -20,6 +20,6 @@
 """
 # Generic imports
 from __future__ import annotations
-from .meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from .exceptions import MaxExecutionsError
-from .hooks import Hook, Hooks
+from djangofoundry.helpers.hooks.meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from djangofoundry.helpers.hooks.exceptions import MaxExecutionsError
+from djangofoundry.helpers.hooks.hooks import Hook, Hooks

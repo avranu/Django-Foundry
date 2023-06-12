@@ -18,5 +18,5 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-from .constants import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from .types import WaypointMap, NamespaceMap
+from djangofoundry.helpers.hooks.meta.constants import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from djangofoundry.helpers.hooks.meta.types import WaypointMap, NamespaceMap

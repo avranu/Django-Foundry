@@ -18,4 +18,4 @@
 		Copyright (c) 2022 Jess Mann
 """
 # Generic imports
-from .abstract import Signal
+from djangofoundry.signals.abstract import Signal

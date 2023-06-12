@@ -17,4 +17,4 @@
 
 		Copyright (c) 2023 Jess Mann
 """
-from .model import IndexInfo, TableInfo, ColumnInfo, ForeignKeyInfo, ConstraintInfo, ConstraintType, ConstraintDict, DbInfo
+from djangofoundry.helpers.render.meta.model import IndexInfo, TableInfo, ColumnInfo, ForeignKeyInfo, ConstraintInfo, ConstraintType, ConstraintDict, DbInfo

@@ -20,7 +20,7 @@
 from __future__ import annotations
 import logging
 import re
-from helpers.render.jinja.template import TemplateHelper
+from djangofoundry.helpers.render.jinja.template import TemplateHelper
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)

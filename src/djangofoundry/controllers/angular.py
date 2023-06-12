@@ -18,7 +18,7 @@
 		Copyright (c) 2023 Jess Mann
 """
 from django.shortcuts import render
-from .generic import GenericController
+from djangofoundry.controllers.generic import GenericController
 
 class AngularController(GenericController):
 	"""

@@ -21,10 +21,10 @@
 # Generic imports
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Iterable, Optional
-from .meta.constants import DEFAULT_NAMESPACE
+from djangofoundry.helpers.hooks.meta.constants import DEFAULT_NAMESPACE
 
 if TYPE_CHECKING:
-	from .hook import Hook
+	from djangofoundry.helpers.hooks.hook import Hook
 
 class Waypoint:
 	"""

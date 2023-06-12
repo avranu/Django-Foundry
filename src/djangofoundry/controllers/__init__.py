@@ -20,7 +20,30 @@
 
 """
 # Generic imports
-from .responses import *
-from .detail import DetailController
-from .list import ListController
-from .generic import GenericController
+from djangofoundry.controllers.responses import (
+    Response,
+    SuccessResponse,
+    ErrorResponse,
+    OkResponse,
+    DataResponse,
+    DataModifiedResponse,
+    CreatedResponse,
+    UpdatedResponse,
+    DeletedResponse,
+    NotFoundResponse,
+    BadRequestResponse,
+    UnauthorizedResponse,
+    ForbiddenResponse,
+    ConflictResponse,
+    GoneResponse,
+    LengthRequiredResponse,
+    PreconditionFailedResponse,
+    RequestEntityTooLargeResponse,
+    NotImplementedResponse,
+    BadGatewayResponse,
+    ServiceUnavailableResponse,
+    GatewayTimeoutResponse,
+)
+from djangofoundry.controllers.detail import DetailController
+from djangofoundry.controllers.list import ListController
+from djangofoundry.controllers.generic import GenericController

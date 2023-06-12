@@ -19,7 +19,7 @@
 """
 # Generic imports
 from __future__ import annotations
-from signals import Signal
+from djangofoundry.signals import Signal
 
 class QueueSignal(Signal):
 	"""

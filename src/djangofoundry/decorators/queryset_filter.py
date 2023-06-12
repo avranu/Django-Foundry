@@ -21,8 +21,8 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import Callable
-from models import QuerySet
+from typing import Callable, Optional
+from djangofoundry.models import QuerySet
 
 class Queryset_Filter:
 	'''

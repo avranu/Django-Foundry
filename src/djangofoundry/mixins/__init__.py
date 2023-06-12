@@ -20,7 +20,7 @@
 
 """
 # Generic imports
-from .hookable import Hookable
-from .dirtyfields import DirtyFields
-from .hasParams import HasParams
-from .jsonResponse import JSONResponseMixin
+from djangofoundry.mixins.hookable import Hookable
+from djangofoundry.mixins.dirtyfields import DirtyFields
+from djangofoundry.mixins.hasParams import HasParams
+from djangofoundry.mixins.jsonResponse import JSONResponseMixin

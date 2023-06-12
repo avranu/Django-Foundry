@@ -21,7 +21,7 @@
 # Generic imports
 from __future__ import annotations
 from typing import Any, Callable, Tuple
-from helpers.hooks.meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from djangofoundry.helpers.hooks.meta import DEFAULT_NAMESPACE, DEFAULT_PRIORITY
 
 class Hook:
 	"""

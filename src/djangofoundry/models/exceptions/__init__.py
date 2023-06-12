@@ -17,4 +17,4 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-from .get import DoesNotExist, NotUnique
+from djangofoundry.models.exceptions.get import DoesNotExist, NotUnique

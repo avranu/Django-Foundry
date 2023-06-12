@@ -19,6 +19,6 @@
 		Copyright (c) 2022 Jess Mann
 
 """
-from .retry import retry
-from .timeout import timeout
-from .queryset_filter import Queryset_Filter
+from djangofoundry.decorators.retry import retry
+from djangofoundry.decorators.timeout import timeout
+from djangofoundry.decorators.queryset_filter import Queryset_Filter

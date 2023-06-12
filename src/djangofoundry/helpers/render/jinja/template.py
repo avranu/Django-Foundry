@@ -21,7 +21,7 @@ from __future__ import annotations
 import logging
 from jinja2 import Environment, PackageLoader, select_autoescape, TemplateNotFound
 from pyparsing import Optional
-from helpers.render.template import TemplateHelper as BaseTemplate
+from djangofoundry.helpers.render.template import TemplateHelper as BaseTemplate
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)

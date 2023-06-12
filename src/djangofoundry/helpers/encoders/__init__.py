@@ -17,4 +17,4 @@
 
 		Copyright (c) 2023 Jess Mann
 """
-from .json import JSONEncoder
+from djangofoundry.helpers.encoders.json import JSONEncoder

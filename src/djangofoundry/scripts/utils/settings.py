@@ -26,8 +26,8 @@ from yaml.loader import SafeLoader
 import logging
 import logging.config
 # App imports
-from .exceptions import FileEmptyError
-from .types import *
+from djangofoundry.scripts.utils.exceptions import FileEmptyError
+from djangofoundry.scripts.utils.types import SettingsFile, SettingsLog
 
 SETTINGS_PATH : str = '../conf/settings.yaml'
 

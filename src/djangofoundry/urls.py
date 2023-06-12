@@ -22,7 +22,7 @@ from __future__ import annotations
 # Django imports
 from django.urls import path
 # App Imports
-from .controllers.memory import MemoryMonitorView, memory_usage
+from djangofoundry.controllers.memory import MemoryMonitorView, memory_usage
 
 app_name = 'django-foundry'
 

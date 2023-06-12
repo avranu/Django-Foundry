@@ -26,8 +26,8 @@ from jinja2 import TemplateNotFound
 from django.db import connections
 from django.db.backends.utils import CursorWrapper
 # LIB imports
-from helpers.render.meta.model import IndexInfo, IndexColumnInfo, ColumnInfo, ConstraintInfo
-from .template import PythonHelper
+from djangofoundry.helpers.render.meta.model import IndexInfo, IndexColumnInfo, ColumnInfo, ConstraintInfo
+from djangofoundry.helpers.render.jinja.code.python.template import PythonHelper
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
@@ -166,7 +166,7 @@ class ModelHelper(PythonHelper):
 		Returns:
 			List[ColumnInfo]: The list of columns for the given table
 		"""
-		from models.abstract import Model
+		from djangofoundry.models import Model
 		if not table_name:
 			table_name = self.table_name
 

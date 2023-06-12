@@ -19,7 +19,7 @@
 """
 from __future__ import annotations
 import logging
-from helpers.render.jinja.code.template import CodeHelper
+from djangofoundry.helpers.render.jinja.code.template import CodeHelper
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)

@@ -17,5 +17,5 @@
 
 		Copyright (c) 2023 Jess Mann
 """
-from .template import PythonHelper
-from .model import ModelHelper
+from djangofoundry.helpers.render.jinja.code.python.template import PythonHelper
+from djangofoundry.helpers.render.jinja.code.python.model import ModelHelper

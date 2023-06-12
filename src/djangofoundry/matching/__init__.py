@@ -17,5 +17,5 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-from matching.engine import MatchingEngine
-from matching.fuzzy import TheFuzz
+from djangofoundry.matching.engine import MatchingEngine
+from djangofoundry.matching.fuzzy import TheFuzz

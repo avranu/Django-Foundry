@@ -17,4 +17,4 @@
 
 		Copyright (c) 2023 Jess Mann
 """
-from templatetags import syntax_highlight
+from djangofoundry.templatetags import syntax_highlight

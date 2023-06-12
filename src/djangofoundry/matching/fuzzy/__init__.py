@@ -17,4 +17,4 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-from .thefuzz import TheFuzz
+from djangofoundry.matching.fuzzy.thefuzz import TheFuzz

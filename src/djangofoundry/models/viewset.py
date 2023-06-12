@@ -24,8 +24,8 @@ from __future__ import annotations
 from rest_framework import viewsets, filters
 # App imports
 from djangofoundry.mixins import HasParams
-from .queryset import QuerySet
-from .serializer import Serializer
+from djangofoundry.models.queryset import QuerySet
+from djangofoundry.models.serializer import Serializer
 
 class ViewSet(HasParams, viewsets.ReadOnlyModelViewSet):
 	"""

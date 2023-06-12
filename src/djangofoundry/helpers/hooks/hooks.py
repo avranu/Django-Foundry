@@ -24,9 +24,9 @@
 # Generic imports
 from __future__ import annotations
 from typing import Any, Callable, Iterable, Optional
-from .meta import NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
-from .hook import Hook
-from .waypoint import Waypoint
+from djangofoundry.helpers.hooks.meta import NamespaceMap, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from djangofoundry.helpers.hooks.hook import Hook
+from djangofoundry.helpers.hooks.waypoint import Waypoint
 
 class Hooks:
 	"""

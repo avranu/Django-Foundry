@@ -25,7 +25,7 @@ import re
 from django.test import TestCase
 from django.views import View
 # Lib imports
-from controllers.mixins import HasParams
+from djangofoundry.controllers.mixins import HasParams
 # App imports
 
 class Sample(HasParams, View):

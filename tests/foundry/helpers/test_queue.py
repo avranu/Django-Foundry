@@ -26,7 +26,7 @@ from collections import deque
 from django.test import TestCase
 from model_bakery import baker
 # Lib imports
-from helpers.queue.queue import Queue
+from djangofoundry.helpers.queue import Queue
 # App imports
 
 MAX_SIZE = 3

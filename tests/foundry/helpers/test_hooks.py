@@ -18,9 +18,9 @@
 		Copyright (c) 2023 Jess Mann
 """
 from django.test import TestCase
-from helpers.hooks.meta.types import WaypointMap
-from helpers.hooks.waypoint import Waypoint
-from helpers.hooks.hook import Hook, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
+from djangofoundry.helpers.hooks.meta.types import WaypointMap
+from djangofoundry.helpers.hooks.waypoint import Waypoint
+from djangofoundry.helpers.hooks.hook import Hook, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
 
 class TestHook(TestCase):
 
