@@ -25,11 +25,11 @@ from __future__ import annotations
 from decimal import Decimal
 from time import perf_counter_ns
 from typing import Optional
+from datetime import timedelta
 from typing_extensions import Self
 from celery_progress.backend import ProgressRecorder, PROGRESS_STATE
 from celery.app.task import Task
 import humanize
-from datetime import timedelta
 # Django Imports
 from django.db.models import TextChoices
 # Lib Imports
@@ -113,15 +113,14 @@ class ProgressBar(ProgressRecorder):
 		if settings is None:
 			settings = {}
 
-		# Set our task if we were provided one
-		self.task = task
-
 		# Set the total early so we can be sure it isn't None when calculations are requested.
 		self.total = total
 
 		# Allow settings to be passed in completely, partially, or changed later.
 		# This notation indicates a dict merge. Default settings are overwritten by any settings passed in.
 		self.settings = default_settings | settings
+
+		super().__init__(task)
 
 		# Start the clock on init
 		self._init_start()
@@ -296,7 +295,7 @@ class ProgressBar(ProgressRecorder):
 		Convenience function for self.next(advance = amount).
 
 		Args:
-			advance (int):
+			amount (int):
 				The amount to increase in the current task.
 			description (str, optional):
 				An optional description to set
@@ -364,7 +363,7 @@ class ProgressBar(ProgressRecorder):
 			self._current = int(current)
 		if total is not None:
 			self._total = int(total)
-		if description is not None:
+		if description:
 			self._description = str(description)
 
 		# If a task exists, refresh it
@@ -392,7 +391,7 @@ class ProgressBar(ProgressRecorder):
 
 		# Update to running if we 1) haven't yet and 2) have done anything at all.
 		# -- otherwise, trust the end user to update states appropriately
-		if not ProgressStates.has_started(self.state) and (self._current > 0 or self._description != ''):
+		if not ProgressStates.has_started(self.state) and (self._current > 0 or self._description):
 			self._state = PROGRESS_STATE
 
 		# If we don't have a task, there's nothing to refresh

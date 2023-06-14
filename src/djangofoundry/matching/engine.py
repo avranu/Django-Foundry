@@ -68,7 +68,7 @@ class MatchingEngine(ABC):
 		Returns:
 			int:
 				The confidence that these two strings match.
-			 	1 - 100
+				1 - 100
 
 				100 means we are certain they match.
 				1 means we are certain they do not match.
@@ -91,7 +91,7 @@ class MatchingEngine(ABC):
 		Returns:
 			int:
 				The confidence that these two strings match.
-			 	1 - 100
+				1 - 100
 
 				100 means we are certain they match.
 				1 means we are certain they do not match.
@@ -114,7 +114,7 @@ class MatchingEngine(ABC):
 		Returns:
 			int:
 				The confidence that these two strings match.
-			 	1 - 100
+				1 - 100
 
 				100 means we are certain they match.
 				1 means we are certain they do not match.
@@ -137,7 +137,7 @@ class MatchingEngine(ABC):
 		Returns:
 			int:
 				The confidence that these two strings match.
-			 	1 - 100
+				1 - 100
 
 				100 means we are certain they match.
 				1 means we are certain they do not match.

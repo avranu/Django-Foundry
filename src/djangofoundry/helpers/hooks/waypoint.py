@@ -20,7 +20,7 @@
 """
 # Generic imports
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Iterable
 from djangofoundry.helpers.hooks.meta.constants import DEFAULT_NAMESPACE
 
 if TYPE_CHECKING:
@@ -55,9 +55,9 @@ class Waypoint:
 			name : str,
 			namespace : str = DEFAULT_NAMESPACE,
 			positional_arguments : int = 0,
-	 		named_arguments : list[str] = list,
-		 	return_type : Any = Any,
-		  	hooks : list[Hook] = list):
+			named_arguments : list[str] = list,
+			return_type : Any = Any,
+			hooks : list[Hook] = list):
 		self.name = name
 		self.namespace = namespace
 		self.positional_arguments = positional_arguments
@@ -81,9 +81,9 @@ class Waypoint:
 
 		Returns:
 			Iterable[Any]:
-   				Returns a list of all return values for the hooks run.
+				Returns a list of all return values for the hooks run.
 				This will actually be an iterable of self.return_type, but we can't typehint based on variables passed in during init.
-  		"""
+		"""
 		# Sort the hooks by priority
 		self.hooks.sort(key = lambda x: x.priority, reverse=True)
 

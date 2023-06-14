@@ -19,11 +19,11 @@
 """
 from djangofoundry.scripts.utils.action import EnumAction
 from djangofoundry.scripts.utils.exceptions import (
-    AppException,
-    FileEmptyError,
-    DbError,
-    DbConnectionError,
-    DbStartError,
-    UnsupportedCommandError
+	AppException,
+	FileEmptyError,
+	DbError,
+	DbConnectionError,
+	DbStartError,
+	UnsupportedCommandError
 )
 from djangofoundry.scripts.utils.settings import Settings

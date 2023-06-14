@@ -88,8 +88,8 @@ class TemplateHelper(ABC):
 		Render a template with the given variables.
 
 		Args:
-			template_name (str): The name of the template to render.
 			variables (dict): The variables to pass to the template.
+			template_name (str): The name of the template to render.
 
 		Returns:
 			str: The rendered template.

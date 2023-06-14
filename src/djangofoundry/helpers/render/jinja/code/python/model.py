@@ -77,7 +77,7 @@ class ModelHelper(PythonHelper):
 		"""
 		return self.connection.cursor()
 
-	def __init__(self, table_name: str, database: str, schema: Optional[str] = None, app_name: str = 'lib', template_path: str = 'templates/jinja', autoescape: list = [], template_suffix: str = '.py.jinja'):
+	def __init__(self, table_name: str, database: str, schema: Optional[str] = None, app_name: str = 'lib', template_path: str = 'templates/jinja', autoescape: list = list, template_suffix: str = '.py.jinja'):
 		"""
 		Initializes a new instance of the ModelHelper class.
 

@@ -21,7 +21,10 @@
 
 # Generic imports
 from __future__ import annotations
-import argparse, textwrap, os, re, sys
+import argparse
+import os
+import re
+import sys
 import platform
 import shutil
 from enum import Enum
@@ -93,7 +96,7 @@ class App:
 	def command(self) -> Actions:
 		"""
 		Get the currently executing command. This is typically set by self.perform()
-  		"""
+		"""
 		if self._command is None:
 			raise ValueError('Command has not been set yet')
 		return self._command
@@ -126,7 +129,7 @@ class App:
 		os.chdir(self.frontend_dir) # Switch to the frontend directory before running Angular commands
 		self.run_subprocess(["npm", "init", "-y"])
 
-		with open('package.json') as f:
+		with open('package.json', encoding="utf-8") as f:
 			data = json.load(f)
 
 		data['name'] = self.project_name
@@ -137,7 +140,7 @@ class App:
 		data['author'] = getpass.getuser()
 		data['license'] = 'BSD-3-Clause'
 
-		with open('package.json', 'w') as f:
+		with open('package.json', 'w', encoding="utf-8") as f:
 			json.dump(data, f, indent=2)
 
 		self.run_subprocess(["npm", "install"])
@@ -166,18 +169,18 @@ class App:
 		"""
 		os_name = platform.system()
 
-		if os_name == 'Linux' or os_name == 'Darwin':
+		if os_name in ['Linux', 'Darwin']:
 			try:
 				self.run_subprocess(['curl', 'https://www.npmjs.com/install.sh', '|', 'sh'])
 				return "npm installed successfully on Linux or macOS"
 			except subprocess.CalledProcessError as process_e:
-				raise EnvironmentError(f"Error installing npm on Linux or macOS: {process_e}")
+				raise EnvironmentError(f"Error installing npm on Linux or macOS: {process_e}") from process_e
 		elif os_name == 'Windows':
 			try:
 				self.run_subprocess(['powershell', '-Command', 'iex (New-Object Net.WebClient).DownloadString("https://www.npmjs.com/install.ps1")'])
 				return "npm installed successfully on Windows"
 			except subprocess.CalledProcessError as process_e:
-				raise EnvironmentError(f"Error installing npm on Windows: {process_e}")
+				raise EnvironmentError(f"Error installing npm on Windows: {process_e}") from process_e
 		else:
 			raise EnvironmentError("Unsupported operating system")
 
@@ -220,10 +223,10 @@ class App:
 	def confirm_setup(self) -> None:
 		"""
 		Confirm the setup has been completed successfully.
-		
+
 		Returns:
 			None
-			
+
 		Raises:
 			EnvironmentError: If the setup was not completed successfully.
 		"""
@@ -239,8 +242,8 @@ class App:
 		for dependency in dependencies:
 			try:
 				__import__(dependency)
-			except ImportError:
-				raise EnvironmentError(f"The {dependency} package isn't available. Please install it.")
+			except ImportError as ie:
+				raise EnvironmentError(f"The {dependency} package isn't available. Please install it.") from ie
 		logger.debug("python dependency check passed.")
 
 	def setup(self) -> None:
@@ -285,24 +288,24 @@ class App:
 
 			# Subprocess wants each arg as a separate entry in a list... combine args into our known command string.
 			script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../manage.py')
-			input_str = ['python', script_path, f'{command}'] + [arg for arg in args]
-			process = subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8")
+			input_str = ['python', script_path, f'{command}'] + list(args)
 
-			if not process.stdout:
-				raise ValueError('No output from subprocess')
+			with subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8") as process:
+				if not process.stdout:
+					raise ValueError('No output from subprocess')
 
-			# Stdout is a stream, so this acts like a while() loop as long as django is running.
-			for line in process.stdout:
-				# Pass all output to our handler, which may trigger events.
-				self.handle_output(line)
+				# Stdout is a stream, so this acts like a while() loop as long as django is running.
+				for line in process.stdout:
+					# Pass all output to our handler, which may trigger events.
+					self.handle_output(line)
 
-			# Wait for output that may not have hit the stream yet. (TODO: This may not be necessary?)
-			process.wait()
+				# Wait for output that may not have hit the stream yet. (TODO: This may not be necessary?)
+				process.wait()
 
-			# Issue our callback, as we're now finished.
-			if callback is not None:
-				logger.debug('Issuing callback on completion')
-				callback(process)
+				# Issue our callback, as we're now finished.
+				if callback is not None:
+					logger.debug('Issuing callback on completion')
+					callback(process)
 
 		except KeyboardInterrupt:
 			# Allow terminating the dev server from the command line.
@@ -323,14 +326,13 @@ class App:
 		Raises:
 			ValueError: If the subprocess has no output.
 		"""
-		process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, encoding="utf-8")
-		if not process.stdout:
-			raise ValueError('No output from subprocess')
+		with subprocess.Popen(cmd_list, stdout=subprocess.PIPE, encoding="utf-8") as process:
+			if not process.stdout:
+				raise ValueError('No output from subprocess')
 
-		for line in process.stdout:
-			self.handle_output(line, print_output)
-		process.wait()
-
+			for line in process.stdout:
+				self.handle_output(line, print_output)
+			process.wait()
 
 	def run_typical_command(self, command : Actions, callback : Optional[Callable] = None, *args, **kwargs) -> str:
 		"""
@@ -396,27 +398,27 @@ class App:
 		Start a process to sync the browser with the application state.
 
 		We currently use browser-sync for this. When our app files change, the browser will automatically refresh the page.
-  		"""
+		"""
 		# Subprocess wants each arg as a separate entry in a list... combine args into our known command string.
 		input_str = ['npm', 'run', 'serve']
 		logger.debug('Starting browsersync')
-		process = subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8", shell=True)
+		with subprocess.Popen(input_str, stdout=subprocess.PIPE, encoding="utf-8", shell=True) as process:
 
-		if not process.stdout:
-			raise ValueError('No output from subprocess')
+			if not process.stdout:
+				raise ValueError('No output from subprocess')
 
-		# Stdout is a stream, so this acts like a while() loop as long as django is running.
-		for line in process.stdout:
-			# Pass all output to our handler, which may trigger events.
-			self.handle_output(line)
+			# Stdout is a stream, so this acts like a while() loop as long as django is running.
+			for line in process.stdout:
+				# Pass all output to our handler, which may trigger events.
+				self.handle_output(line)
 
-		# Wait for output that may not have hit the stream yet. (TODO: This may not be necessary?)
-		process.wait()
+			# Wait for output that may not have hit the stream yet. (TODO: This may not be necessary?)
+			process.wait()
 
 	def on_django_started(self) -> None:
 		"""
 		Called when the django dev server is fully started.
-  		"""
+		"""
 		# If we're trying to start our app, then run our next action
 		if self.command == Actions.START:
 			self.sync_browser()
@@ -455,7 +457,7 @@ class App:
 
 		Returns:
 			Any: The result of the action.
-  		"""
+		"""
 		# Save the command for later
 		self._command = command
 
@@ -522,8 +524,8 @@ class App:
 			self.setup_routing(page_name)
 			self.create_django_controller(page_name)
 			logging.info(f"Successfully created new page '{page_name}' in Django and Angular.")
-		except Exception as e:
-			logging.error(f"Failed to create new page '{page_name}': {e}")
+		except Exception as new_page_exception:
+			logging.error(f"Failed to create new page '{page_name}': {new_page_exception}")
 
 	def create_angular_component(self, page_name: str) -> None:
 		"""
@@ -589,8 +591,8 @@ class App:
 
 		controller_file = os.path.join(controllers_dir, f"{page_name}.py")
 		try:
-			with open(controller_file, "w") as file:
-				file.write(f"from django.shortcuts import render\n\n")
+			with open(controller_file, "w", encoding="utf-8") as file:
+				file.write("from django.shortcuts import render\n\n")
 				file.write(f"def {page_name}_view(request):\n")
 				file.write(f"    return render(request, '{page_name}.html')\n")
 		except IOError as ioe:
@@ -650,7 +652,7 @@ if __name__ == '__main__':
 	try:
 		main()
 	except KeyboardInterrupt:
-		logger.info(f'Shutting down server...')
+		logger.info('Shutting down server...')
 		sys.exit(0)
 	except DbStartError:
 		logger.error('Could not start DB. Cannot continue')

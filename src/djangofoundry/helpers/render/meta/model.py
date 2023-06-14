@@ -17,9 +17,8 @@
 		Copyright (c) 2023 Jess Mann
 """
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Optional
 from enum import Enum
-from typing import Any
 
 class ConstraintType(Enum):
 	"""
@@ -173,11 +172,12 @@ class ConstraintInfo(DbInfo):
 		last_change (str): The last time the constraint was changed
 	"""
 	def __init__(self, name, constraint_type: ConstraintType, column_name, search_condition : Optional[str] = None, r_constraint_name : Optional[str] = None, r_owner : Optional[Any] = None, delete_rule : Optional[str] = None, status : Optional[str] = None, deferrable : Optional[str] = None, deferred : Optional[str] = None, validated : Optional[str] = None, generated : Optional[str] = None, last_change : Optional[str] = None, *args, **kwargs):
-		self.name = name
+		super().__init__(name)
 		self.constraint_type = constraint_type
 		self.column_name = column_name
 		self.search_condition = search_condition
 		self.r_constraint_name = r_constraint_name
+		self.r_owner = r_owner
 		self.delete_rule = delete_rule
 		self.status = status
 		self.deferrable = deferrable
@@ -230,7 +230,7 @@ class IndexInfo(DbInfo):
 	"""
 
 	def __init__(self, name: str, columns: Optional[list[IndexColumnInfo]] = None, uniqueness: str = ''):
-		if not name or name == '':
+		if not name:
 			name = f'index.{"-".join([column.name for column in columns or []])}'
 		super().__init__(name)
 		self.uniqueness = uniqueness

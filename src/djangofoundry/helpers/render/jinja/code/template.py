@@ -38,7 +38,7 @@ class CodeHelper(TemplateHelper):
 		Suggest a class name based on a set of input. This method exists primarily to establish an interface for subclasses.
 
 		Args:
-			input (str): The input to base the suggested name on
+			input_str (str): The input to base the suggested name on
 
 		Returns:
 			str: The suggested class name

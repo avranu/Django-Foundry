@@ -26,7 +26,7 @@ from django.http import JsonResponse
 #
 # Set up logging for this module. __name__ includes the namespace (e.g. dashboard.models.cases).
 #
-# We can adjust logging settings from the namespace down to the module level in EmtAutomation/settings
+# We can adjust logging settings from the namespace down to the module level in project/settings
 #
 logger = logging.getLogger(__name__)
 

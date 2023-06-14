@@ -81,7 +81,7 @@ class Db:
 
 		Returns:
 			None
-  		"""
+		"""
 		self._log_path = self.sanitize_path(user_input_path)
 
 	@data_path.setter
@@ -94,7 +94,7 @@ class Db:
 
 		Returns:
 			None
-  		"""
+		"""
 		self._data_path = self.sanitize_path(user_input_path)
 
 	def __init__(self, data_path: str = DEFAULT_DATA_PATH, log_path: str = DEFAULT_LOG_PATH):
@@ -116,7 +116,7 @@ class Db:
 		Raises:
 			ValueError: If the config options provided are not valid, or the files they reference are not found.
 			FileNotFoundError: If the postgres executable cannot be found.
-  		"""
+		"""
 		# Validation
 		if not os.path.isdir(data_path):
 			raise ValueError(f'Data path not found: "{data_path}"')
@@ -140,7 +140,7 @@ class Db:
 
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl), or -1 if the server is already running.
-  		"""
+		"""
 		# If we're already running, then just return right away.
 		if self.is_running():
 			print("Postgres server already running")
@@ -155,7 +155,7 @@ class Db:
 
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
-  		"""
+		"""
 		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart'], check=True).returncode
 
 	def stop(self) -> int:
@@ -164,7 +164,7 @@ class Db:
 
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
-  		"""
+		"""
 		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop'], check=True).returncode
 
 	def status(self) -> int:
@@ -173,7 +173,7 @@ class Db:
 
 		Returns:
 			int: The exit code returned from executing the postgres command (pg_ctl)
-  		"""
+		"""
 		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status'], check=True).returncode
 
 	def check_errors(self) -> int:
@@ -240,18 +240,18 @@ class Db:
 
 		Raises:
 			FileNotFoundError: If postgres is not able to find the data directory
-  		"""
+		"""
 		# Create a child process, supressing output
 		child = subprocess.run([EXE, '-D', self.data_path, 'status'], stdout = subprocess.PIPE, check=True)
 
 		"""
-  		Postgres returns exit code 3 if the server is NOT running, and 4 on error. It returns 0 otherwise.
+		Postgres returns exit code 3 if the server is NOT running, and 4 on error. It returns 0 otherwise.
 
 		See here: https://www.postgresql.org/docs/current/app-pg-ctl.html
 			status mode checks whether a server is running in the specified data directory. If it is,
-	  		the server's PID and the command line options that were used to invoke it are displayed.
+			the server's PID and the command line options that were used to invoke it are displayed.
 			If the server is not running, pg_ctl returns an exit status of 3.
-		 	If an accessible data directory is not specified, pg_ctl returns an exit status of 4.
+			If an accessible data directory is not specified, pg_ctl returns an exit status of 4.
 		"""
 		if child.returncode == 4:
 			raise FileNotFoundError(f'Postgres is not able to find the data directory: {self.data_path}')
@@ -262,7 +262,7 @@ class Db:
 		Takes arbitrary user input, and sanitizes it to prevent injection attacks.
 
 		NOTE: The return value from this function will generally be passed directly to the command line,
-  		so we must be especially careful with what we return.
+		so we must be especially careful with what we return.
 
 		Args:
 			user_input_path (str): The user input to turn into a path
@@ -314,13 +314,13 @@ class Actions(Enum):
 
 if __name__ == '__main__':
 	"""
- 		This code is only run when this script is called directly (i.e. python bin/db.py)
-   	"""
+		This code is only run when this script is called directly (i.e. python bin/db.py)
+	"""
 
 	# Setup the basic configuration for the parser
 	parser = argparse.ArgumentParser(
 			formatter_class=argparse.RawTextHelpFormatter,
-	 		description=textwrap.dedent("""
+			description=textwrap.dedent("""
 				Interact with the application's local DB
 			"""),
 			epilog="",
@@ -328,9 +328,9 @@ if __name__ == '__main__':
 
 	# Define the arguments we will accept from the command line.
 	parser.add_argument('action',
-					 type=Actions,
-					 action=EnumAction,
-					 help=textwrap.dedent("""\
+					type=Actions,
+					action=EnumAction,
+					help=textwrap.dedent("""\
 						Start the local application DB
 
 						status: check the DB status
@@ -344,17 +344,17 @@ if __name__ == '__main__':
 						long_queries: check for long running queries in the DB
 						locks: check for locks in the DB
 						manage: manage the DB, restarting it if it is not running
-					 """))
+					"""))
 	parser.add_argument('-l', '--log',
-					 	type=str,
+						type=str,
 						metavar='path',
 						default=DEFAULT_LOG_PATH,
-	  					help="Path to the log file for the DB.")
+						help="Path to the log file for the DB.")
 	parser.add_argument('-d', '--data',
-					 	type=str,
+						type=str,
 						metavar='path',
 						default=DEFAULT_DATA_PATH,
-	  					help="Path to the data directory for postgres.")
+						help="Path to the data directory for postgres.")
 
 	# Parse the arguments provided to our script from the command line
 	# These are used as attributes. For example: options.action

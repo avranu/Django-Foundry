@@ -27,9 +27,10 @@ import openai
 from tqdm import tqdm
 
 class ChatGPTBugFixer:
-	def __init__(self, api_key, project_path):
+	def __init__(self, api_key, args):
 		openai.api_key = api_key
-		self.project_path = project_path
+		self.args = args
+		self.project_path = args.path
 		self.max_chars = 10000
 
 	def strip_comments(self, code : str) -> str:
@@ -83,17 +84,17 @@ class ChatGPTBugFixer:
 	def submit_code_to_chatgpt(self, code, file_path) -> str:
 		try:
 			response = openai.ChatCompletion.create(
-				model="gpt-4",
+				model = "gpt-4",
 				messages = [
-					{"role": "system", "content": "Your job is to identify bugs in python code and suggest improvements, adhering to modern best "+
-	  											  "practices, such as DRY. Review the code supplied and list specific changes to the code. If "+
-												  "functionality can be added to the code, suggest them. Use the following format for your "+
-												  "suggestions: 'Change Y to Z'. If there are no changes needed, respond with 'no changes proposed'. "+
-												  "Example response format: In the `calculate` method, change 'area = length * length' to 'area = "+
-												  "length * width'. All code submitted will be from a large django project using python 3.10.4, which "+
-												  "is focused on data analytics and running background automation tasks. The code snippet provided "+
-												  "is not the full file; it excludes all imports and comments in the original. When you are finished, "+
-												  "adding as much functionality as you can and identifying bugs, please write django unit tests for "+
+					{"role": "system", "content": "Your job is to identify bugs in python code and suggest improvements, adhering to modern best " +
+												  "practices, such as DRY. Review the code supplied and list specific changes to the code. If " +
+												  "functionality can be added to the code, suggest them. Use the following format for your " +
+												  "suggestions: 'Change Y to Z'. If there are no changes needed, respond with 'no changes proposed'. " +
+												  "Example response format: In the `calculate` method, change 'area = length * length' to 'area = " +
+												  "length * width'. All code submitted will be from a large django project using python 3.10.4, which " +
+												  "is focused on data analytics and running background automation tasks. The code snippet provided " +
+												  "is not the full file; it excludes all imports and comments in the original. When you are finished, " +
+												  "adding as much functionality as you can and identifying bugs, please write django unit tests for " +
 												  "the code for 100% code coverage"},
 					{"role": "user", "content": f"File: `{file_path}`, Code: \n\n{code}"},
 				]
@@ -121,14 +122,14 @@ class ChatGPTBugFixer:
 		exclude = ["__init__.py", "settings.py", "urls.py", "wsgi.py", "asgi.py", "manage.py"]
 		python_files = [file for file in python_files if os.path.basename(file) not in exclude]
 		excluded_dirs = ['migrations', 'logs', 'tests', 'conf', 'settings', 'static', 'templates',
-				   		 'node_modules', 'venv', 'build', 'dist', 'public', 'docs']
+						 'node_modules', 'venv', 'build', 'dist', 'public', 'docs']
 		for excluded_dir in excluded_dirs:
 			python_files = [file for file in python_files if excluded_dir not in file]
 		count = 0
 
 		for file_path in tqdm(python_files, desc="Processing files", unit="file"):
 			# Check if we've reached the max number of files to process
-			if args.max > 0 and count > args.max:
+			if self.args.max > 0 and count > self.args.max:
 				break
 
 			diff_file_path = file_path + ".diff"
@@ -137,7 +138,7 @@ class ChatGPTBugFixer:
 				continue
 
 			try:
-				with open(file_path, "r") as source_code:
+				with open(file_path, "r", encoding="utf-8") as source_code:
 					code = source_code.read()
 					code_no_comments = self.trim_code(code)
 
@@ -162,7 +163,7 @@ class ChatGPTBugFixer:
 							print(f"\nNo suggestions found for {file_path}")
 							continue
 
-						with open(diff_file_path, "w") as diff_file:
+						with open(diff_file_path, "w", encoding="utf-8") as diff_file:
 							diff_file.write(suggestions)
 						print(f"\nSuggestions saved to {diff_file_path}")
 					else:
@@ -180,7 +181,7 @@ def main(args):
 			print(f"Error loading settings: {e}")
 			return
 
-		bugfixer = ChatGPTBugFixer(openai_api_key, args.path)
+		bugfixer = ChatGPTBugFixer(openai_api_key, args)
 		bugfixer.process_python_files()
 	except KeyboardInterrupt:
 		print("Exiting...")

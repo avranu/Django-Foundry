@@ -40,7 +40,7 @@ class Hook:
 		Indicates the number of times this hook has been run.
 
 		Represented as a property to discourage editing the executions variable.
-  		"""
+		"""
 		return self._executions
 
 	def __init__(self,
@@ -52,18 +52,18 @@ class Hook:
 		"""
 		Args:
 			name (str):
-   				The name of the hook
+				The name of the hook
 			action (Callable):
-   				The action to perform when the hook is run.
+				The action to perform when the hook is run.
 			namespace (str):
-   				The namespace of the hook (defaults to the DEFAULT_NAMESPACE constant)
+				The namespace of the hook (defaults to the DEFAULT_NAMESPACE constant)
 			priority (int):
 				The priority of the hook (defaults to the DEFAULT_PRIORITY constant).
 				Hooks execute in the order of their priority.
 				Lower priorities will execute first.
 			max_executions (int):
-   				The maximum number of times this hook can be run. Defaults to -1 (no maximum)
-  		"""
+				The maximum number of times this hook can be run. Defaults to -1 (no maximum)
+		"""
 		self.namespace = namespace
 		self.name = name
 		self.action = action
@@ -84,10 +84,10 @@ class Hook:
 			>>> hook = Hook('test', lambda: 1, max_executions = 1)
 			>>> hook.run()
 			>>> hook.run()
-   			Traceback (most recent call last):
+			Traceback (most recent call last):
 			...
 			MaxExecutionsError: Hook application.test has already been run 1 times.
-  		"""
+		"""
 		return self.executions < self.max_executions > -1
 
 	def run(self, *args, **kwargs) -> Tuple[bool, Any]:
@@ -96,13 +96,13 @@ class Hook:
 
 		Args:
 			*args:
-   				Any positional arguments to pass to the action
+				Any positional arguments to pass to the action
 			**kwargs:
-   				Any keyword arguments to pass to the action
+				Any keyword arguments to pass to the action
 
 		Returns:
 			(bool, Any): Returns a boolean to indicate whether the action run, and the return value of the action (or None)
-  		"""
+		"""
 		# Check if we're allowed to run
 		if self.can_run() is False:
 			return (False, None)
@@ -120,13 +120,13 @@ class Hook:
 
 		Args:
 			*args:
-   				Any positional arguments to pass to the action
+				Any positional arguments to pass to the action
 			**kwargs:
-   				Any keyword arguments to pass to the action
+				Any keyword arguments to pass to the action
 
 		Returns:
 			Any: Hooks may define their own return values
-  		"""
+		"""
 		# Increase the executions (perhaps beyond the max)
 		self._executions += 1
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 	This code is only called if this module is executed directly (i.e. outside of django)
 
 	Its purpose is to run basic unit tests to ensure the module operates the way we intend it to.
- 	"""
+	"""
 	# Import the doctest module, which runs tests based on Examples in our comments.
 	import doctest
 

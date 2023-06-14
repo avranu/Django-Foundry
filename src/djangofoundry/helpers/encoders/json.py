@@ -21,6 +21,9 @@ import json
 from decimal import Decimal
 
 class JSONEncoder(json.JSONEncoder):
+	"""
+	JSON encoder that can handle Decimal objects
+	"""
 	def default(self, obj):
 		if isinstance(obj, Decimal):
 			return float(obj)

@@ -1,1 +1,0 @@
-from djangofoundry.meta.request import RequestType

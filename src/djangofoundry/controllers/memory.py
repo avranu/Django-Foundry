@@ -30,7 +30,8 @@ class MemoryMonitorView(View):
 	template_name = 'memory.html'
 
 	def get(self, request, *args, **kwargs):
-		return render(request, self.template_name)
+		return render(request, self.template_name, *args, **kwargs)
+
 
 def memory_usage(request):
 	"""

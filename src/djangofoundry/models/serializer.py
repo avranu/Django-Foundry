@@ -19,9 +19,9 @@
 """
 # Generic imports
 from __future__ import annotations
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
-class Serializer(serializers.ModelSerializer):
+class Serializer(ModelSerializer):
 	"""
 	A base serializer class that can be used to dynamically include or exclude fields based on context.
 	"""

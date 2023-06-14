@@ -1,0 +1,666 @@
+Messages
+========
+
+src/djangofoundry/scripts/lint.py:
+    L118:- ChatGPTBugFixer.process_python_files: mccabe - MC0001
+    ChatGPTBugFixer.process_python_files is too complex (11)
+
+src/djangofoundry/scripts/lint.py:
+    L-:13 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+django-foundry.src.djangofoundry.controllers.memory (src/djangofoundry/controllers/memory.py):
+    L36:- memory_usage: pylint - too-many-locals
+    Too many local variables (22/15)
+
+src/djangofoundry/controllers/memory.py:
+    L36:- memory_usage: mccabe - MC0001
+    memory_usage is too complex (21)
+
+tests/foundry/helpers/test_queue.py:
+    L344:501 None: pycodestyle - E501
+    line too long (8253 > 500 characters)
+
+django-foundry.tests.foundry.helpers.test_queue (tests/foundry/helpers/test_queue.py):
+    L23:- None: pylint - unused-import
+    Unused import re
+
+django-foundry.tests.foundry.helpers.test_queue (tests/foundry/helpers/test_queue.py):
+    L24:- None: pylint - unused-import
+    Unused deque imported from collections
+
+django-foundry.tests.foundry.helpers.test_queue (tests/foundry/helpers/test_queue.py):
+    L26:- None: pylint - unused-import
+    Unused TestCase imported from django.test
+
+django-foundry.tests.foundry.helpers.test_queue (tests/foundry/helpers/test_queue.py):
+    L27:- None: pylint - unused-import
+    Unused baker imported from model_bakery
+
+django-foundry.tests.foundry.helpers.test_queue (tests/foundry/helpers/test_queue.py):
+    L29:- None: pylint - unused-import
+    Unused Queue imported from djangofoundry.helpers.queue
+
+src/djangofoundry/helpers/hooks/hook.py:
+    L-:4 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+src/djangofoundry/helpers/hooks/hooks.py:
+    L-:4 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+src/djangofoundry/helpers/hooks/hooks.py:
+    L248:4 None: pycodestyle - E126
+    continuation line over-indented for hanging indent
+
+django-foundry.src.djangofoundry.helpers.hooks.hooks (src/djangofoundry/helpers/hooks/hooks.py):
+    L39:1 Hooks.run: pylint - keyword-arg-before-vararg
+    Keyword argument before variable positional arguments list in the definition of run function
+
+src/djangofoundry/scripts/utils/action.py:
+    L-:5 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+tests/foundry/helpers/test_hooks.py:
+    L86:501 None: pycodestyle - E501
+    line too long (1039 > 500 characters)
+
+django-foundry.tests.foundry.helpers.test_hooks (tests/foundry/helpers/test_hooks.py):
+    L21:- None: pylint - unused-import
+    Unused WaypointMap imported from djangofoundry.helpers.hooks.meta.types
+
+django-foundry.tests.foundry.helpers.test_hooks (tests/foundry/helpers/test_hooks.py):
+    L22:- None: pylint - unused-import
+    Unused Waypoint imported from djangofoundry.helpers.hooks.waypoint
+
+src/djangofoundry/scripts/app.py:
+    L20:1 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/scripts/app.py:
+    L506:4 None: pyflakes - F841
+    local variable '_result' is assigned to but never used
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L264:1 App.run: pylint - keyword-arg-before-vararg
+    Keyword argument before variable positional arguments list in the definition of run function
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L337:1 App.run_typical_command: pylint - keyword-arg-before-vararg
+    Keyword argument before variable positional arguments list in the definition of run_typical_command function
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L449:1 App.perform: pylint - too-many-return-statements
+    Too many return statements (7/6)
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L482:4 App.perform: pylint - no-else-return
+    Unnecessary "else" after "return", remove the "else" and de-indent the code inside it
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L487:4 App.perform: pylint - no-else-return
+    Unnecessary "else" after "return", remove the "else" and de-indent the code inside it
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L572:8 App.setup_routing: pylint - unspecified-encoding
+    Using open without explicitly specifying an encoding
+
+django-foundry.src.djangofoundry.scripts.app (src/djangofoundry/scripts/app.py):
+    L621:8 App.create_new_model: pylint - unspecified-encoding
+    Using open without explicitly specifying an encoding
+
+src/djangofoundry/models/model.py:
+    L83:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+django-foundry.src.djangofoundry.models.model (src/djangofoundry/models/model.py):
+    L116:3 Model.to_dict: pylint - unreachable
+    Unreachable code
+
+src/djangofoundry/helpers/queue/queue.py:
+    L-:5 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+src/djangofoundry/helpers/queue/queue.py:
+    L273:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/helpers/queue/queue.py:
+    L274:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/helpers/queue/queue.py:
+    L332:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/helpers/queue/queue.py:
+    L335:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/helpers/queue/queue.py:
+    L401:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/helpers/queue/queue.py:
+    L402:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/scripts/db.py:
+    L20:1 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/scripts/db.py:
+    L23:16 None: pycodestyle - E401
+    multiple imports on one line
+
+src/djangofoundry/scripts/db.py:
+    L322:4 None: pycodestyle - E126
+    continuation line over-indented for hanging indent
+
+src/djangofoundry/models/fields/char.py:
+    L-:5 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+src/djangofoundry/models/fields/char.py:
+    L59:30 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L60:15 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L61:13 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L62:14 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L71:22 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L72:20 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L73:17 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L74:18 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L75:21 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L81:30 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L82:15 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L83:13 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/fields/char.py:
+    L84:14 None: pycodestyle - E223
+    tab before operator
+
+src/djangofoundry/models/queryset.py:
+    L79:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/models/queryset.py:
+    L-:52 None: pycodestyle - E101
+    indentation contains mixed spaces and tabs
+
+src/djangofoundry/models/queryset.py:
+    L139:3 None: pyflakes - F841
+    local variable '_e' is assigned to but never used
+
+src/djangofoundry/models/queryset.py:
+    L157:3 None: pyflakes - F841
+    local variable '_e' is assigned to but never used
+
+src/djangofoundry/models/queryset.py:
+    L175:3 None: pyflakes - F841
+    local variable '_e' is assigned to but never used
+
+django-foundry.src.djangofoundry.models.queryset (src/djangofoundry/models/queryset.py):
+    L1322:2 QuerySet.partial_autocorrelation: pylint - import-outside-toplevel
+    Import outside toplevel (statsmodels.tsa.stattools.pacf)
+
+src/djangofoundry/urls.py:
+    L30:3 None: pycodestyle - E126
+    continuation line over-indented for hanging indent
+
+src/djangofoundry/decorators/queryset_filter.py:
+    L27:8 None: pycodestyle - N801
+    class name 'Queryset_Filter' should use CapWords convention
+
+src/djangofoundry/decorators/queryset_filter.py:
+    L61:3 None: pycodestyle - E265
+    block comment should start with '# '
+
+src/djangofoundry/scripts/utils/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.scripts.utils.action.EnumAction' imported but unused
+
+src/djangofoundry/scripts/utils/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.scripts.utils.exceptions.AppException' imported but unused
+
+src/djangofoundry/scripts/utils/__init__.py:
+    L29:1 None: pyflakes - F401
+    'djangofoundry.scripts.utils.settings.Settings' imported but unused
+
+src/djangofoundry/helpers/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.helpers.logging.log_object' imported but unused
+
+src/djangofoundry/helpers/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.helpers.progress.ProgressBar' imported but unused
+
+src/djangofoundry/helpers/__init__.py:
+    L25:1 None: pyflakes - F401
+    'djangofoundry.helpers.encoders.JSONEncoder' imported but unused
+
+src/djangofoundry/controllers/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.controllers.responses.Response' imported but unused
+
+src/djangofoundry/controllers/__init__.py:
+    L47:1 None: pyflakes - F401
+    'djangofoundry.controllers.detail.DetailController' imported but unused
+
+src/djangofoundry/controllers/__init__.py:
+    L48:1 None: pyflakes - F401
+    'djangofoundry.controllers.list.ListController' imported but unused
+
+src/djangofoundry/controllers/__init__.py:
+    L49:1 None: pyflakes - F401
+    'djangofoundry.controllers.generic.GenericController' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.models.exceptions.DoesNotExist' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.models.queryset.QuerySet' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L25:1 None: pyflakes - F401
+    'djangofoundry.models.manager.Manager' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L26:1 None: pyflakes - F401
+    'djangofoundry.models.model.Model' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L27:1 None: pyflakes - F401
+    'djangofoundry.models.viewset.ViewSet' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L28:1 None: pyflakes - F401
+    'djangofoundry.models.serializer.Serializer' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L29:1 None: pyflakes - F401
+    'djangofoundry.models.choices.TextChoices' imported but unused
+
+src/djangofoundry/models/__init__.py:
+    L30:1 None: pyflakes - F401
+    'djangofoundry.models.fields.IntegerField' imported but unused
+
+src/djangofoundry/matching/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.matching.engine.MatchingEngine' imported but unused
+
+src/djangofoundry/matching/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.matching.fuzzy.TheFuzz' imported but unused
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L23:- None: pylint - unused-import
+    Unused import re
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L28:- None: pylint - import-error
+    Unable to import 'djangofoundry.controllers.mixins'
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L28:- None: pylint - no-name-in-module
+    No name 'mixins' in module 'djangofoundry.controllers'
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L59:7 HasParamsTest.test_sanitize_str: pylint - redefined-builtin
+    Redefining built-in 'input'
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L67:4 HasParamsTest.test_sanitize_str: pylint - deprecated-method
+    Using deprecated method assertEquals()
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L70:7 HasParamsTest.test_sanitize_int: pylint - redefined-builtin
+    Redefining built-in 'input'
+
+django-foundry.tests.foundry.controllers.test_mixins (tests/foundry/controllers/test_mixins.py):
+    L78:4 HasParamsTest.test_sanitize_int: pylint - deprecated-method
+    Using deprecated method assertEquals()
+
+src/djangofoundry/options/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.options.request.RequestType' imported but unused
+
+src/djangofoundry/helpers/render/jinja/code/python/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.code.python.template.PythonHelper' imported but unused
+
+src/djangofoundry/helpers/render/jinja/code/python/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.code.python.model.ModelHelper' imported but unused
+
+django-foundry.tests.foundry.models.test_choices (tests/foundry/models/test_choices.py):
+    L25:- None: pylint - unused-import
+    Unused date imported from datetime
+
+django-foundry.tests.foundry.models.test_choices (tests/foundry/models/test_choices.py):
+    L26:- None: pylint - unused-import
+    Unused import decimal
+
+django-foundry.tests.foundry.models.test_choices (tests/foundry/models/test_choices.py):
+    L27:- None: pylint - unused-import
+    Unused Iterable imported from typing
+
+django-foundry.tests.foundry.models.test_choices (tests/foundry/models/test_choices.py):
+    L28:- None: pylint - unused-import
+    Unused ParserError imported from dateutil.parser
+
+src/djangofoundry/__init__.py:
+    L22:1 None: pyflakes - F401
+    'djangofoundry.options.request.RequestType' imported but unused
+
+src/djangofoundry/mixins/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.mixins.hookable.Hookable' imported but unused
+
+src/djangofoundry/mixins/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.mixins.dirtyfields.DirtyFields' imported but unused
+
+src/djangofoundry/mixins/__init__.py:
+    L25:1 None: pyflakes - F401
+    'djangofoundry.mixins.hasParams.HasParams' imported but unused
+
+src/djangofoundry/mixins/__init__.py:
+    L26:1 None: pyflakes - F401
+    'djangofoundry.mixins.jsonResponse.JSONResponseMixin' imported but unused
+
+src/djangofoundry/signals/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.signals.abstract.Signal' imported but unused
+
+src/djangofoundry/matching/fuzzy/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.matching.fuzzy.thefuzz.TheFuzz' imported but unused
+
+src/djangofoundry/helpers/render/jinja/code/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.code.template.CodeHelper' imported but unused
+
+src/djangofoundry/helpers/render/jinja/code/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.code.python.PythonHelper' imported but unused
+
+src/djangofoundry/helpers/encoders/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.encoders.json.JSONEncoder' imported but unused
+
+src/djangofoundry/helpers/hooks/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.helpers.hooks.meta.DEFAULT_NAMESPACE' imported but unused
+
+src/djangofoundry/helpers/hooks/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.helpers.hooks.exceptions.MaxExecutionsError' imported but unused
+
+src/djangofoundry/helpers/hooks/__init__.py:
+    L25:1 None: pyflakes - F401
+    'djangofoundry.helpers.hooks.hooks.Hook' imported but unused
+
+django-foundry.tests.foundry.decorators.test_timeout (tests/foundry/decorators/test_timeout.py):
+    L20:- None: pylint - unused-import
+    Unused sleep imported from time
+
+django-foundry.tests.foundry.decorators.test_timeout (tests/foundry/decorators/test_timeout.py):
+    L21:- None: pylint - unused-import
+    Unused TestCase imported from django.test
+
+django-foundry.tests.foundry.decorators.test_timeout (tests/foundry/decorators/test_timeout.py):
+    L22:- None: pylint - unused-import
+    Unused timeout imported from djangofoundry.decorators.timeout
+
+src/djangofoundry/helpers/render/meta/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.meta.model.IndexInfo' imported but unused
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L24:- None: pylint - wrong-import-order
+    standard import "from unittest.mock import MagicMock" should be placed before "from django.test import TestCase"
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L24:- None: pylint - unused-import
+    Unused MagicMock imported from unittest.mock
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L245:2 QuerySetTestCase.test_filter_by_related: pylint - unused-variable
+    Unused variable 'documents'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L273:2 QuerySetTestCase.test_summarize_x_by_high_y: pylint - unused-variable
+    Unused variable 'cases'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L279:2 QuerySetTestCase.test_summarize_x_by_low_y: pylint - unused-variable
+    Unused variable 'cases'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L291:2 QuerySetTestCase.test_summarize_distribution: pylint - unused-variable
+    Unused variable 'cases'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L297:2 QuerySetTestCase.test_summarize_x_by_y_distribution: pylint - unused-variable
+    Unused variable 'cases'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L306:2 QuerySetTestCase.test_count_unique: pylint - unused-variable
+    Unused variable 'cases'
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L23:- None: pylint - ungrouped-imports
+    Imports from package django are not grouped
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L42:2 QuerySetTestCase.setUpClass: pylint - protected-access
+    Access to a protected member _meta of a client class
+
+django-foundry.tests.foundry.models.test_queryset (tests/foundry/models/test_queryset.py):
+    L137:2 QuerySetTestCase._create_sample_documents: pylint - consider-using-enumerate
+    Consider using enumerate instead of iterating with range and len
+
+src/djangofoundry/helpers/hooks/meta/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.helpers.hooks.meta.constants.DEFAULT_NAMESPACE' imported but unused
+
+src/djangofoundry/helpers/hooks/meta/__init__.py:
+    L22:1 None: pyflakes - F401
+    'djangofoundry.helpers.hooks.meta.types.WaypointMap' imported but unused
+
+src/djangofoundry/models/exceptions/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.models.exceptions.get.DoesNotExist' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.models.fields.boolean.BooleanField' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.models.fields.number.IntegerField' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L25:1 None: pyflakes - F401
+    'djangofoundry.models.fields.date.DateTimeField' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L26:1 None: pyflakes - F401
+    'djangofoundry.models.fields.char.CharField' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L27:1 None: pyflakes - F401
+    'djangofoundry.models.fields.relationships.ForeignKey' imported but unused
+
+src/djangofoundry/models/fields/__init__.py:
+    L28:1 None: pyflakes - F401
+    'djangofoundry.models.fields.objects.HStoreField' imported but unused
+
+src/djangofoundry/helpers/queue/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.helpers.queue.signals.QueueSignal' imported but unused
+
+src/djangofoundry/helpers/queue/__init__.py:
+    L22:1 None: pyflakes - F401
+    'djangofoundry.helpers.queue.queue.Queue' imported but unused
+
+src/djangofoundry/helpers/render/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.template.TemplateHelper' imported but unused
+
+src/djangofoundry/helpers/render/__init__.py:
+    L21:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.CodeHelper' imported but unused
+
+src/djangofoundry/exceptions/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.exceptions.app.AppException' imported but unused
+
+src/djangofoundry/helpers/render/jinja/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.helpers.render.jinja.code.CodeHelper' imported but unused
+
+src/djangofoundry/templatetags/__init__.py:
+    L20:1 None: pyflakes - F401
+    'djangofoundry.templatetags.syntax_highlight' imported but unused
+
+src/djangofoundry/scripts/__init__.py:
+    L28:1 None: pyflakes - F401
+    'djangofoundry.scripts.utils.EnumAction' imported but unused
+
+src/djangofoundry/scripts/__init__.py:
+    L38:1 None: pyflakes - F401
+    'djangofoundry.scripts.app.App' imported but unused
+
+src/djangofoundry/scripts/__init__.py:
+    L39:1 None: pyflakes - F401
+    'djangofoundry.scripts.db.Db' imported but unused
+
+src/djangofoundry/decorators/__init__.py:
+    L22:1 None: pyflakes - F401
+    'djangofoundry.decorators.retry.retry' imported but unused
+
+src/djangofoundry/decorators/__init__.py:
+    L23:1 None: pyflakes - F401
+    'djangofoundry.decorators.timeout.timeout' imported but unused
+
+src/djangofoundry/decorators/__init__.py:
+    L24:1 None: pyflakes - F401
+    'djangofoundry.decorators.queryset_filter.Queryset_Filter' imported but unused
+
+django-foundry (__init__.py):
+    L1:- None: pylint - django-not-configured
+    Django was not configured. For more information run pylint --load-plugins=pylint_django --help-msg=django-not-configured
+
+django-foundry.src.djangofoundry.helpers.encoders.json (src/djangofoundry/helpers/encoders/json.py):
+    L27:1 JSONEncoder.default: pylint - arguments-renamed
+    Parameter 'o' has been renamed to 'obj' in overriding 'JSONEncoder.default' method
+
+django-foundry.src.djangofoundry.helpers.hooks.meta.types (src/djangofoundry/helpers/hooks/meta/types.py):
+    L30:24 None: pylint - used-before-assignment
+    Using variable 'Waypoint' before assignment
+
+django-foundry.src.djangofoundry.helpers.render.meta.model (src/djangofoundry/helpers/render/meta/model.py):
+    L174:1 ConstraintInfo.__init__: pylint - keyword-arg-before-vararg
+    Keyword argument before variable positional arguments list in the definition of __init__ function
+
+django-foundry.src.djangofoundry.helpers.render.meta.model (src/djangofoundry/helpers/render/meta/model.py):
+    L174:1 ConstraintInfo.__init__: pylint - too-many-locals
+    Too many local variables (16/15)
+
+django-foundry.src.djangofoundry.mixins.hasParams (src/djangofoundry/mixins/hasParams.py):
+    L70:3 HasParams.get_param: pylint - no-else-return
+    Unnecessary "else" after "return", remove the "else" and de-indent the code inside it
+
+django-foundry.src.djangofoundry.mixins.hookable (src/djangofoundry/mixins/hookable.py):
+    L31:15 Hookable.hook: pylint - unused-argument
+    Unused argument 'name'
+
+django-foundry.src.djangofoundry.mixins.hookable (src/djangofoundry/mixins/hookable.py):
+    L40:22 Hookable.hook_filter: pylint - unused-argument
+    Unused argument 'name'
+
+django-foundry.src.djangofoundry.models.fields.objects (src/djangofoundry/models/fields/objects.py):
+    L56:- JsonFloatValues: pylint - abstract-method
+    Method '__rand__' is abstract in class 'Combinable' but is not overridden in child class 'JsonFloatValues'
+
+django-foundry.src.djangofoundry.models.fields.objects (src/djangofoundry/models/fields/objects.py):
+    L56:- JsonFloatValues: pylint - abstract-method
+    Method '__ror__' is abstract in class 'Combinable' but is not overridden in child class 'JsonFloatValues'
+
+django-foundry.src.djangofoundry.models.fields.objects (src/djangofoundry/models/fields/objects.py):
+    L56:- JsonFloatValues: pylint - abstract-method
+    Method '__rxor__' is abstract in class 'Combinable' but is not overridden in child class 'JsonFloatValues'
+
+django-foundry.src.djangofoundry.scripts.summarize (src/djangofoundry/scripts/summarize.py):
+    L57:8 PythonClassParser.parse_file: pylint - unspecified-encoding
+    Using open without explicitly specifying an encoding
+
+django-foundry.src.djangofoundry.scripts.summarize (src/djangofoundry/scripts/summarize.py):
+    L172:7 PythonClassParser.write_to_file: pylint - unspecified-encoding
+    Using open without explicitly specifying an encoding
+
+django-foundry.src.djangofoundry.scripts.summarize (src/djangofoundry/scripts/summarize.py):
+    L201:7 PythonClassParser.run: pylint - unspecified-encoding
+    Using open without explicitly specifying an encoding
+
+django-foundry.src.djangofoundry.templatetags.syntax_highlight (src/djangofoundry/templatetags/syntax_highlight.py):
+    L22:- None: pylint - no-name-in-module
+    No name 'PythonLexer' in module 'pygments.lexers'
+
+django-foundry.src.djangofoundry.templatetags.syntax_highlight (src/djangofoundry/templatetags/syntax_highlight.py):
+    L23:- None: pylint - no-name-in-module
+    No name 'HtmlFormatter' in module 'pygments.formatters'
+
+
+
+Check Information
+=================
+         Started: 2023-06-14 01:02:38.607946
+        Finished: 2023-06-14 01:03:08.569815
+      Time Taken: 29.96 seconds
+       Formatter: text
+        Profiles: .prospector.yaml, no_doc_warnings, strictness_veryhigh, member_warnings
+      Strictness: from profile
+  Libraries Used: django, celery
+       Tools Run: dodgy, mccabe, profile-validator, pycodestyle, pyflakes, pylint
+  Messages Found: 162
+ External Config: pylint: /home/jess/personal/django-foundry/pyproject.toml
+

@@ -26,14 +26,14 @@
 		Copyright (c) 2022 Jess Mann
 """
 from djangofoundry.scripts.utils import (
-    EnumAction,
-    Settings,
-    AppException,
-    FileEmptyError,
-    DbError,
-    DbConnectionError,
-    DbStartError,
-    UnsupportedCommandError
+	EnumAction,
+	Settings,
+	AppException,
+	FileEmptyError,
+	DbError,
+	DbConnectionError,
+	DbStartError,
+	UnsupportedCommandError
 )
 from djangofoundry.scripts.app import App
 from djangofoundry.scripts.db import Db

@@ -62,7 +62,7 @@ class LogHandler(TypedDict):
 	level: LoggerLevels
 	formatter: str
 	stream: str
-	#class: str
+	# class: str
 
 class LogRoot(TypedDict):
 	"""

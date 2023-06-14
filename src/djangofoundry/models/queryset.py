@@ -1,6 +1,4 @@
 """
-
-
 	Metadata:
 
 		File: queryset.py
@@ -36,7 +34,11 @@ from scipy import stats
 import pandas as pd
 import numpy as np
 # Django Imports
-from django.db.models import Sum, Count, Q, Avg, Min, Max, StdDev, ExpressionWrapper, fields, F, FloatField
+from django.db.models import (
+	Sum, Count, Q, Avg, Min, Max, StdDev, ExpressionWrapper, F,
+	FloatField, IntegerField, DecimalField, BigIntegerField, PositiveIntegerField,
+	PositiveSmallIntegerField, SmallIntegerField, DurationField, PositiveBigIntegerField
+)
 from django.db.models.query import RawQuerySet
 # Django extensions
 import auto_prefetch
@@ -101,15 +103,15 @@ class QuerySet(auto_prefetch.QuerySet):
 
 		# List of all fields that are numeric
 		numeric_fields = [
-			fields.IntegerField,
-			fields.FloatField,
-			fields.DecimalField,
-			fields.BigIntegerField,
-			fields.PositiveIntegerField,
-			fields.SmallIntegerField,
-			fields.PositiveSmallIntegerField,
-			fields.DurationField,
-			fields.PositiveBigIntegerField,
+			IntegerField,
+			FloatField,
+			DecimalField,
+			BigIntegerField,
+			PositiveIntegerField,
+			SmallIntegerField,
+			PositiveSmallIntegerField,
+			DurationField,
+			PositiveBigIntegerField,
 		]
 		attr = getattr(self.model, field_name)
 
@@ -518,7 +520,7 @@ class QuerySet(auto_prefetch.QuerySet):
 		max_value = self.aggregate(Max(field_name))[f"{field_name}__max"]
 
 		# Get the distribution
-		distribution = (self.values(field_name).annotate(bin=ExpressionWrapper(F(field_name) - min_value, output_field=fields.IntegerField()) // ((max_value - min_value) // bins)).values("bin").annotate(count=Count("bin")).order_by("bin"))
+		distribution = (self.values(field_name).annotate(bin=ExpressionWrapper(F(field_name) - min_value, output_field=IntegerField()) // ((max_value - min_value) // bins)).values("bin").annotate(count=Count("bin")).order_by("bin"))
 
 		return {result["bin"]: result["count"] for result in distribution}
 
@@ -547,8 +549,8 @@ class QuerySet(auto_prefetch.QuerySet):
 		max_value = self.aggregate(Max(y_field_name))[f"{y_field_name}__max"]
 
 		# Get the distribution
-		distribution = (self.values(x_field_name, y_field_name).annotate(bin=ExpressionWrapper(F(y_field_name) - min_value, output_field=fields.IntegerField()) // ((max_value - min_value) // bins)).values(x_field_name,
-																																														   			         "bin").annotate(count=Count("bin")).order_by(x_field_name, "bin"))
+		distribution = (self.values(x_field_name, y_field_name).annotate(bin=ExpressionWrapper(F(y_field_name) - min_value, output_field=IntegerField()) // ((max_value - min_value) // bins)).values(x_field_name,
+																																																			 "bin").annotate(count=Count("bin")).order_by(x_field_name, "bin"))
 
 		# Convert the distribution to a dictionary
 		distribution_dict = {}

@@ -2,7 +2,7 @@
 
 	Metadata:
 
-		File: exceptions.py
+		File: exceptions/app.py
 		Project: Django Foundry
 		Created Date: 17 Dec 2022
 		Author: Jess Mann

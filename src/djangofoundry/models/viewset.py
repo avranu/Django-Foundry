@@ -19,20 +19,25 @@
 """
 # Generic imports
 from __future__ import annotations
+from typing import TYPE_CHECKING
 # Django Imports
 # Third party imports
-from rest_framework import viewsets, filters
+from rest_framework.filters import OrderingFilter
+from rest_framework.viewsets import ReadOnlyModelViewSet
 # App imports
 from djangofoundry.mixins import HasParams
-from djangofoundry.models.queryset import QuerySet
 from djangofoundry.models.serializer import Serializer
 
-class ViewSet(HasParams, viewsets.ReadOnlyModelViewSet):
+if TYPE_CHECKING:
+	from djangofoundry.models.queryset import QuerySet
+
+
+class ViewSet(HasParams, ReadOnlyModelViewSet):
 	"""
 	An abstract viewset class that provides a default implementation for the get_queryset method, and allows for filtering and ordering of the queryset.
 	"""
 	serializer_class = Serializer
-	filter_backends = [filters.OrderingFilter]
+	filter_backends = [OrderingFilter]
 	filterset_fields : list[str] = []
 	ordering_fields = ['__all__']
 	ordering = ['id']

@@ -20,10 +20,10 @@
 # Generic imports
 from __future__ import annotations
 from typing import Any, Callable, Optional
-from typing_extensions import Self
-from psqlextra.query import ConflictAction
 import queue
 from collections import deque
+from typing_extensions import Self
+from psqlextra.query import ConflictAction
 # Django Imports
 # Lib Imports
 from djangofoundry.helpers.queue import signals
@@ -32,6 +32,9 @@ from djangofoundry.models.choices import TextChoices
 # App Imports
 
 class Callbacks(TextChoices):
+	"""
+	Constants for the callback points on a queue
+	"""
 	SAVE = 'save'
 	CLEAR = 'clear'
 	APPEND = 'append'
@@ -65,14 +68,14 @@ class Queue(queue.Queue):
 	limit: int = 100
 
 	# The key on this model to check for collisions during save() - if a collision happens, we update instead
-	unique_key: list[str] = list()
+	unique_key: list[str] = []
 
 	# A queue ONLY works on a single model. This can be specified in __init__, or determined by the first append
 	model: Model
 
 	# Optional callbacks to be used when certain actions occur (like saving the queue, clearing the queue, etc)
 	# NOTE: The signature uses "str" instead of "Callbacks" so that subclasses of Queue can implement additional callback points.
-	callbacks: dict[str, Callable | None] = dict()
+	callbacks: dict[str, Callable | None] = {}
 
 	# If True, saving the queue will be deferred until it is turned back on
 	# Saving will still occur at the end of a with block.
@@ -207,6 +210,7 @@ class Queue(queue.Queue):
 
 		Args:
 			callback_name (str): The name of the callback (specified in __init__ or the class definition)
+			**kwargs: Any additional arguments to pass to the callback
 
 		Returns:
 			Any: Special callbacks may define what kinds of data they wish to return.

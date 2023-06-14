@@ -90,7 +90,7 @@ class Settings:
 		if os.path.exists(filepath):
 			# If it exists, then open it
 			with open(filepath, encoding='utf-8') as file:
-	     		# Load the contents into a variable
+				# Load the contents into a variable
 				self._settings = yaml.load(file, Loader=SafeLoader)
 		else:
 			# Let everyone know we couldn't find the settings. This likely exits.
@@ -109,7 +109,7 @@ class Settings:
 
 		Returns:
 			dict: A dictionary of settings.
-  		"""
+		"""
 		return self.settings
 
 
@@ -122,7 +122,7 @@ class Settings:
 
 		Returns:
 			Any: The value stored at the provided key
-  		"""
+		"""
 		return self.settings.get(key)
 
 if __name__ == '__main__':

@@ -18,8 +18,6 @@
 """
 # Generic imports
 from __future__ import annotations
-
-from typing import Optional
 # Django Imports
 from django.db import models
 # Lib Imports
@@ -51,7 +49,6 @@ class RowIdField(CharField):
 	A charfield that is used for storing row ids (from databases like Oracle)
 	"""
 	def __init__(self, *,
-				 map_field  : Optional[str] = None,
 				 max_length : int = 18,
 				 unique	 : bool = True,
 				 null	   : bool = False,
@@ -59,12 +56,11 @@ class RowIdField(CharField):
 				 editable   : bool = False,
 				 **kwargs):
 		# Call the parent init function first
-		super().__init__(max_length  = max_length,
-								map_field   = map_field,
-								unique	  = unique,
-								null		= null,
-								blank	   = blank,
-								editable	= editable,
+		super().__init__(max_length 	 = max_length,
+								unique	 = unique,
+								null	 = null,
+								blank 	 = blank,
+								editable = editable,
 								**kwargs)
 
 class GuidField(CharField):
@@ -72,21 +68,19 @@ class GuidField(CharField):
 	A charfield that is used for storing GUIDs (UUID v4)
 	"""
 	def __init__(self, *,
-				 map_field  : Optional[str] = None,
-				 max_length : int = 38,
-				 unique	 : bool = True,
-				 null	   : bool = False,
-				 blank	  : bool = False,
-				 editable   : bool = False,
+				 max_length : int 	= 38,
+				 unique	 : bool 	= True,
+				 null : bool 		= False,
+				 blank : bool 		= False,
+				 editable : bool 	= False,
 				 **kwargs):
 		'''
 		Redefine init to only accept named args
 		'''
 		# Call the parent init function first
-		super().__init__(max_length  = max_length,
-								map_field   = map_field,
-								unique	  = unique,
-								null		= null,
-								blank	   = blank,
-								editable	= editable,
+		super().__init__(max_length		 = max_length,
+								unique	 = unique,
+								null	 = null,
+								blank	 = blank,
+								editable = editable,
 								**kwargs)

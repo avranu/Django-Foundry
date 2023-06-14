@@ -27,7 +27,7 @@ import logging
 #
 # Set up logging for this module. __name__ includes the namespace (e.g. dashboard.models.cases).
 #
-# We can adjust logging settings from the namespace down to the module level in EmtAutomation/settings
+# We can adjust logging settings from the namespace down to the module level in project/settings
 #
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ class HasParams:
 	Attributes:
 		kwargs (Iterable[dict]):
 			The (unsanitized) parameters passed to us via url.
-  			NOTE: This is defined by django controllers and overrides our definition. We include it here only for standalone type checking purposes.
+			NOTE: This is defined by django controllers and overrides our definition. We include it here only for standalone type checking purposes.
 	"""
 	kwargs: Iterable[dict]
 
@@ -53,18 +53,18 @@ class HasParams:
 
 		Attributes:
 			name (str):
-   				The name of the parameter
+				The name of the parameter
 			sanitize (bool):
 				If False, return the user input unmodified. Otherwise, sanitize the user input (default).
 			required (bool):
-   				If true, we will throw an exception if the parameter is missing. If false, we return null for missing parameters.
+				If true, we will throw an exception if the parameter is missing. If false, we return null for missing parameters.
 
 		Returns:
 			str: The value of the parameter, or None if not found.
 
 		Raises:
 			ReferenceError: If the parameter is missing and required is True.
-  		"""
+		"""
 		# If it's found, then return it.
 		if name in self.kwargs:
 			if sanitize is False:
@@ -87,9 +87,9 @@ class HasParams:
 
 		Convenience method for accessing get_param(name,True) and ensuring the return value is a str.
 
-  		Attributes:
+		Attributes:
 			name (str):
-   				The name of the parameter
+				The name of the parameter
 			sanitize (bool):
 				If False, return the user input unmodified. Otherwise, sanitize the user input (default).
 
@@ -98,7 +98,8 @@ class HasParams:
 
 		Raises:
 			ReferenceError: If the parameter is missing
-  		"""
+			TypeError: If the parameter is found but is None
+		"""
 		value = self.get_param(name, sanitize=sanitize, required=True)
 
 		# This should never happen, because required=True should throw a ReferenceError if the value is null.
@@ -156,16 +157,16 @@ class HasParams:
 
 		Args:
 			value (str):
-   				The value of the user input string to sanitize.
+				The value of the user input string to sanitize.
 			param_type (str|int):
-   				A variable type. This function currently supports string and int.
+				A variable type. This function currently supports string and int.
 
 		Returns:
 			str | int: The sanitized value
 
 		Raises:
 			ValueError: If param_type is not a supported type.
-  		"""
+		"""
 		match param_type:
 			case str():
 				return self.sanitize_str(value)

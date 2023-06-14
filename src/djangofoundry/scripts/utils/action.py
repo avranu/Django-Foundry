@@ -20,7 +20,8 @@
 
 		Copyright (c) 2022 Jess Mann
 """
-import argparse, enum
+import argparse
+import enum
 from typing import Any, Optional
 
 class EnumAction(argparse.Action):

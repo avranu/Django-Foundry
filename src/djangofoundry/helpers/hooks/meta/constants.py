@@ -1,7 +1,7 @@
 """
 	This module defines constants that relate to our hook classes.
 
- 	These can be imported in other packages with minimal dependencies that could cause a circular import.
+	These can be imported in other packages with minimal dependencies that could cause a circular import.
 
 	Metadata:
 

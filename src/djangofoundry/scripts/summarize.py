@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class PythonClassParser:
 	"""
-	Parser for Python classes in a directory. 
+	Parser for Python classes in a directory.
 
 	This class will parse all Python files in a directory and output a summary of all classes found in those files, which can be used
 	to generate documentation for the project, or to pass to other tools (like LLMs).
@@ -229,7 +229,7 @@ def parse_args() -> argparse.Namespace:
 	return parser.parse_args()
 
 if __name__ == "__main__":
-	args: argparse.Namespace = parse_args()
+	args : argparse.Namespace = parse_args()
 	if args.verbose:
 		logger.setLevel(logging.DEBUG)
 
@@ -237,5 +237,5 @@ if __name__ == "__main__":
 		file_handler = logging.FileHandler(args.logfile)
 		logger.addHandler(file_handler)
 
-	parser: PythonClassParser = PythonClassParser(args.directory, args.output, args.ignore, args.recursive)
-	parser.run()
+	arg_parser : PythonClassParser = PythonClassParser(args.directory, args.output, args.ignore, args.recursive)
+	arg_parser.run()
