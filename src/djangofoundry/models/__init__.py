@@ -21,11 +21,6 @@
 """
 # Generic imports
 from djangofoundry.models.exceptions import DoesNotExist, NotUnique
-from djangofoundry.models.queryset import QuerySet
-from djangofoundry.models.manager import Manager, PostgresManager
-from djangofoundry.models.model import Model
-from djangofoundry.models.viewset import ViewSet
-from djangofoundry.models.serializer import Serializer
 from djangofoundry.models.choices import TextChoices
 from djangofoundry.models.fields import (
 	IntegerField,
@@ -52,3 +47,8 @@ from djangofoundry.models.fields import (
 	OneToOneField,
 	JSONField,
 )
+from djangofoundry.models.queryset import QuerySet
+from djangofoundry.models.manager import Manager, PostgresManager
+from djangofoundry.models.model import Model
+from djangofoundry.models.serializer import Serializer
+from djangofoundry.models.viewset import ViewSet
