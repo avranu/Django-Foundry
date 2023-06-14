@@ -71,9 +71,9 @@ class HasParams:
 				# Return it unsanitized
 				logger.warning(f'Returning user input {name} unsanitized.')
 				return self.kwargs[name]
-			else:
-				# Unless explicitly False, return a sanitized string.
-				return self.sanitize_str(self.kwargs[name])
+			
+			# Unless explicitly False, return a sanitized string.
+			return self.sanitize_str(self.kwargs[name])
 
 		# Not found, determine what to do...
 		if required is True:
