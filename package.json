@@ -10,7 +10,9 @@
     "lint:fix": "find src/ -name '*.py' -exec yapf --in-place {} +",
     "lint:check": "find src/ -name '*.py' -exec echo 'Checking:' {} ';' -exec yapf --diff {} +",
     "black:check": "black --check src",
-    "black:diff": "black --diff src"
+    "black:diff": "black --diff src",
+    "build": "python -m build",
+    "upload": "python -m twine upload dist/*"
   },
   "repository": {
     "type": "git",
