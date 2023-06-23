@@ -395,7 +395,7 @@ class ProgressBar(ProgressRecorder):
 			self._state = PROGRESS_STATE
 
 		# If we don't have a task, there's nothing to refresh
-		if self.task is None:
+		if not hasattr(self, 'task') or not self.task:
 			return
 
 		# Refresh the state of the task we have based on our local values here

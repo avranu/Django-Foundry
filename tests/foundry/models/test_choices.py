@@ -32,7 +32,6 @@ from django.test import TestCase
 from djangofoundry.models.choices import TextChoices
 # App imports
 
-
 class ChoicesTest(TestCase):
 
 	def setUp(self):

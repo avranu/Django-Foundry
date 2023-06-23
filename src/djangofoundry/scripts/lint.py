@@ -91,7 +91,7 @@ class ChatGPTBugFixer:
 												  "functionality can be added to the code, suggest them. Use the following format for your " +
 												  "suggestions: 'Change Y to Z'. If there are no changes needed, respond with 'no changes proposed'. " +
 												  "Example response format: In the `calculate` method, change 'area = length * length' to 'area = " +
-												  "length * width'. All code submitted will be from a large django project using python 3.10.4, which " +
+												  "length * width'. All code submitted will be from a large django project using python 3.10 or higher, which " +
 												  "is focused on data analytics and running background automation tasks. The code snippet provided " +
 												  "is not the full file; it excludes all imports and comments in the original. When you are finished, " +
 												  "adding as much functionality as you can and identifying bugs, please write django unit tests for " +
