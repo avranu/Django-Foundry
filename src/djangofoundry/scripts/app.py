@@ -143,6 +143,7 @@ class App:
 		with open('package.json', 'w', encoding="utf-8") as f:
 			json.dump(data, f, indent=2)
 
+		# TODO 3 sparate npm commands can likely be consolidated into 2 or 1.
 		self.run_subprocess(["npm", "install"])
 		self.run_subprocess(["npm", "install", "@angular/cli"])
 		self.run_subprocess(["ng", "new", self.project_name, "--skip-git", "--skip-install"])
@@ -169,20 +170,29 @@ class App:
 		"""
 		os_name = platform.system()
 
+		# If ubuntu, install with apt
+		if os_name == 'Linux' and shutil.which('apt'):
+			try:
+				self.run_subprocess(['apt', 'install', 'npm'])
+				return "npm installed successfully on Ubuntu"
+			except subprocess.CalledProcessError as process_e:
+				raise EnvironmentError(f"Error installing npm on Ubuntu: {process_e}") from process_e
+		
 		if os_name in ['Linux', 'Darwin']:
 			try:
 				self.run_subprocess(['curl', 'https://www.npmjs.com/install.sh', '|', 'sh'])
 				return "npm installed successfully on Linux or macOS"
 			except subprocess.CalledProcessError as process_e:
 				raise EnvironmentError(f"Error installing npm on Linux or macOS: {process_e}") from process_e
-		elif os_name == 'Windows':
+		
+		if os_name == 'Windows':
 			try:
 				self.run_subprocess(['powershell', '-Command', 'iex (New-Object Net.WebClient).DownloadString("https://www.npmjs.com/install.ps1")'])
 				return "npm installed successfully on Windows"
 			except subprocess.CalledProcessError as process_e:
 				raise EnvironmentError(f"Error installing npm on Windows: {process_e}") from process_e
-		else:
-			raise EnvironmentError("Unsupported operating system")
+		
+		raise EnvironmentError("Unsupported operating system")
 
 
 	def check_environment(self) -> None:
