@@ -34,12 +34,12 @@ import json
 import getpass
 import logging
 import psutil
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 # Our imports
 from djangofoundry.scripts.utils.exceptions import DbStartError, UnsupportedCommandError
-from djangofoundry.scripts.utils.settings import Settings
-from djangofoundry.scripts.db import Db
+from djangofoundry.scripts.utils.settings import Settings, DEFAULT_SETTINGS_PATH
+from djangofoundry.scripts.db.db import Db
 from djangofoundry.scripts.app.actions import Actions
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
@@ -197,6 +197,46 @@ class App:
 			f.write(f'{package_name}>={version}\n')
 
 		return True
+	
+	def django_createapp(self, name : str):
+		"""
+		Creates a new app in django (similar to python manage.py startapp) but with our custom changes to the default app structure.
+		"""
+
+		self.run_subprocess(["python", "manage.py", "startapp", name])
+
+		try:
+			# Within the app dir, remove the models.py file, and create a models directory with __init__.py inside it
+			os.chdir(os.path.join(self.project_name, 'dashboard'))
+			os.remove('models.py')
+
+			# Create directories for models, controllers, and templates
+			# dir_name => create __init__.py
+			dirs = { 'models' : True, 'controllers' : True, 'templates' : False }
+			for dir_name, create_init in dirs.items():
+				os.makedirs(dir_name, exist_ok=True)
+				if create_init:
+					with open(os.path.join(dir_name, '__init__.py'), 'w') as f:
+						f.write('')
+
+			# Copy all files from ../templates/app_templates (relative to this file) to {name}/templates/{name}/
+			templates_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'app_templates')
+			shutil.copytree(templates_dir, os.path.join(name, 'templates', name))
+
+			# Render ../templates/IndexController.py.jinja and save it to ./controllers/IndexController.py
+			env = Environment(loader=FileSystemLoader("templates/jinja/IndexController"))
+
+			controller_dir = f"backend/{name}/controllers/"
+			os.makedirs(controller_dir, exist_ok=True)
+
+			for template_name in env.list_templates():
+				template = env.get_template(template_name)
+				rendered_template = template.render(controller_name='IndexController')
+				output_file = os.path.join(controller_dir, template_name.replace(".jinja", ".py"))
+				with open(output_file, "w") as file:
+					file.write(rendered_template)
+		finally:
+			os.chdir(self.backend_dir)
 
 	def django_setup(self) -> str:
 		"""
@@ -212,8 +252,9 @@ class App:
 			# Switch to the backend directory before running Django commands
 			os.chdir(self.backend_dir) 
 			self.run_subprocess(["pip", "install", "django"])
-			self.run_subprocess(["django-admin", "startproject", self.project_name, '.'])
-			self.run_subprocess(["python", "manage.py", "startapp", self.project_name])
+			self.run_subprocess(["django-admin", "startproject", self.project_name, 'backend'])
+			self.django_createapp('dashboard')
+
 		finally:
 			# Switch back to the original directory
 			os.chdir(self.directory) 
@@ -250,6 +291,11 @@ class App:
 
 			# TODO 3 sparate npm commands can likely be consolidated into 2 or 1.
 			self.run_subprocess(["npm", "install"])
+
+			# Create a dashboard directory, with a ts and sass subdirectory
+			os.makedirs('dashboard', exist_ok=True)
+			os.makedirs('dashboard/ts', exist_ok=True)
+			os.makedirs('dashboard/sass', exist_ok=True)
 		finally:
 			os.chdir(self.directory) # Switch back to the original directory
 
@@ -920,7 +966,7 @@ def main():
 		parser.add_argument('-d', '--directory', default='.', help='The directory for the project.')
 		parser.add_argument('-f', '--frontend-dir', default='frontend', help='The directory for the frontend (relative to -d).')
 		parser.add_argument('-b', '--backend-dir', default='backend', help='The directory for the backend (relative to -d).')
-		parser.add_argument('-s', '--settings', default='conf/settings.yaml', help='The settings file to use.')
+		parser.add_argument('-s', '--settings', default=DEFAULT_SETTINGS_PATH, help='The settings file to use.')
 		parser.add_argument('--page-name', help='The name of the page to create.')
 		parser.add_argument('--model-name', help='The name of the model to create.')
 		parser.add_argument('--package-name', help='The name of the package to create.')
