@@ -35,5 +35,5 @@ from djangofoundry.scripts.utils import (
 	DbStartError,
 	UnsupportedCommandError
 )
-from djangofoundry.scripts.app import App
 from djangofoundry.scripts.db import Db
+from djangofoundry.scripts.app import App

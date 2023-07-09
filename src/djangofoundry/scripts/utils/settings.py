@@ -29,7 +29,7 @@ from yaml.loader import SafeLoader
 from djangofoundry.scripts.utils.exceptions import FileEmptyError
 from djangofoundry.scripts.utils.types import SettingsFile, SettingsLog
 
-SETTINGS_PATH : str = '../conf/settings.yaml'
+DEFAULT_SETTINGS_PATH : str = '../conf/sample-settings.yaml'
 
 class Settings:
 	"""
@@ -40,7 +40,12 @@ class Settings:
 	_settings : SettingsFile | None = None
 	_logging_setup : bool = False
 
-	def __init__(self, settings_path : str = SETTINGS_PATH):
+	def __init__(self, settings_path : str = DEFAULT_SETTINGS_PATH):
+		# Check if the settings file exists
+		if not os.path.exists(settings_path):
+			# Load the default config, which is relative to this file's path
+			settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), DEFAULT_SETTINGS_PATH)
+
 		# Load our settings
 		self.load_config(settings_path)
 
@@ -55,7 +60,7 @@ class Settings:
 			self.load_config()
 
 			if not self._settings:
-				raise FileEmptyError(f'No settings found in {SETTINGS_PATH}')
+				raise FileEmptyError(f'No settings found in {DEFAULT_SETTINGS_PATH}')
 
 		# It should exist now
 		return self._settings
@@ -83,7 +88,7 @@ class Settings:
 		return logging.getLogger(namespace)
 
 
-	def load_config(self, settings_path : str = SETTINGS_PATH) -> SettingsFile:
+	def load_config(self, settings_path : str = DEFAULT_SETTINGS_PATH) -> SettingsFile:
 		# Read our default sensitivity settings (if available)
 		filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings_path)
 

@@ -23,6 +23,9 @@
 import argparse
 import enum
 from typing import Any, Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 class EnumAction(argparse.Action):
 	"""
@@ -40,7 +43,11 @@ class EnumAction(argparse.Action):
 			raise TypeError("type must be an Enum when using EnumAction")
 
 		# Generate choices from the Enum
-		kwargs.setdefault("choices", tuple(e.name for e in enum_type))
+		try:
+			kwargs.setdefault("choices", tuple(e.value.lower() for e in enum_type))
+		except Exception as e:
+			logger.critical(f'Exception setting enum choices for argparse. This can happen if the enum is set with a non-string value. "{e}"')
+			raise e
 
 		super().__init__(**kwargs)
 
@@ -54,7 +61,7 @@ class EnumAction(argparse.Action):
 
 		# Convert value back into an Enum
 		if isinstance(value, str):
-			value = self._enum[value]
+			value = self._enum[value.upper()]
 			setattr(namespace, self.dest, value)
 		elif value is None:
 			raise argparse.ArgumentTypeError(f"You need to pass a value after {option_string}!")

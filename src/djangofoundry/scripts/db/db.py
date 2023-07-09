@@ -20,21 +20,22 @@
 #!/usr/bin/env python
 
 # Generic imports
-import argparse, textwrap, os, re
+import argparse, textwrap, os, re, pathlib
+import shutil
 import sys
-from enum import Enum
 import subprocess
 from shutil import which
 import time
+import logging
+from typing import Callable
 # Our imports
+from djangofoundry.scripts.db.choices import Actions, PostgresStatusCodes
+from djangofoundry.scripts.db.constants import DEFAULT_DATA_PATH, DEFAULT_LOG_PATH, EXE
+from djangofoundry.scripts.db.functions import db_action, REGISTERED_ACTIONS
 from djangofoundry.scripts.utils.action import EnumAction
 
-# Default path to the data directory, which we pass directly to postgres
-DEFAULT_DATA_PATH = os.environ.get('django_foundry_db_data_path', './pgsql/data')
-# Default path to the logfile we want to use.
-DEFAULT_LOG_PATH = os.environ.get('django_foundry_log_path', './pgsql/pgsql.log')
-# Command to use to interact with the DB. This must be in our path.
-EXE = os.environ.get('django_foundry_postgres_bin', "pg_ctl")
+# Set up logging
+logger = logging.getLogger(__name__)
 
 class Db:
 	"""
@@ -72,7 +73,7 @@ class Db:
 		return self._database
 
 	@log_path.setter
-	def log_path(self, user_input_path : str) -> None:
+	def log_path(self, user_input_path : str|pathlib.Path) -> None:
 		"""
 		Sets the log path. Assumes that input_path is user input and sanitizes it accordingly.
 
@@ -85,7 +86,7 @@ class Db:
 		self._log_path = self.sanitize_path(user_input_path)
 
 	@data_path.setter
-	def data_path(self, user_input_path : str) -> None:
+	def data_path(self, user_input_path : str|pathlib.Path) -> None:
 		"""
 		Sets the data directory path. Assumes that input_path is user input and sanitizes it accordingly.
 
@@ -97,12 +98,12 @@ class Db:
 		"""
 		self._data_path = self.sanitize_path(user_input_path)
 
-	def __init__(self, data_path: str = DEFAULT_DATA_PATH, log_path: str = DEFAULT_LOG_PATH):
+	def __init__(self, data_path: str|pathlib.Path = DEFAULT_DATA_PATH, log_path: str|pathlib.Path = DEFAULT_LOG_PATH):
 		"""
 		Sets up our Db object with config options we'll use for this run.
 
 		Args:
-			data_path (str, optional):
+			data_path(str, optional)
 				The data directory path to use, which is passed directly to Postgres.
 				Note: This is sanitized and only accepts these characters: a-zA-Z0-9/_.-
 				On windows, this also accepts colons and backslashes.
@@ -132,57 +133,158 @@ class Db:
 		self._user = os.environ.get('django_foundry_db_user', 'postgres')
 		self._database = os.environ.get('django_foundry_db_database', 'DjangoFoundry')
 
-	def start(self) -> int:
+	def create_data_dir(self) -> None:
+		"""
+		Creates the data directory if it does not exist.
+
+		Returns:
+			None
+		"""
+		if not os.path.isdir(self.data_path):
+			os.makedirs(self.data_path)
+
+	def move_data_dir(self, new_path: str|pathlib.Path) -> bool:
+		"""
+		Moves the data directory to a new location.
+
+		Args:
+			new_path(str): The new path to move the data directory to.
+
+		Returns:
+			bool: True if the directory now exists at the new path, False otherwise.
+
+			NOTE: This will return True if the directory already exists at the new path, so was not moved.
+
+		Raises:
+			ValueError: If the new path is not valid.
+		"""
+		# Validate the new path
+		new_path = self.sanitize_path(new_path)
+
+		# If it's the same as our current path, then we're done.
+		if new_path == self.data_path:
+			logger.info("Data directory already at '%s'. Skipping move.", new_path)
+			return True
+
+		# If it's not the same, then we need to move the directory.
+		shutil.move(self.data_path, new_path)
+		self.data_path = new_path
+
+		# Make sure the directory exists at the new path.
+		return os.path.isdir(self.data_path)
+
+	@db_action(Actions.START)
+	def start(self) -> bool:
 		"""
 		Starts the PostgresSQL server (if it is not running) and prints all output to stdout.
 
 		If the server is already running, prints a message indicating so, but does NOT attempt to restart.
 
 		Returns:
-			int: The exit code returned from executing the postgres command (pg_ctl), or -1 if the server is already running.
+			bool: True if the server is running now (regardless of whether we had to start it), False otherwise. 
 		"""
 		# If we're already running, then just return right away.
 		if self.is_running():
-			print("Postgres server already running")
-			return -1
+			logger.info("Postgres server already running")
+			return True
 
 		# Okay, not running. Try starting it with subprocess.run
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'start'], check=True).returncode
+		result = subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'start'], check=False).returncode
 
-	def restart(self) -> int:
+		# If the result is 0, then we started successfully.
+		if result == 0:
+			logger.info("Postgres server started successfully")
+			return True
+		
+		# Otherwise, we failed to start.
+		logger.error("Postgres server failed to start")
+		return False
+
+	@db_action(Actions.RESTART)
+	def restart(self) -> bool:
 		"""
 		Restarts the PostgresSQL server and prints all output to stdout.
 
 		Returns:
-			int: The exit code returned from executing the postgres command (pg_ctl)
+			bool: True if the server is running now (regardless of whether we had to start it), False otherwise.
 		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart'], check=True).returncode
+		result = subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'restart'], check=True).returncode
 
-	def stop(self) -> int:
+		# If the result is 0, then we started successfully.
+		if result == 0:
+			logger.info("Postgres server restarted successfully")
+			return True
+		
+		# Otherwise, we failed to start.
+		logger.error("Postgres server failed to restart")
+		return False
+
+	@db_action(Actions.STOP)
+	def stop(self) -> bool:
 		"""
 		Stops the PostgresSQL server and prints all output to stdout.
 
 		Returns:
-			int: The exit code returned from executing the postgres command (pg_ctl)
+			bool: True if the server is stopped now (regardless of whether we had to stop it), False if it is still running.
 		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop'], check=True).returncode
+		try:
+			result = subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'stop'], check=True).returncode
+		except subprocess.CalledProcessError as e:
+			# If the return code is 3, then the server was not running, so we can just return True.
+			if e.returncode == 3:
+				logger.info("Postgres server already stopped")
+				return True
 
-	def status(self) -> int:
+			# Otherwise, we failed to stop it.
+			logger.error("Postgres server failed to stop")
+			return False
+
+		# If the result is 0, then we stopped it successfully
+		if result == 0:
+			logger.info("Postgres server stopped successfully")
+			return True
+		
+		# Otherwise, we failed to stop it.
+		logger.error("Postgres server failed to stop")
+		return False
+
+	@db_action(Actions.STATUS)
+	def status(self) -> bool:
 		"""
 		Checks the status of the postgres server and prints all output to stdout.
 
 		Returns:
-			int: The exit code returned from executing the postgres command (pg_ctl)
+			bool: True if it is running, False otherwise. 
 		"""
-		return subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status'], check=True).returncode
+		result = subprocess.run([EXE, '-D', self.data_path, '-l', self.log_path, 'status'], check=False).returncode
 
-	def check_errors(self) -> int:
+		if PostgresStatusCodes.encountered_error(result):
+			logger.warning('Encountered error while checking status. Postgres error code %s', result)
+
+		if PostgresStatusCodes.is_running(result):
+			return True
+		
+		return False
+
+	@db_action(Actions.CHECK_ERRORS)
+	def check_errors(self) -> bool:
 		"""
 		Checks the postgres server for errors and prints all output to stdout.
+
+		Returns:
+			bool: True if there are no errors (i.e. success), False if we detect errrors (i.e. failure).
 		"""
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT * FROM pg_stat_database_conflicts WHERE datname = current_database();"]
-		return subprocess.call(cmd)
+		result = subprocess.call(cmd)
 
+		if result == 0:
+			logger.info("No errors detected")
+			return True
+		
+		logger.error("Errors detected")
+		return False
+
+	@db_action(Actions.ANALYZE)
 	def analyze(self) -> int:
 		"""
 		Runs an ANALYZE VERBOSE on the database.
@@ -190,6 +292,7 @@ class Db:
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "ANALYZE VERBOSE;"]
 		return subprocess.call(cmd)
 
+	@db_action(Actions.REPAIR_ERRORS)
 	def repair_errors(self) -> int:
 		"""
 		Runs a REINDEX DATABASE on the database.
@@ -197,6 +300,7 @@ class Db:
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "REINDEX DATABASE current_database;"]
 		return subprocess.call(cmd)
 
+	@db_action(Actions.DEAD_ROWS)
 	def dead_rows(self) -> int:
 		"""
 		Checks for dead rows in the database.
@@ -204,6 +308,7 @@ class Db:
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT relname, n_dead_tup FROM pg_stat_user_tables WHERE n_dead_tup > 0;"]
 		return subprocess.call(cmd)
 
+	@db_action(Actions.LONG_QUERIES)
 	def long_queries(self) -> int:
 		"""
 		Checks for long running queries in the database.
@@ -211,6 +316,7 @@ class Db:
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT pid, now() - pg_stat_activity.query_start AS duration, query FROM pg_stat_activity WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';"]
 		return subprocess.call(cmd)
 
+	@db_action(Actions.LOCKS)
 	def locks(self) -> int:
 		"""
 		Checks for locks in the database.
@@ -218,7 +324,7 @@ class Db:
 		cmd = ['psql', '-U', self.user, '-d', self.database, '-c', "SELECT pid, relation::regclass, mode, granted FROM pg_locks WHERE NOT granted;"]
 		return subprocess.call(cmd)
 
-
+	@db_action(Actions.MANAGE)
 	def manage(self) -> None:
 		"""
 		Manages the postgres server, restarting it if it is not running.
@@ -257,7 +363,7 @@ class Db:
 			raise FileNotFoundError(f'Postgres is not able to find the data directory: {self.data_path}')
 		return not child.returncode
 
-	def sanitize_path(self, user_input_path : str) -> str:
+	def sanitize_path(self, user_input_path : str|pathlib.Path) -> str:
 		"""
 		Takes arbitrary user input, and sanitizes it to prevent injection attacks.
 
@@ -265,58 +371,50 @@ class Db:
 		so we must be especially careful with what we return.
 
 		Args:
-			user_input_path (str): The user input to turn into a path
+			user_input_path (str|pathlib.Path): The user input to turn into a path
 
 		Returns:
 			str: The sanitized path
 		"""
-		# Whitelist "good" characters and remove all others
+		# Convert to a string if it is a pathlib.Path
+		if isinstance(user_input_path, pathlib.Path):
+			user_input_path = str(user_input_path)
 
+		# Whitelist "good" characters and remove all others
 		if os.name == 'nt':
 			# If we're running on windows, we must accept colons and backslashes
 			return re.sub(r'[^a-zA-Z0-9:/\\_.-]', '', user_input_path)
 
 		# If we're running on a sane operating system, don't allow colons or backslashes.
 		return re.sub(r'[^a-zA-Z0-9/_.-]', '', user_input_path)
-
-class Actions(Enum):
-	"""
-	Defines the options we allow to be passed in from the command line when this script is run.
-
-	Attribues:
-		status:
-			check the DB status
-		start:
-			start the DB (if it is not already running)
-		restart:
-			stop the DB (if it is running) and start it again.
-		stop:
-			stop the DB (if it is running)
-	"""
-	START = 'start'
-	RESTART = 'restart'
-	STATUS = 'status'
-	STOP = 'stop'
-	CHECK_ERRORS = 'check_errors'
-	ANALYZE = 'analyze'
-	REPAIR_ERRORS = 'repair_errors'
-	MANAGE = 'manage'
-	DEAD_ROWS = 'dead_rows'
-	LONG_QUERIES = 'long_queries'
-	LOCKS = 'locks'
-
-	def __str__(self):
+	
+	def run(self, action : str|Actions) -> int:
 		"""
-		Turns an option into a string representation
+		Runs the specified action.
+
+		NOTE: This makes use of the REGISTERED_ACTIONS dict, which is populated using the @db_action decorator.
+		
+		Args:
+			action (Actions): The action to run
+		
+		Returns:
+			int: The exit code of the action
 		"""
-		return self.value
+		# Convert the action to an string
+		if isinstance(action, Actions):
+			action = action.value
 
+		# Check if the action is valid
+		if action not in REGISTERED_ACTIONS:
+			raise ValueError(f'Invalid action: {action}')
 
-if __name__ == '__main__':
+		# Run the action
+		return REGISTERED_ACTIONS[action](self)
+
+def main() -> None:
 	"""
-		This code is only run when this script is called directly (i.e. python bin/db.py)
+	Entry point for the script
 	"""
-
 	# Setup the basic configuration for the parser
 	parser = argparse.ArgumentParser(
 			formatter_class=argparse.RawTextHelpFormatter,
@@ -327,6 +425,7 @@ if __name__ == '__main__':
 	)
 
 	# Define the arguments we will accept from the command line.
+	# allow case insensitive actions
 	parser.add_argument('action',
 					type=Actions,
 					action=EnumAction,
@@ -345,6 +444,11 @@ if __name__ == '__main__':
 						locks: check for locks in the DB
 						manage: manage the DB, restarting it if it is not running
 					"""))
+	parser.add_argument('-a', '--app',
+					type=str,
+					metavar='app',
+					default='djangofoundry',
+					help="Name of the application.")
 	parser.add_argument('-l', '--log',
 						type=str,
 						metavar='path',
@@ -355,10 +459,25 @@ if __name__ == '__main__':
 						metavar='path',
 						default=DEFAULT_DATA_PATH,
 						help="Path to the data directory for postgres.")
+	parser.add_argument('--level', '-v',
+						type=str,
+						metavar='level',
+						default='info',
+						choices=['debug', 'info', 'warning', 'error', 'critical'],
+						help="The log level to use.")
 
 	# Parse the arguments provided to our script from the command line
 	# These are used as attributes. For example: options.action
 	options = parser.parse_args()
+
+	# Set the logger config as basic, output to console
+	logging.basicConfig(
+		level=options.level.upper(),
+		format='%(asctime)s %(levelname)s %(message)s',
+		datefmt='%Y-%m-%d %H:%M:%S',
+		handlers=[logging.StreamHandler()],
+		stream=sys.stdout
+	)
 
 	try:
 		# Instantiate a new DB object based on our arguments
@@ -372,34 +491,12 @@ if __name__ == '__main__':
 		print(f'Unable to find a necessary file: {fnf}')
 		sys.exit()
 
-	match options.action:
-		case Actions.START:
-			# Check the status and start the server if it isn't running, and print output to stdout.
-			result = db.start()
-		case Actions.STOP:
-			# Stop the server and print output to stdout.
-			result = db.stop()
-		case Actions.RESTART:
-			# Restart the server and print output to stdout.
-			result = db.restart()
-		case Actions.STATUS:
-			# Check the server status and print output to stdout.
-			result = db.status()
-		case Actions.CHECK_ERRORS:
-			result = db.check_errors()
-		case Actions.ANALYZE:
-			result = db.analyze()
-		case Actions.REPAIR_ERRORS:
-			result = db.repair_errors()
-		case Actions.DEAD_ROWS:
-			result = db.dead_rows()
-		case Actions.LONG_QUERIES:
-			result = db.long_queries()
-		case Actions.LOCKS:
-			result = db.locks()
-		case Actions.MANAGE:
-			db.manage()
-		case _:
-			print("Error: Unknown action. Try --help to see how to call this script.")
+	result = db.run(options.action)
 
-	sys.exit()
+	sys.exit(result)
+
+if __name__ == '__main__':
+	"""
+		This code is only run when this script is called directly (i.e. python bin/db.py)
+	"""
+	main()
