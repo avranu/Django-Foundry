@@ -1,18 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from rest_framework import serializers
-from djangofoundry.models.serializer import Serializer
+from .baker_recipes import TestSerializer
+from tests.testcase import TestCase
 
-# A concrete serializer for testing the abstract Serializer
-class TestSerializer(Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
-
-    class Meta:
-        fields = ['id', 'name']
-        generated_fields = ['name']
-
-class TestSerializerClass:
+class TestSerializerClass(TestCase):
 
     @pytest.fixture
     def test_serializer(self):

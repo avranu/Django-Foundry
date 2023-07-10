@@ -19,9 +19,9 @@
 """
 from time import sleep
 from django.test import TestCase
-from djangofoundry.decorators.timeout import timeout
 
 '''
+from djangofoundry.decorators.timeout import timeout
 class TimeoutTestCase(TestCase):
 	def test_timeout_decorator(self):
 		@timeout(1)

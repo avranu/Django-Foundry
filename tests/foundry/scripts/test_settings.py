@@ -2,7 +2,9 @@ import pytest
 from unittest.mock import patch, MagicMock
 from djangofoundry.scripts.utils.settings import Settings
 
-class TestSettings:
+from tests.testcase import TestCase
+
+class TestSettings(TestCase):
 
     @pytest.fixture
     def mock_settings(self):

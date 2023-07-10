@@ -3,7 +3,9 @@ from unittest.mock import patch, MagicMock
 from django.http import HttpRequest
 from djangofoundry.controllers.memory import MemoryMonitorView, memory_usage
 
-class TestMemoryMonitorView:
+from tests.testcase import TestCase
+
+class TestMemoryMonitorView(TestCase):
 
     @pytest.fixture
     def memory_monitor_view(self):
@@ -15,7 +17,9 @@ class TestMemoryMonitorView:
         assert response.status_code == 200
         assert 'memory.html' in response.template_name
 
-class TestMemoryUsage:
+from tests.testcase import TestCase
+
+class TestMemoryUsage(TestCase):
 
     @patch('psutil.Process')
     @patch('psutil.process_iter')

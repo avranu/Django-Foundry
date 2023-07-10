@@ -2,7 +2,9 @@ import pytest
 from unittest.mock import patch, MagicMock
 from djangofoundry.scripts.build import PackageUploader
 
-class TestPackageUploader:
+from tests.testcase import TestCase
+
+class TestPackageUploader(TestCase):
 
     @pytest.fixture
     def mock_uploader(self):

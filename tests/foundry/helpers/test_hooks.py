@@ -22,7 +22,9 @@ from djangofoundry.helpers.hooks.meta.types import WaypointMap
 from djangofoundry.helpers.hooks.waypoint import Waypoint
 from djangofoundry.helpers.hooks.hook import Hook, DEFAULT_NAMESPACE, DEFAULT_PRIORITY
 
-class TestHook(TestCase):
+from tests.testcase import TestCase
+
+class TestHook(TestCase)(TestCase):
 
 	def setUp(self):
 		self.action = lambda x: x * 2

@@ -2,7 +2,9 @@ import pytest
 from unittest.mock import patch, MagicMock
 from djangofoundry.scripts.imports import ImportProcessor
 
-class TestImportProcessor:
+from tests.testcase import TestCase
+
+class TestImportProcessor(TestCase):
 
     @pytest.fixture
     def mock_processor(self):

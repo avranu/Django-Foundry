@@ -59,7 +59,9 @@ class TheFuzzTestCase(TestCase):
 		result = self.fuzz.token_partial_match(input1, input2)
 		self.assertEqual(result, 100)
 
-class TestMatchingEngine(TestCase):
+from tests.testcase import TestCase
+
+class TestMatchingEngine(TestCase)(TestCase):
 	'''
 	Tests the MatchingEngine class
 	'''

@@ -3,7 +3,9 @@ from unittest.mock import patch, MagicMock
 from decimal import Decimal
 from djangofoundry.helpers.progress import ProgressBar, ChildProgressBar
 
-class TestProgressBar:
+from tests.testcase import TestCase
+
+class TestProgressBar(TestCase):
 
     @pytest.fixture
     def progress_bar(self):
@@ -33,7 +35,9 @@ class TestProgressBar:
         assert progress_bar.description == 'Restarted'
         assert progress_bar.total == 100
 
-class TestChildProgressBar:
+from tests.testcase import TestCase
+
+class TestChildProgressBar(TestCase):
 
     @pytest.fixture
     def child_progress_bar(self, progress_bar):

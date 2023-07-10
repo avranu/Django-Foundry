@@ -6,7 +6,9 @@ import psutil
 import subprocess
 import sys
 
-class TestApp:
+from tests.testcase import TestCase
+
+class TestApp(TestCase):
 
     @pytest.fixture
     def app(self):

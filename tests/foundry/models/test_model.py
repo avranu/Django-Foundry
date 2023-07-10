@@ -1,13 +1,22 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from django.db import models
-from djangofoundry.models.model import Model
 
 # A concrete model for testing the abstract Model
-class TestModel(Model):
-    name = models.CharField(max_length=100)
+from tests.testcase import TestCase
 
-class TestModelClass:
+class TestModelClass(TestCase):
+    @pytest.fixture(autouse=True)
+    def set_model(self, django_test_environment):
+        # Import the Queryset_Filter module after Django is set up
+        global Model, TestModel
+        from djangofoundry.models import Model as FoundryModel
+        Model = FoundryModel
+
+        class TestModel(Model):
+            name = models.CharField(max_length=100)
+            class Meta:
+                app_label = "tests"
 
     @pytest.fixture
     def test_model(self):
@@ -23,8 +32,10 @@ class TestModelClass:
         test_model.id = 1
         assert test_model.to_dict() == {"id": 1, "name": "Test"}
 
-    @patch.object(TestModel, 'save')
     def test_presave(self, mock_save, test_model):
+        # patch TestModel.save()
+        test_model.save = mock_save
+
         test_model.presave()
         assert mock_save.called
 

@@ -1,14 +1,10 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from rest_framework.test import APIRequestFactory, force_authenticate
-from djangofoundry.models.viewset import ViewSet
-from djangofoundry.models.serializer import Serializer
+from .baker_recipes import TestViewSet
+from tests.testcase import TestCase
 
-# A concrete viewset for testing the abstract ViewSet
-class TestViewSet(ViewSet):
-    serializer_class = Serializer
-
-class TestViewSetClass:
+class TestViewSetClass(TestCase):
 
     @pytest.fixture
     def viewset(self):

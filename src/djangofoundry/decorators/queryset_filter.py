@@ -61,6 +61,8 @@ class Queryset_Filter:
 		#super().__set_name__(owner, name)
 		setattr(owner, name, self.filter_fn)
 
+		self.queryset = owner
+
 	def __get__(self, instance, owner):
 		# Record the queryset obj for later use
 		self.queryset = instance

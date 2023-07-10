@@ -22,7 +22,7 @@ from __future__ import annotations
 from decimal import Decimal
 from functools import reduce
 import operator
-from typing import List, Tuple, Union, Callable, Any, Optional
+from typing import TYPE_CHECKING, List, Tuple, Union, Callable, Any, Optional
 from datetime import datetime
 from math import sqrt
 from time import perf_counter_ns
@@ -44,13 +44,15 @@ from django.db.models.query import RawQuerySet
 import auto_prefetch
 # App Imports
 
+if TYPE_CHECKING:
+	from djangofoundry.models.manager import Manager
+
 #
 # Set up logging for this module. __name__ includes the namespace (e.g. dashboard.models.cases).
 #
 # We can adjust logging settings from the namespace down to the module level in DjangoFoundry/settings
 #
 logger = logging.getLogger(__name__)
-
 
 class QuerySet(auto_prefetch.QuerySet):
 	'''

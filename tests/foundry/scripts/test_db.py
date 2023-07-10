@@ -3,7 +3,9 @@ from unittest.mock import patch, MagicMock, call
 from pathlib import Path
 from djangofoundry.scripts.db import db, functions, Actions
 
-class TestDb:
+from tests.testcase import TestCase
+
+class TestDb(TestCase):
     @pytest.fixture
     def mock_db(self):
         # Initialize Db with test paths

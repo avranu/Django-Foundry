@@ -1,9 +1,17 @@
+from typing import Callable
 import pytest
 from unittest.mock import patch, MagicMock
-from time import sleep
-from djangofoundry.decorators.retry import retry
 
-class TestRetry:
+from tests.testcase import TestCase
+
+class TestRetry(TestCase):
+
+    @pytest.fixture(autouse=True)
+    def set_retry(self, django_test_environment):
+        # Import the Queryset_Filter module after Django is set up
+        global retry
+        from djangofoundry.decorators.retry import retry as retry_decorator
+        retry = retry_decorator
 
     def test_retry_success(self):
         # Function that always succeeds
