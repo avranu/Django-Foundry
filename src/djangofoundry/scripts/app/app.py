@@ -60,8 +60,14 @@ class App:
 	def __init__(self, project_name='myproject', author_name=None, settings = None, directory : str = '.', frontend_dir='frontend', backend_dir='backend'):
 		self.project_name = project_name
 		self.directory = directory
-		self.frontend_dir = directory + '/' + frontend_dir
-		self.backend_dir = directory + '/' + backend_dir
+		if frontend_dir[0] == '/':
+			self.frontend_dir = frontend_dir
+		else:
+			self.frontend_dir = directory + '/' + frontend_dir
+		if backend_dir[0] == '/':
+			self.backend_dir = backend_dir
+		else:
+			self.backend_dir = directory + '/' + backend_dir
 		self.author_name = author_name or getpass.getuser()
 		self.settings = settings
 
@@ -226,7 +232,7 @@ class App:
 			# Render ../templates/IndexController.py.jinja and save it to ./controllers/IndexController.py
 			env = Environment(loader=FileSystemLoader("templates/jinja/IndexController"))
 
-			controller_dir = f"backend/{name}/controllers/"
+			controller_dir = f"{self.backend_dir}/{name}/controllers/"
 			os.makedirs(controller_dir, exist_ok=True)
 
 			for template_name in env.list_templates():
@@ -489,7 +495,7 @@ class App:
 		# If ubuntu, install with apt
 		if os_name == 'Linux' and shutil.which('apt'):
 			try:
-				self.run_subprocess(['apt', 'install', 'npm', 'npx'])
+				self.run_subprocess(['sudo', 'apt', 'install', 'npm', 'npx'])
 				return "npm installed successfully on Ubuntu"
 			except subprocess.CalledProcessError as process_e:
 				raise EnvironmentError(f"Error installing npm on Ubuntu: {process_e}") from process_e
@@ -922,7 +928,7 @@ class App:
 		Returns:
 			None
 		"""
-		controllers_dir = "backend/controllers"
+		controllers_dir = f"{self.backend_dir}/controllers"
 		os.makedirs(controllers_dir, exist_ok=True)
 
 		controller_file = os.path.join(controllers_dir, f"{page_name}.py")
@@ -930,7 +936,7 @@ class App:
 			with open(controller_file, "w", encoding="utf-8") as file:
 				file.write("from django.shortcuts import render\n\n")
 				file.write(f"def {page_name}_view(request):\n")
-				file.write(f"    return render(request, '{page_name}.html')\n")
+				file.write(f"	return render(request, '{page_name}.html')\n")
 		except IOError as ioe:
 			logging.error(f"Failed to create Django controller '{page_name}': {ioe}")
 			raise
@@ -947,7 +953,7 @@ class App:
 		"""
 		env = Environment(loader=FileSystemLoader("templates/jinja/model"))
 
-		model_dir = f"backend/models/{model_name}"
+		model_dir = f"{self.backend_dir}/models/{model_name}"
 		os.makedirs(model_dir, exist_ok=True)
 
 		for template_name in env.list_templates():
