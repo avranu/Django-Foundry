@@ -1,22 +1,23 @@
-"""
+"""*****************************************************************************
+ *                                                                             *
+ * Metadata:                                                                   *
+ *                                                                             *
+ * 	File: request.py                                                           *
+ * 	Project: django-foundry                                                    *
+ * 	Created: 08 Jun 2023                                                       *
+ * 	Author: Jess Mann                                                          *
+ * 	Email: jmann@osc.ny.gov                                                    *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Last Modified: Thu Oct 19 2023                                             *
+ * 	Modified By: Jess Mann                                                     *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Copyright (c) 2023 NYS Office of the State Comptroller                     *
+ ****************************************************************************"""
 
-	Metadata:
-
-		File: meta/request.py
-		Project: Django Foundry
-		Created Date: 13 Oct 2022
-		Author: Jess Mann
-		Email: jess.a.mann@gmail.com
-
-		-----
-
-		Last Modified: Sat Dec 03 2022
-		Modified By: Jess Mann
-
-		-----
-
-		Copyright (c) 2022 Jess Mann
-"""
 from enum import Enum
 
 class RequestType(Enum):
@@ -25,3 +26,4 @@ class RequestType(Enum):
 	"""
 	GET = 'GET'
 	POST = 'POST'
+	SOAP = 'SOAP'

@@ -1,22 +1,22 @@
-"""
-
-	Metadata:
-
-		File: db.py
-		Project: Django Foundry
-		Created Date: 06 Sep 2022
-		Author: Jess Mann
-		Email: jess.a.mann@gmail.com
-
-		-----
-
-		Last Modified: Fri Apr 21 2023
-		Modified By: Jess Mann
-
-		-----
-
-		Copyright (c) 2022 Jess Mann
-"""
+"""*****************************************************************************
+ *                                                                             *
+ * Metadata:                                                                   *
+ *                                                                             *
+ * 	File: db.py                                                                *
+ * 	Project: django-foundry                                                    *
+ * 	Created: 08 Jun 2023                                                       *
+ * 	Author: Jess Mann                                                          *
+ * 	Email: jess.a.mann@gmail.com                                               *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Last Modified: Mon Oct 02 2023                                             *
+ * 	Modified By: Jess Mann                                                     *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Copyright (c) 2023 Jess Mann                                               *
+ ****************************************************************************"""
 #!/usr/bin/env python
 
 # Generic imports
@@ -348,7 +348,7 @@ class Db:
 			FileNotFoundError: If postgres is not able to find the data directory
 		"""
 		# Create a child process, supressing output
-		child = subprocess.run([EXE, '-D', self.data_path, 'status'], stdout = subprocess.PIPE, check=True)
+		child = subprocess.run([EXE, '-D', self.data_path, 'status'], stdout = subprocess.PIPE)
 
 		"""
 		Postgres returns exit code 3 if the server is NOT running, and 4 on error. It returns 0 otherwise.

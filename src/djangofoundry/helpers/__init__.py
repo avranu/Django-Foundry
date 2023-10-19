@@ -21,5 +21,5 @@
 """
 # Generic imports
 from djangofoundry.helpers.logging import log_object
-from djangofoundry.helpers.progress import ProgressBar, ProgressStates
+#from djangofoundry.helpers.progress import ProgressBar, ProgressStates
 from djangofoundry.helpers.encoders import JSONEncoder

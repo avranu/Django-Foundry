@@ -103,9 +103,9 @@ class ColumnInfo(DbInfo):
 		self,
 		name: str,
 		data_type: str,
-		data_length: int,
+		data_length: int | None,
 		nullable: str,
-		data_default: Any,
+		data_default: Any = '',
 		precision: Optional[int] = None,
 		scale: Optional[int] = None,
 	):

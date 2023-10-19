@@ -1,6 +1,6 @@
 [project]
 name = "djangofoundry"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
   { name="Jess Mann", email="jess.a.mann+df@gmail.com" },
 ]

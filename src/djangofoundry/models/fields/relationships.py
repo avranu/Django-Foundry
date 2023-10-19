@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 # Django Imports
+from django.db import models
 import auto_prefetch
 # App Imports
 
@@ -35,4 +36,9 @@ class ForeignKey(auto_prefetch.ForeignKey):
 class OneToOneField(auto_prefetch.OneToOneField):
 	"""
 	A OneToOneField that uses the auto_prefetch library.
+	"""
+
+class ManyToManyField(models.ManyToManyField):
+	"""
+	A ManyToManyField (for future expansion, and consistency)
 	"""

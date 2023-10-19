@@ -47,8 +47,12 @@ class InsertedNowField(DateTimeField):
 	Override the default django field to customize typical init options
 	'''
 	def __init__(self, *_args, **kwargs):
-		# Default is not allowed. Accept it as an arg (thus pulling it from kwargs) and then ignore it.
-		super().__init__(auto_now_add=True, null = False, blank = False, **kwargs)
+		# Set auto_now_add, null, and blank within kwargs
+		kwargs['auto_now_add'] = True
+		kwargs['null'] = False
+		kwargs['blank'] = False
+
+		super().__init__(**kwargs)
 
 
 class UpdatedNowField(DateTimeField):
@@ -56,5 +60,9 @@ class UpdatedNowField(DateTimeField):
 	Override the default django field to customize typical init options
 	'''
 	def __init__(self, *_args, **kwargs):
-		# Default is not allowed. Accept it as an arg (thus pulling it from kwargs) and then ignore it.
-		super().__init__(auto_now=True, null = False, blank = False, **kwargs)
+		# Set auto_now_add, null, and blank within kwargs
+		kwargs['auto_now'] = True
+		kwargs['null'] = False
+		kwargs['blank'] = False
+
+		super().__init__(**kwargs)
