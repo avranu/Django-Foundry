@@ -1,22 +1,22 @@
-"""
-
-	Metadata:
-
-		File: app.py
-		Project: Django Foundry
-		Created Date: 06 Sep 2022
-		Author: Jess Mann
-		Email: jess.a.mann@gmail.com
-
-		-----
-
-		Last Modified: Sat Dec 03 2022
-		Modified By: Jess Mann
-
-		-----
-
-		Copyright (c) 2022 Jess Mann
-"""
+"""*****************************************************************************
+ *                                                                             *
+ * Metadata:                                                                   *
+ *                                                                             *
+ * 	File: app.py                                                               *
+ * 	Project: django-foundry                                                    *
+ * 	Created: 19 Oct 2023                                                       *
+ * 	Author: Jess Mann                                                          *
+ * 	Email: jess.a.mann@gmail.com                                               *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Last Modified: Sat Oct 28 2023                                             *
+ * 	Modified By: Jess Mann                                                     *
+ *                                                                             *
+ * 	-----                                                                      *
+ *                                                                             *
+ * 	Copyright (c) 2023 Jess Mann                                               *
+ ****************************************************************************"""
 #!/usr/bin/env python
 
 # Generic imports
@@ -405,6 +405,20 @@ class App:
 
 		return True
 	
+	def svelte_setup(self) -> str:
+		"""
+		Setup the svelte project and app
+		"""
+		# TODO
+		return "Svelte setup skipped."
+	
+	def bun_setup(self) -> str:
+		"""
+		Setup bun
+		"""
+		# TODO
+		return "Bun setup skipped."
+	
 	def nuxt_setup(self) -> str:
 		"""
 		Setup the Nuxt project and app with given names.
@@ -592,7 +606,7 @@ class App:
 		self.create_venv()
 		self.install_dependencies()
 		self.django_setup()
-		self.nuxt_setup()
+		self.svelte_setup()
 		self.confirm_setup()
 
 	def run(self, command : Actions, callback : Optional[Callable] = None, *args, **kwargs) -> str:
